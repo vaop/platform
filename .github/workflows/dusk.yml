@@ -37,11 +37,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-      chrome:
-        image: selenium/standalone-chromium
-        options: >-
-          --shm-size=2g
-
     name: PHP ${{ matrix.php }} / MariaDB ${{ matrix.mariadb }}
 
     steps:
@@ -120,6 +115,9 @@ jobs:
       - name: Wait for server
         run: |
           timeout 30 bash -c 'until curl -s http://127.0.0.1:8000 > /dev/null 2>&1; do sleep 1; done'
+
+      - name: Install ChromeDriver
+        run: php artisan dusk:chrome-driver --detect
 
       - name: Run Dusk tests
         run: php artisan dusk --env=testing
