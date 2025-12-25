@@ -1,0 +1,49 @@
+name: Pint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  pull_request_target:
+    types: [opened, synchronize]
+  merge_group:
+
+jobs:
+  pint:
+    runs-on: ubuntu-latest
+
+    # Skip duplicate runs for PRs from the same repo
+    if: |
+      github.event_name != 'pull_request_target' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    name: Pint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-8.4-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-8.4-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run Pint
+        run: ./vendor/bin/pint --test
