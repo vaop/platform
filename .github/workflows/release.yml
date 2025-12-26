@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  RELEASE_NAME: vaop-platform-${{ github.ref_name }}
+
+jobs:
+  build:
+    name: Build Release Artifacts
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, json, curl, openssl, pdo, tokenizer, bcmath
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Prepare release directory
+        run: |
+          mkdir -p release
+
+          # Copy application files
+          cp -r app release/
+          cp -r bootstrap release/
+          cp -r config release/
+          cp -r database release/
+          cp -r public release/
+          cp -r resources release/
+          cp -r routes release/
+          cp -r storage release/
+          cp -r vendor release/
+
+          # Copy root files
+          cp artisan release/
+          cp composer.json release/
+          cp composer.lock release/
+          cp .env.example release/
+
+          # Set up storage directories with proper structure
+          mkdir -p release/storage/app/public
+          mkdir -p release/storage/framework/cache/data
+          mkdir -p release/storage/framework/sessions
+          mkdir -p release/storage/framework/testing
+          mkdir -p release/storage/framework/views
+          mkdir -p release/storage/logs
+
+          # Create .gitkeep files
+          touch release/storage/app/.gitkeep
+          touch release/storage/app/public/.gitkeep
+          touch release/storage/framework/.gitkeep
+          touch release/storage/framework/cache/.gitkeep
+          touch release/storage/framework/cache/data/.gitkeep
+          touch release/storage/framework/sessions/.gitkeep
+          touch release/storage/framework/testing/.gitkeep
+          touch release/storage/framework/views/.gitkeep
+          touch release/storage/logs/.gitkeep
+
+          # Create bootstrap/cache directory
+          mkdir -p release/bootstrap/cache
+          touch release/bootstrap/cache/.gitkeep
+
+      - name: Create zip archive
+        run: |
+          cd release
+          zip -r ../${{ env.RELEASE_NAME }}.zip .
+
+      - name: Create tar.gz archive
+        run: |
+          cd release
+          tar -czvf ../${{ env.RELEASE_NAME }}.tar.gz .
+
+      - name: Generate checksums
+        run: |
+          sha256sum ${{ env.RELEASE_NAME }}.zip | awk '{print $1}' > ${{ env.RELEASE_NAME }}.zip.sha256
+          sha256sum ${{ env.RELEASE_NAME }}.tar.gz | awk '{print $1}' > ${{ env.RELEASE_NAME }}.tar.gz.sha256
+
+      - name: Attest build provenance for zip
+        uses: actions/attest-build-provenance@ef244123eb79f2f7a7e75d99086184180e6d0018 # v2
+        with:
+          subject-path: ${{ env.RELEASE_NAME }}.zip
+
+      - name: Attest build provenance for tar.gz
+        uses: actions/attest-build-provenance@ef244123eb79f2f7a7e75d99086184180e6d0018 # v2
+        with:
+          subject-path: ${{ env.RELEASE_NAME }}.tar.gz
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2
+        with:
+          files: |
+            ${{ env.RELEASE_NAME }}.zip
+            ${{ env.RELEASE_NAME }}.tar.gz
+            ${{ env.RELEASE_NAME }}.zip.sha256
+            ${{ env.RELEASE_NAME }}.tar.gz.sha256
