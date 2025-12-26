@@ -1,0 +1,36 @@
+version: 2
+
+updates:
+  # GitHub Actions - grouped weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Composer (PHP) - individual PRs for production, grouped for dev
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      composer-dev:
+        dependency-type: development
+        patterns:
+          - "*"
+    # Production dependencies are not in a group, so they get individual PRs
+
+  # npm - individual PRs for production, grouped for dev
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm-dev:
+        dependency-type: development
+        patterns:
+          - "*"
+    # Production dependencies are not in a group, so they get individual PRs
