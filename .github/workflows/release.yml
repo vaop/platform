@@ -23,14 +23,14 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
         with:
-          php-version: '8.4'
-          extensions: mbstring, xml, ctype, json, curl, openssl, pdo, tokenizer, bcmath
+          php-version: '8.5'
+          extensions: xml, ctype, json, curl, openssl, pdo, tokenizer, bcmath
           coverage: none
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '22'
+          node-version: '25'
           cache: 'npm'
 
       - name: Install Composer dependencies
