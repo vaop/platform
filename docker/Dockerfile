@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Build stage for frontend assets
-FROM node:22-alpine AS frontend
+FROM node:25-alpine AS frontend
 
 WORKDIR /app
 
