@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# Documentation
+*.md
+LICENSE
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Dependencies (will be installed in container)
+/vendor
+/node_modules
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Testing
+/tests
+phpunit.xml
+.phpunit.result.cache
+
+# Build artifacts
+/public/build
+/public/hot
+/storage/*.key
+
+# Laravel specific
+/bootstrap/cache/*.php
+/storage/app/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+!storage/**/.gitignore
+
+# Sail
+docker-compose.yml
+compose.yaml
+
+# Development
+.editorconfig
+boost.json

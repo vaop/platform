@@ -1,0 +1,32 @@
+{
+    auto_https off
+    admin off
+}
+
+:80 {
+    root * /var/www/html/public
+
+    encode gzip
+
+    # Handle static files
+    file_server
+
+    # PHP handling via FastCGI
+    php_fastcgi 127.0.0.1:9000 {
+        resolve_root_symlink
+    }
+
+    # Laravel-specific headers
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        -Server
+    }
+
+    # Logging
+    log {
+        output stdout
+        format json
+    }
+}
