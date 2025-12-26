@@ -6,7 +6,7 @@ FROM node:22-alpine AS frontend
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,id=npm-$TARGETARCH,target=/root/.npm \
     npm ci
 
 COPY vite.config.js ./
@@ -61,7 +61,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 # Install PHP dependencies (no dev)
-RUN --mount=type=cache,target=/root/.composer/cache \
+RUN --mount=type=cache,id=composer-$TARGETARCH,target=/root/.composer/cache \
     composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 # Copy application code
