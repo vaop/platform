@@ -3,6 +3,8 @@
 # Build stage for frontend assets
 FROM node:25-alpine AS frontend
 
+ARG TARGETARCH
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -16,7 +18,9 @@ COPY public ./public
 RUN npm run build
 
 # Production PHP image
-FROM php:8.4-fpm-alpine AS production
+FROM php:8.5-fpm-alpine AS production
+
+ARG TARGETARCH
 
 # Copy Caddy binary from official image (pinned version for security updates via Dependabot)
 COPY --from=caddy:2.11-alpine /usr/bin/caddy /usr/sbin/caddy
@@ -29,22 +33,20 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     freetype-dev \
     libzip-dev \
-    oniguruma-dev \
     icu-dev \
     mariadb-client
 
 # Install PHP extensions
+# Note: mbstring is built-in as of PHP 8.5, opcache is built-in as of PHP 8.5
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
+    && docker-php-ext-install \
     pdo_mysql \
-    mbstring \
     exif \
     pcntl \
     bcmath \
     gd \
     zip \
-    intl \
-    opcache
+    intl
 
 # Configure PHP for production
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
