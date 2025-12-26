@@ -1,10 +1,13 @@
+# syntax=docker/dockerfile:1
+
 # Build stage for frontend assets
 FROM node:22-alpine AS frontend
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
 COPY vite.config.js ./
 COPY resources ./resources
@@ -56,7 +59,8 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 # Install PHP dependencies (no dev)
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+RUN --mount=type=cache,target=/root/.composer/cache \
+    composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 # Copy application code
 COPY . .
