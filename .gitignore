@@ -12,6 +12,7 @@
 /.junie
 /.nova
 /.phpunit.cache
+/coverage
 /.vscode
 /.zed
 /_docs
