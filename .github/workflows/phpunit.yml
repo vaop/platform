@@ -22,6 +22,11 @@ jobs:
       matrix:
         php: ['8.4', '8.5']
         mariadb: ['10', '11']
+        coverage: [false]
+        include:
+          - php: '8.4'
+            mariadb: '11'
+            coverage: true
 
     services:
       mariadb:
@@ -37,7 +42,7 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    name: PHPUnit (PHP ${{ matrix.php }} / MariaDB ${{ matrix.mariadb }})
+    name: PHPUnit (PHP ${{ matrix.php }} / MariaDB ${{ matrix.mariadb }})${{ matrix.coverage && ' + Coverage' || '' }}
 
     steps:
       - name: Checkout code
@@ -50,7 +55,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, pdo, pdo_mysql
-          coverage: ${{ matrix.php == '8.4' && matrix.mariadb == '11' && 'xdebug' || 'none' }}
+          coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -101,8 +106,8 @@ jobs:
           DB_PASSWORD: password
 
       - name: Run tests
-#        run: php artisan test ${{ matrix.php == '8.4' && matrix.mariadb == '11' && '--coverage --min=80' || '' }}
-        run: php artisan test ${{ matrix.php == '8.4' && matrix.mariadb == '11' && '--coverage' || '' }}
+        # run: php artisan test ${{ matrix.coverage && '--coverage --min=80' || '' }}
+        run: php artisan test ${{ matrix.coverage && '--coverage' || '' }}
         env:
           DB_CONNECTION: mariadb
           DB_HOST: 127.0.0.1
