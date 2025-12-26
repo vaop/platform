@@ -19,7 +19,7 @@ RUN npm run build
 FROM php:8.4-fpm-alpine AS production
 
 # Copy Caddy binary from official image (avoids Alpine package CVEs)
-COPY --from=caddy:2.9-alpine /usr/bin/caddy /usr/bin/caddy
+COPY --from=caddy:2.9-alpine /usr/bin/caddy /usr/sbin/caddy
 
 # Install system dependencies
 RUN apk add --no-cache \
