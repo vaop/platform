@@ -17,7 +17,7 @@ env:
 
 jobs:
   build:
-    name: Build (${{ matrix.platform }})
+    name: Docker Build (${{ matrix.platform }})
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
@@ -93,7 +93,7 @@ jobs:
 
   # Health check using amd64 image (runs in parallel with arm64 build)
   test:
-    name: Health Check
+    name: Docker Health Check
     runs-on: ubuntu-24.04
     needs: build
     # Only run on amd64 runner, skip for push events (tested during merge job)
@@ -159,7 +159,7 @@ jobs:
 
   # Merge multi-arch manifests (only on push to main or tags)
   merge:
-    name: Merge Manifests
+    name: Docker Merge Manifests
     runs-on: ubuntu-24.04
     needs: build
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
