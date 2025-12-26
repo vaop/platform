@@ -34,3 +34,9 @@ updates:
         patterns:
           - "*"
     # Production dependencies are not in a group, so they get individual PRs
+
+  # Docker - update base images in Dockerfile
+  - package-ecosystem: docker
+    directory: /docker
+    schedule:
+      interval: weekly
