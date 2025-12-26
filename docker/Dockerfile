@@ -3,6 +3,8 @@
 # Build stage for frontend assets
 FROM node:22-alpine AS frontend
 
+ARG TARGETARCH
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -17,6 +19,8 @@ RUN npm run build
 
 # Production PHP image
 FROM php:8.5-fpm-alpine AS production
+
+ARG TARGETARCH
 
 # Copy Caddy binary from official image (pinned version for security updates via Dependabot)
 COPY --from=caddy:2.11-alpine /usr/bin/caddy /usr/sbin/caddy
@@ -34,10 +38,10 @@ RUN apk add --no-cache \
     mariadb-client
 
 # Install PHP extensions
+# Note: mbstring is built-in as of PHP 8.5
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
     pdo_mysql \
-    mbstring \
     exif \
     pcntl \
     bcmath \
