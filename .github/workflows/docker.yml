@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - '**'
     tags:
       - 'v*'
   pull_request:
@@ -61,7 +60,9 @@ jobs:
           docker run -d --name test-container -p 8080:80 \
             -e APP_KEY=base64:$(openssl rand -base64 32) \
             -e APP_ENV=production \
-            -e DB_CONNECTION=sqlite \
+            -e SESSION_DRIVER=array \
+            -e CACHE_STORE=array \
+            -e LOG_CHANNEL=stderr \
             vaop/platform:test
 
       - name: Wait for container to be ready

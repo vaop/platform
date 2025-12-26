@@ -67,10 +67,13 @@ COPY --from=frontend /app/public/build ./public/build
 # Generate optimized autoloader
 RUN composer dump-autoload --optimize --no-dev
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+# Ensure directories exist and set permissions
+RUN mkdir -p /var/www/html/storage/framework/{cache,sessions,views} \
+    && mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
 # Copy Caddy configuration
 COPY docker/Caddyfile /etc/caddy/Caddyfile
