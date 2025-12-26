@@ -12,7 +12,9 @@ on:
 
 jobs:
   build:
+    name: Docker
     runs-on: ubuntu-latest
+
     # Skip pull_request_target for same-repo PRs (pull_request handles those)
     if: |
       github.event_name != 'pull_request_target' ||
