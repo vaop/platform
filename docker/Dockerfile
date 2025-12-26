@@ -16,7 +16,7 @@ COPY public ./public
 RUN npm run build
 
 # Production PHP image
-FROM php:8.4-fpm-alpine AS production
+FROM php:8.5-fpm-alpine AS production
 
 # Copy Caddy binary from official image (pinned version for security updates via Dependabot)
 COPY --from=caddy:2.11-alpine /usr/bin/caddy /usr/sbin/caddy
