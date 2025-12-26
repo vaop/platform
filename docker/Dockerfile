@@ -33,22 +33,20 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     freetype-dev \
     libzip-dev \
-    oniguruma-dev \
     icu-dev \
     mariadb-client
 
 # Install PHP extensions
-# Note: mbstring is built-in as of PHP 8.5
+# Note: mbstring is built-in as of PHP 8.5, opcache is built-in as of PHP 8.5
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
+    && docker-php-ext-install \
     pdo_mysql \
     exif \
     pcntl \
     bcmath \
     gd \
     zip \
-    intl \
-    opcache
+    intl
 
 # Configure PHP for production
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
