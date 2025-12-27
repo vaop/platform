@@ -18,7 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../src/App/Console/Commands',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->web(append: [
+            \App\Install\Middleware\RedirectIfNotInstalled::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'install/finalize',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

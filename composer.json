@@ -4,6 +4,7 @@
     "type": "project",
     "require": {
         "php": "^8.4",
+        "ext-pdo": "*",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1"
     },
@@ -23,6 +24,7 @@
             "App\\": "src/App/",
             "Domain\\": "src/Domain/",
             "System\\": "src/System/",
+            "Services\\": "src/Services/",
             "Database\\Seeders\\": "database/seeders/"
         }
     },
