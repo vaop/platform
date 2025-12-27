@@ -87,6 +87,20 @@ services:
                 - '--innodb_initialized'
             retries: 3
             timeout: 5s
+    phpmyadmin:
+        image: 'phpmyadmin:latest'
+        ports:
+            - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
+        environment:
+            PMA_HOST: mariadb
+            PMA_PORT: 3306
+            PMA_USER: '${DB_USERNAME}'
+            PMA_PASSWORD: '${DB_PASSWORD}'
+            UPLOAD_LIMIT: 100M
+        networks:
+            - sail
+        depends_on:
+            - mariadb
 networks:
     sail:
         driver: bridge
