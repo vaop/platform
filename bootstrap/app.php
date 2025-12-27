@@ -10,10 +10,13 @@ $app = (new Application(
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../src/App/Http/routes.php',
-        commands: __DIR__ . '/../src/App/Console/commands.php',
+        web: __DIR__.'/../src/App/Http/routes.php',
+        commands: __DIR__.'/../src/App/Console/commands.php',
         health: '/up',
     )
+    ->withCommands([
+        __DIR__.'/../src/App/Console/Commands',
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })

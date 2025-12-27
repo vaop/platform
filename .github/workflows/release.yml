@@ -46,6 +46,9 @@ jobs:
         run: |
           mkdir -p release
 
+          # Generate VERSION file from tag (strip 'v' prefix)
+          echo "${GITHUB_REF_NAME#v}" > release/VERSION
+
           # Copy application files
           cp -r bootstrap release/
           cp -r config release/

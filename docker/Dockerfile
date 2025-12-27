@@ -93,6 +93,9 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
+# Disable web installer in Docker (users configure via env vars)
+ENV INSTALLER_ENABLED=false
+
 EXPOSE 80
 
 CMD ["/usr/local/bin/start.sh"]
