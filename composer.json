@@ -1,10 +1,15 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "vaop/platform",
+    "description": "A modern, open-source flight operations platform for virtual airlines",
+    "license": "AGPL-3.0-or-later",
     "type": "project",
+    "keywords": ["virtual", "airline", "flight", "simulation", "operations", "vaop", "virtual-airline", "flight-sim", "pirep", "acars", "aviation", "laravel", "vatsim", "ivao", "msfs", "xplane"],
+    "homepage": "https://github.com/vaop/platform",
     "require": {
         "php": "^8.4",
         "ext-pdo": "*",
+        "ext-zip": "*",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1"
     },
