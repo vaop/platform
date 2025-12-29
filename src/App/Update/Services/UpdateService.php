@@ -14,8 +14,8 @@ class UpdateService
     private string $tempPath;
 
     public function __construct(
-        private GitHubReleaseService $github,
-        private BackupService $backup,
+        private readonly GitHubReleaseService $github,
+        private readonly BackupService        $backup,
     ) {
         $this->tempPath = storage_path('app/updates');
     }
@@ -154,24 +154,34 @@ class UpdateService
     {
         $this->ensureTempDirectory();
 
-        // Prefer tar.gz, fall back to zip
-        $format = class_exists('PharData') ? 'tar.gz' : 'zip';
-        $url = $this->github->getDownloadUrl($release, $format);
+        $url = $this->github->getDownloadUrl($release, 'zip');
 
-        $filename = "release-{$release['tag_name']}.{$format}";
+        $filename = "release-{$release['tag_name']}.zip";
         $filepath = $this->tempPath.'/'.$filename;
 
         $response = Http::withOptions([
             'sink' => $filepath,
             'timeout' => 300,
+            'allow_redirects' => true,
         ])->get($url);
 
         if ($response->failed()) {
             throw UpdateException::downloadFailed($url, "HTTP {$response->status()}");
         }
 
-        if (! file_exists($filepath) || filesize($filepath) === 0) {
+        if (! file_exists($filepath)) {
+            throw UpdateException::downloadFailed($url, 'Downloaded file does not exist');
+        }
+
+        $size = filesize($filepath);
+        if ($size === 0) {
             throw UpdateException::downloadFailed($url, 'Downloaded file is empty');
+        }
+
+        // Sanity check - tar.gz files should be at least a few KB
+        if ($size < 1024) {
+            $content = file_get_contents($filepath);
+            throw UpdateException::downloadFailed($url, "Downloaded file too small ({$size} bytes): ".substr($content, 0, 100));
         }
 
         return $filepath;
@@ -186,29 +196,47 @@ class UpdateService
     {
         $extractPath = $this->tempPath.'/extracted-'.uniqid();
 
-        if (str_ends_with($archivePath, '.zip')) {
-            $this->extractZip($archivePath, $extractPath);
+        $this->extractZip($archivePath, $extractPath);
+
+        // Find the extracted directory
+        $contents = array_diff(scandir($extractPath), ['.', '..']);
+
+        // Determine the source directory for copying
+        // Check if this looks like a flat extraction (files directly in root)
+        $hasRootFiles = in_array('composer.json', $contents) || in_array('artisan', $contents) || in_array('VERSION', $contents);
+
+        if ($hasRootFiles) {
+            // Flat structure - files extracted directly, no parent directory
+            $sourceDir = $extractPath;
         } else {
-            $this->extractTarGz($archivePath, $extractPath);
-        }
+            // GitHub archive format - look for single subdirectory
+            $directories = [];
+            foreach ($contents as $item) {
+                if (is_dir($extractPath.'/'.$item)) {
+                    $directories[] = $item;
+                }
+            }
 
-        // Find the extracted directory (GitHub creates a subdirectory)
-        $contents = scandir($extractPath);
-        $subdir = null;
+            if (count($directories) === 1) {
+                $sourceDir = $extractPath.'/'.$directories[0];
+            } else {
+                // Look for a directory matching GitHub's pattern: reponame-version
+                $sourceDir = null;
+                foreach ($directories as $dir) {
+                    if (preg_match('/^[a-zA-Z0-9_-]+-v?\d+/', $dir)) {
+                        $sourceDir = $extractPath.'/'.$dir;
+                        break;
+                    }
+                }
 
-        foreach ($contents as $item) {
-            if ($item !== '.' && $item !== '..' && is_dir($extractPath.'/'.$item)) {
-                $subdir = $extractPath.'/'.$item;
-                break;
+                if (! $sourceDir) {
+                    throw UpdateException::extractionFailed('Could not find GitHub archive root');
+                }
             }
         }
 
-        if (! $subdir) {
-            throw UpdateException::extractionFailed('Could not find extracted content');
-        }
-
         // Copy files to base path
-        $this->copyUpdateFiles($subdir, base_path());
+        $this->copyUpdateFiles($sourceDir, base_path());
 
         // Clean up extracted files
         $this->removeDirectory($extractPath);
@@ -216,9 +244,15 @@ class UpdateService
 
     private function extractZip(string $archivePath, string $extractPath): void
     {
+        if (! mkdir($extractPath, 0755, true)) {
+            throw UpdateException::extractionFailed('Could not create extraction directory');
+        }
+
         $zip = new ZipArchive;
-        if ($zip->open($archivePath) !== true) {
-            throw UpdateException::extractionFailed('Could not open zip archive');
+        $result = $zip->open($archivePath);
+
+        if ($result !== true) {
+            throw UpdateException::extractionFailed("Could not open zip archive (error code: {$result})");
         }
 
         if (! $zip->extractTo($extractPath)) {
@@ -229,24 +263,24 @@ class UpdateService
         $zip->close();
     }
 
-    private function extractTarGz(string $archivePath, string $extractPath): void
-    {
-        if (! mkdir($extractPath, 0755, true)) {
-            throw UpdateException::extractionFailed('Could not create extraction directory');
-        }
-
-        try {
-            $phar = new \PharData($archivePath);
-            $phar->extractTo($extractPath);
-        } catch (\Exception $e) {
-            throw UpdateException::extractionFailed($e->getMessage());
-        }
-    }
-
     private function copyUpdateFiles(string $source, string $destination): void
     {
+        // Normalize paths using realpath
+        $sourceReal = realpath($source);
+        $destReal = realpath($destination);
+
+        if ($sourceReal === false) {
+            throw UpdateException::extractionFailed("Source path does not exist: {$source}");
+        }
+
+        if ($destReal === false) {
+            throw UpdateException::extractionFailed("Destination path does not exist: {$destination}");
+        }
+
+        $sourceLen = strlen($sourceReal);
+
         $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+            new \RecursiveDirectoryIterator($sourceReal, \RecursiveDirectoryIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::SELF_FIRST
         );
 
@@ -259,8 +293,16 @@ class UpdateService
         ];
 
         foreach ($iterator as $item) {
-            $relativePath = substr($item->getPathname(), strlen($source) + 1);
-            $destPath = $destination.'/'.$relativePath;
+            // Get absolute path and compute relative path from source
+            $itemPath = $item->getPathname();
+            $relativePath = substr($itemPath, $sourceLen + 1);
+
+            // Skip if relative path is empty or invalid
+            if (empty($relativePath)) {
+                continue;
+            }
+
+            $destPath = $destReal . DIRECTORY_SEPARATOR . $relativePath;
 
             // Skip preserved paths
             $skip = false;
@@ -284,7 +326,7 @@ class UpdateService
                 if (! is_dir($dir)) {
                     mkdir($dir, 0755, true);
                 }
-                copy($item->getPathname(), $destPath);
+                copy($itemPath, $destPath);
             }
         }
     }
