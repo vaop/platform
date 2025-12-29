@@ -141,7 +141,7 @@ class UpdateServiceTest extends TestCase
             ->andReturn(0); // Same version
 
         $this->expectException(UpdateException::class);
-        $this->expectExceptionMessage('Already running the latest version');
+        $this->expectExceptionMessage(__('update.errors.already_up_to_date', ['version' => $currentVersion]));
 
         $release = [
             'tag_name' => 'v0.0.1',
@@ -159,7 +159,7 @@ class UpdateServiceTest extends TestCase
             ->andThrow(UpdateException::noReleasesFound());
 
         $this->expectException(UpdateException::class);
-        $this->expectExceptionMessage('No releases found');
+        $this->expectExceptionMessage(__('update.errors.no_releases'));
 
         $this->service->checkForUpdate();
     }
@@ -205,6 +205,6 @@ class UpdateServiceTest extends TestCase
         }
 
         $this->assertNotEmpty($progressMessages);
-        $this->assertContains('Fetching release information...', $progressMessages);
+        $this->assertContains(__('update.progress.fetching'), $progressMessages);
     }
 }

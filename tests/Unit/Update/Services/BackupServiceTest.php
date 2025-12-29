@@ -151,7 +151,7 @@ class BackupServiceTest extends TestCase
     public function it_throws_exception_for_nonexistent_restore_file(): void
     {
         $this->expectException(UpdateException::class);
-        $this->expectExceptionMessage('Backup file not found');
+        $this->expectExceptionMessage(__('update.errors.restore_failed', ['reason' => 'Backup file not found: /nonexistent/backup.zip']));
 
         $this->service->restore('/nonexistent/backup.zip');
     }

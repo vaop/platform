@@ -26,9 +26,9 @@ class UpdateCommandTest extends TestCase
         // Use the real GitHub API - this tests actual update check functionality
         // Since there's a real release (v0.0.2), the update should be available
         $this->artisan('vaop:update', ['--check' => true])
-            ->expectsOutputToContain('Current version:')
-            ->expectsOutputToContain('Latest version:')
-            ->expectsOutputToContain('An update is available!')
+            ->expectsOutputToContain(__('update.current_version', ['version' => '']))
+            ->expectsOutputToContain(__('update.latest_version', ['version' => '']))
+            ->expectsOutputToContain(__('update.update_available'))
             ->assertSuccessful();
     }
 
@@ -47,7 +47,7 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update', ['--check' => true])
-            ->expectsOutputToContain('You are running the latest version.')
+            ->expectsOutputToContain(__('update.up_to_date'))
             ->assertSuccessful();
     }
 
@@ -61,7 +61,7 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update', ['--check' => true])
-            ->expectsOutputToContain('No releases found')
+            ->expectsOutputToContain(__('update.errors.no_releases'))
             ->assertFailed();
     }
 
@@ -88,7 +88,7 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update', ['--list-backups' => true])
-            ->expectsOutputToContain('Available backups:')
+            ->expectsOutputToContain(__('update.available_backups'))
             ->expectsOutputToContain('backup-1.0.0')
             ->expectsOutputToContain('backup-0.9.0')
             ->assertSuccessful();
@@ -104,7 +104,7 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update', ['--list-backups' => true])
-            ->expectsOutputToContain('No backups found.')
+            ->expectsOutputToContain(__('update.no_backups'))
             ->assertSuccessful();
     }
 
@@ -117,7 +117,7 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update', ['--restore' => 'nonexistent.zip'])
-            ->expectsOutputToContain('Backup file not found')
+            ->expectsOutputToContain(__('update.backup_file_not_found', ['file' => '']))
             ->assertFailed();
     }
 
@@ -142,9 +142,9 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update')
-            ->expectsOutputToContain('An update is available!')
-            ->expectsConfirmation('Do you want to update now?', 'no')
-            ->expectsOutputToContain('Update cancelled.')
+            ->expectsOutputToContain(__('update.update_available'))
+            ->expectsConfirmation(__('update.confirm_update'), 'no')
+            ->expectsOutputToContain(__('update.update_cancelled'))
             ->assertSuccessful();
     }
 
@@ -174,8 +174,8 @@ class UpdateCommandTest extends TestCase
 
         // With --force, it skips confirmation and calls update
         $this->artisan('vaop:update', ['--force' => true])
-            ->expectsOutputToContain('An update is available!')
-            ->expectsOutputToContain('Update completed successfully!')
+            ->expectsOutputToContain(__('update.update_available'))
+            ->expectsOutputToContain(__('update.update_completed'))
             ->assertSuccessful();
     }
 
@@ -200,7 +200,7 @@ class UpdateCommandTest extends TestCase
         });
 
         $this->artisan('vaop:update', ['--check' => true])
-            ->expectsOutputToContain('Release notes:')
+            ->expectsOutputToContain(__('update.release_notes'))
             ->expectsOutputToContain("What's New")
             ->expectsOutputToContain('Feature 1')
             ->assertSuccessful();
@@ -228,9 +228,9 @@ class UpdateCommandTest extends TestCase
             });
 
             $this->artisan('vaop:update', ['--restore' => 'test-restore-backup.zip'])
-                ->expectsOutputToContain('This will restore your application')
-                ->expectsConfirmation('Are you sure you want to restore this backup?', 'no')
-                ->expectsOutputToContain('Restore cancelled.')
+                ->expectsOutputToContain(__('update.restore_warning'))
+                ->expectsConfirmation(__('update.confirm_restore'), 'no')
+                ->expectsOutputToContain(__('update.restore_cancelled'))
                 ->assertSuccessful();
         } finally {
             @unlink($testBackup);

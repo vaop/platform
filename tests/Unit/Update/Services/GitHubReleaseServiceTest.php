@@ -48,7 +48,7 @@ class GitHubReleaseServiceTest extends TestCase
         ]);
 
         $this->expectException(UpdateException::class);
-        $this->expectExceptionMessage('No releases found on GitHub.');
+        $this->expectExceptionMessage(__('update.errors.no_releases'));
 
         $this->service->getLatestRelease();
     }
@@ -61,7 +61,7 @@ class GitHubReleaseServiceTest extends TestCase
         ]);
 
         $this->expectException(UpdateException::class);
-        $this->expectExceptionMessage('GitHub API error: 500');
+        $this->expectExceptionMessage(__('update.errors.network_error', ['reason' => 'GitHub API error: 500']));
 
         $this->service->getLatestRelease();
     }
