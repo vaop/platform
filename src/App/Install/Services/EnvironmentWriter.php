@@ -40,7 +40,7 @@ class EnvironmentWriter
         }
 
         $content = file_get_contents($this->envPath);
-        $pattern = "/^" . preg_quote($key, '/') . "=(.*)$/m";
+        $pattern = '/^'.preg_quote($key, '/').'=(.*)$/m';
 
         if (preg_match($pattern, $content, $matches)) {
             $value = trim($matches[1]);
@@ -57,7 +57,7 @@ class EnvironmentWriter
 
     public function generateAppKey(): string
     {
-        $key = 'base64:' . base64_encode(random_bytes(32));
+        $key = 'base64:'.base64_encode(random_bytes(32));
         $this->set('APP_KEY', $key);
 
         return $key;
@@ -83,7 +83,7 @@ class EnvironmentWriter
     private function updateOrAppend(string $content, string $key, string $value): string
     {
         $escapedValue = $this->escapeValue($value);
-        $pattern = "/^" . preg_quote($key, '/') . "=.*$/m";
+        $pattern = '/^'.preg_quote($key, '/').'=.*$/m';
 
         if (preg_match($pattern, $content)) {
             return preg_replace($pattern, "{$key}={$escapedValue}", $content);
@@ -91,7 +91,7 @@ class EnvironmentWriter
 
         $content = rtrim($content);
 
-        return $content . "\n{$key}={$escapedValue}\n";
+        return $content."\n{$key}={$escapedValue}\n";
     }
 
     private function escapeValue(string $value): string
@@ -103,7 +103,7 @@ class EnvironmentWriter
         if (preg_match('/[\s"\'#]/', $value) || str_contains($value, '${')) {
             $escaped = str_replace(['\\', '"'], ['\\\\', '\\"'], $value);
 
-            return '"' . $escaped . '"';
+            return '"'.$escaped.'"';
         }
 
         return $value;

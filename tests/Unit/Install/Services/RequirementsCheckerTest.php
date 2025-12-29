@@ -15,7 +15,7 @@ class RequirementsCheckerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->checker = new RequirementsChecker();
+        $this->checker = new RequirementsChecker;
     }
 
     #[Test]

@@ -23,7 +23,7 @@ class EnvironmentWriterTest extends TestCase
         file_put_contents($this->testEnvPath, "APP_NAME=TestApp\nAPP_ENV=testing\n");
 
         // Create writer with custom path using reflection
-        $this->writer = new EnvironmentWriter();
+        $this->writer = new EnvironmentWriter;
         $reflection = new \ReflectionClass($this->writer);
         $property = $reflection->getProperty('envPath');
         $property->setValue($this->writer, $this->testEnvPath);
@@ -127,7 +127,7 @@ class EnvironmentWriterTest extends TestCase
     #[Test]
     public function it_reads_quoted_values_correctly(): void
     {
-        file_put_contents($this->testEnvPath, 'QUOTED_VALUE="hello world"' . "\n");
+        file_put_contents($this->testEnvPath, 'QUOTED_VALUE="hello world"'."\n");
 
         $value = $this->writer->get('QUOTED_VALUE');
 

@@ -74,7 +74,7 @@ class DatabaseConfigurationTest extends TestCase
             'host' => config('database.connections.mysql.host'),
             'port' => config('database.connections.mysql.port'),
             'database' => 'test',
-            'username' => 'invalid_user_' . uniqid(),
+            'username' => 'invalid_user_'.uniqid(),
             'password' => 'invalid_password',
         ]);
 

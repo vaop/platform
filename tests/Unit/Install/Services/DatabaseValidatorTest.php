@@ -15,7 +15,7 @@ class DatabaseValidatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->validator = new DatabaseValidator();
+        $this->validator = new DatabaseValidator;
     }
 
     #[Test]
@@ -69,7 +69,7 @@ class DatabaseValidatorTest extends TestCase
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', 3306),
             'database' => 'test',
-            'username' => 'invalid_user_' . uniqid(),
+            'username' => 'invalid_user_'.uniqid(),
             'password' => 'invalid_password',
         ];
 
@@ -86,7 +86,7 @@ class DatabaseValidatorTest extends TestCase
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', 3306),
-            'database' => 'nonexistent_database_' . uniqid(),
+            'database' => 'nonexistent_database_'.uniqid(),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
         ];

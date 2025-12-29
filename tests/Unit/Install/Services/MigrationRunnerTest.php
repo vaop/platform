@@ -18,7 +18,7 @@ class MigrationRunnerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->runner = new MigrationRunner();
+        $this->runner = new MigrationRunner;
     }
 
     #[Test]
