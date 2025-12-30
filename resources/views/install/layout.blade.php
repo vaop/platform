@@ -71,7 +71,7 @@
         </main>
 
         <footer class="py-4 text-center text-sm text-gray-500">
-            {{ __('install.footer') }}
+            v{{ config('vaop.version') }}
         </footer>
     </div>
 </body>

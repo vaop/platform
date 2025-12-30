@@ -11,7 +11,6 @@ return [
     // Layout
     'title' => 'Install VAOP',
     'header' => 'VAOP Installer',
-    'footer' => 'VAOP Platform',
 
     // Steps
     'steps' => [

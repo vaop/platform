@@ -23,14 +23,6 @@ class VersionCommand extends Command
 
     private function getVersion(): string
     {
-        $versionFile = base_path('VERSION');
-
-        if (! file_exists($versionFile)) {
-            return 'unknown';
-        }
-
-        $version = trim(file_get_contents($versionFile));
-
-        return $version ?: 'unknown';
+        return config('vaop.version');
     }
 }

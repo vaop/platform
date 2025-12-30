@@ -27,13 +27,7 @@ class UpdateService
      */
     public function getCurrentVersion(): string
     {
-        $versionFile = base_path('VERSION');
-
-        if (! file_exists($versionFile)) {
-            return '0.0.0-dev';
-        }
-
-        return trim(file_get_contents($versionFile));
+        return config('vaop.version');
     }
 
     /**
