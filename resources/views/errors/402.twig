@@ -6,12 +6,12 @@
 {% block title %}{{ __('Payment Required') }} - {{ app.name }}{% endblock %}
 
 {% block content %}
-<div class="min-h-[60vh] flex items-center justify-center">
-    <div class="text-center">
-        <h1 class="text-8xl font-bold text-gray-200">402</h1>
-        <h2 class="text-2xl font-semibold text-gray-900 mt-4">{{ __('Payment Required') }}</h2>
-        <p class="text-gray-600 mt-2">{{ __('Please complete payment to access this resource.') }}</p>
-        <div class="mt-6">
+<div class="center-content section-lg">
+    <div style="text-align: center;">
+        <h1 class="heading-2xl" style="font-size: 6rem; color: var(--color-border);">402</h1>
+        <h2 class="heading-lg" style="margin-top: 1rem;">{{ __('Payment Required') }}</h2>
+        <p class="text-muted" style="margin-top: 0.5rem;">{{ __('Please complete payment to access this resource.') }}</p>
+        <div style="margin-top: 1.5rem;">
             {% include 'components/button.twig' with {
                 href: url('/'),
                 label: __('Go Home'),

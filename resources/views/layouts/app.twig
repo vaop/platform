@@ -7,20 +7,18 @@
 <head>
     {% include 'layouts/partials/head.twig' %}
 </head>
-<body class="min-h-screen bg-gray-100">
-    <div class="min-h-screen flex flex-col">
-        {% include 'layouts/partials/header.twig' %}
+<body class="page">
+    {% include 'layouts/partials/header.twig' %}
 
-        <main class="flex-1">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                {% include 'layouts/partials/flash-messages.twig' %}
+    <main class="page-content">
+        <div class="container section">
+            {% include 'layouts/partials/flash-messages.twig' %}
 
-                {% block content %}{% endblock %}
-            </div>
-        </main>
+            {% block content %}{% endblock %}
+        </div>
+    </main>
 
-        {% include 'layouts/partials/footer.twig' %}
-    </div>
+    {% include 'layouts/partials/footer.twig' %}
 
     {% include 'layouts/partials/scripts.twig' %}
 </body>

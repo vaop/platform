@@ -1,0 +1,214 @@
+/**
+ * Layout Utilities
+ * Container, spacing, and layout helper classes.
+ */
+
+/* Container */
+.container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: 80rem; /* 1280px */
+}
+
+.container-sm {
+    max-width: 40rem; /* 640px */
+}
+
+.container-md {
+    max-width: 48rem; /* 768px */
+}
+
+.container-lg {
+    max-width: 64rem; /* 1024px */
+}
+
+.container-xl {
+    max-width: 80rem; /* 1280px */
+}
+
+/* Sections (vertical spacing) */
+.section {
+    @apply py-8 sm:py-12;
+}
+
+.section-sm {
+    @apply py-4 sm:py-6;
+}
+
+.section-lg {
+    @apply py-12 sm:py-16 lg:py-20;
+}
+
+/* Stack (vertical flex with gap) */
+.stack {
+    @apply flex flex-col;
+}
+
+.stack-2 {
+    @apply gap-2;
+}
+
+.stack-3 {
+    @apply gap-3;
+}
+
+.stack-4 {
+    @apply gap-4;
+}
+
+.stack-6 {
+    @apply gap-6;
+}
+
+.stack-8 {
+    @apply gap-8;
+}
+
+/* Cluster (horizontal flex with gap) */
+.cluster {
+    @apply flex flex-wrap items-center;
+}
+
+.cluster-2 {
+    @apply gap-2;
+}
+
+.cluster-4 {
+    @apply gap-4;
+}
+
+/* Grid layouts */
+.grid-auto {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-2 {
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2;
+}
+
+.grid-3 {
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+}
+
+.grid-4 {
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4;
+}
+
+/* Flex utilities */
+.flex-center {
+    @apply flex items-center justify-center;
+}
+
+.flex-between {
+    @apply flex items-center justify-between;
+}
+
+.flex-start {
+    @apply flex items-center justify-start;
+}
+
+.flex-end {
+    @apply flex items-center justify-end;
+}
+
+/* Spacer (pushes content apart) */
+.spacer {
+    @apply flex-1;
+}
+
+/* Divider */
+.divider {
+    @apply my-4;
+    border-top: 1px solid var(--color-border-muted);
+}
+
+.divider-vertical {
+    @apply mx-4 self-stretch;
+    border-left: 1px solid var(--color-border-muted);
+}
+
+/* Screen reader only */
+.sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+    clip: rect(0, 0, 0, 0);
+}
+
+/* Hide/show utilities */
+.hidden {
+    @apply !hidden;
+}
+
+.visible {
+    @apply !visible;
+}
+
+.invisible {
+    @apply !invisible;
+}
+
+/* Responsive hide */
+.hide-mobile {
+    @apply hidden sm:block;
+}
+
+.hide-desktop {
+    @apply sm:hidden;
+}
+
+/* Sticky positioning */
+.sticky-top {
+    @apply sticky top-0 z-30;
+}
+
+.sticky-bottom {
+    @apply sticky bottom-0 z-30;
+}
+
+/* Full height layouts */
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+/* Page wrapper (for consistent page structure) */
+.page {
+    @apply min-h-screen flex flex-col;
+    background-color: var(--color-surface);
+}
+
+.page-header {
+    @apply sticky top-0 z-40;
+    background-color: var(--color-surface-elevated);
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.page-content {
+    @apply flex-1;
+}
+
+.page-footer {
+    @apply mt-auto;
+    background-color: var(--color-surface-elevated);
+    border-top: 1px solid var(--color-border-muted);
+}
+
+/* Sidebar layout */
+.layout-sidebar {
+    @apply flex min-h-screen;
+}
+
+.layout-sidebar-aside {
+    @apply w-64 flex-shrink-0;
+}
+
+.layout-sidebar-main {
+    @apply flex-1 min-w-0;
+}
+
+/* Center content (for login pages, etc.) */
+.center-content {
+    @apply min-h-screen flex items-center justify-center p-4;
+}

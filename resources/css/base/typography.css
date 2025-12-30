@@ -1,0 +1,121 @@
+/**
+ * Typography
+ * Base typography styles and heading classes.
+ */
+
+/* Heading sizes */
+.heading-2xl {
+    @apply text-3xl font-bold tracking-tight;
+    font-family: var(--font-heading);
+}
+
+.heading-xl {
+    @apply text-2xl font-bold tracking-tight;
+    font-family: var(--font-heading);
+}
+
+.heading-lg {
+    @apply text-xl font-semibold;
+    font-family: var(--font-heading);
+}
+
+.heading-md {
+    @apply text-lg font-semibold;
+    font-family: var(--font-heading);
+}
+
+.heading-sm {
+    @apply text-base font-semibold;
+    font-family: var(--font-heading);
+}
+
+/* Text modifiers */
+.text-lead {
+    @apply text-lg leading-relaxed;
+}
+
+.text-small {
+    @apply text-sm;
+}
+
+.text-muted {
+    color: var(--color-text-muted);
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.text-danger {
+    color: var(--color-danger);
+}
+
+.text-warning {
+    color: var(--color-warning-dark);
+}
+
+.text-info {
+    color: var(--color-info);
+}
+
+/* Links */
+.link {
+    @apply underline underline-offset-4 transition-colors;
+    color: var(--color-primary);
+}
+
+.link:hover {
+    color: var(--color-primary-hover);
+}
+
+/* Prose/content blocks */
+.prose {
+    @apply leading-relaxed;
+}
+
+.prose p {
+    @apply mb-4;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+    @apply mt-8 mb-4 font-bold;
+    font-family: var(--font-heading);
+}
+
+.prose h1 { @apply text-3xl; }
+.prose h2 { @apply text-2xl; }
+.prose h3 { @apply text-xl; }
+.prose h4 { @apply text-lg; }
+
+.prose ul,
+.prose ol {
+    @apply mb-4 pl-6;
+}
+
+.prose ul { @apply list-disc; }
+.prose ol { @apply list-decimal; }
+
+.prose li {
+    @apply mb-2;
+}
+
+.prose code {
+    @apply px-1.5 py-0.5 rounded text-sm;
+    font-family: var(--font-mono);
+    background-color: var(--color-surface-muted);
+}
+
+.prose pre {
+    @apply p-4 rounded-lg mb-4 overflow-x-auto;
+    font-family: var(--font-mono);
+    background-color: var(--color-surface-muted);
+}
+
+.prose blockquote {
+    @apply pl-4 italic;
+    border-left: 4px solid var(--color-border);
+    color: var(--color-text-muted);
+}

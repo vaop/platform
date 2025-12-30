@@ -4,27 +4,24 @@
 
 {# Badge/tag #}
 {% macro badge(text, options = {}) %}
-    {% set variant = options.variant|default('gray') %}
-    {% set size = options.size|default('md') %}
+    {% set variant = options.variant|default('secondary') %}
+    {% set size = options.size|default('') %}
 
-    {% set variantClasses = {
-        'gray': 'bg-gray-100 text-gray-800',
-        'red': 'bg-red-100 text-red-800',
-        'yellow': 'bg-yellow-100 text-yellow-800',
-        'green': 'bg-green-100 text-green-800',
-        'blue': 'bg-blue-100 text-blue-800',
-        'indigo': 'bg-indigo-100 text-indigo-800',
-        'purple': 'bg-purple-100 text-purple-800',
-        'pink': 'bg-pink-100 text-pink-800'
+    {% set variantMap = {
+        'gray': 'secondary',
+        'red': 'danger',
+        'yellow': 'warning',
+        'green': 'success',
+        'blue': 'info',
+        'indigo': 'primary',
+        'purple': 'primary',
+        'pink': 'primary'
     } %}
 
-    {% set sizeClasses = {
-        'sm': 'px-2 py-0.5 text-xs',
-        'md': 'px-2.5 py-0.5 text-sm',
-        'lg': 'px-3 py-1 text-base'
-    } %}
+    {% set badgeVariant = variantMap[variant]|default(variant) %}
+    {% set sizeClass = size ? 'badge-' ~ size : '' %}
 
-    <span class="inline-flex items-center font-medium rounded-full {{ variantClasses[variant] }} {{ sizeClasses[size] }}">
+    <span class="badge badge-{{ badgeVariant }} {{ sizeClass }}">
         {{ text }}
     </span>
 {% endmacro %}
@@ -32,16 +29,16 @@
 {# Status indicator dot #}
 {% macro status(status, label = '') %}
     {% set statusColors = {
-        'online': 'bg-green-400',
-        'offline': 'bg-gray-400',
-        'busy': 'bg-red-400',
-        'away': 'bg-yellow-400'
+        'online': 'var(--color-success)',
+        'offline': 'var(--color-text-muted)',
+        'busy': 'var(--color-danger)',
+        'away': 'var(--color-warning)'
     } %}
 
-    <span class="inline-flex items-center">
-        <span class="w-2 h-2 rounded-full {{ statusColors[status]|default('bg-gray-400') }}"></span>
+    <span class="cluster cluster-2">
+        <span style="width: 0.5rem; height: 0.5rem; border-radius: 50%; background-color: {{ statusColors[status]|default('var(--color-text-muted)') }};"></span>
         {% if label %}
-            <span class="ml-2 text-sm text-gray-600">{{ label }}</span>
+            <span class="text-small text-muted">{{ label }}</span>
         {% endif %}
     </span>
 {% endmacro %}
@@ -53,19 +50,21 @@
     {% set size = options.size|default('md') %}
     {% set initials = options.initials|default('') %}
 
-    {% set sizeClasses = {
-        'xs': 'w-6 h-6 text-xs',
-        'sm': 'w-8 h-8 text-sm',
-        'md': 'w-10 h-10 text-base',
-        'lg': 'w-12 h-12 text-lg',
-        'xl': 'w-16 h-16 text-xl'
+    {% set sizes = {
+        'xs': '1.5rem',
+        'sm': '2rem',
+        'md': '2.5rem',
+        'lg': '3rem',
+        'xl': '4rem'
     } %}
 
+    {% set sizeValue = sizes[size]|default('2.5rem') %}
+
     {% if src %}
-        <img src="{{ src }}" alt="{{ alt }}" class="rounded-full object-cover {{ sizeClasses[size] }}">
+        <img src="{{ src }}" alt="{{ alt }}" style="width: {{ sizeValue }}; height: {{ sizeValue }}; border-radius: 50%; object-fit: cover;">
     {% else %}
-        <span class="inline-flex items-center justify-center rounded-full bg-gray-500 {{ sizeClasses[size] }}">
-            <span class="font-medium text-white">{{ initials }}</span>
+        <span class="flex-center" style="width: {{ sizeValue }}; height: {{ sizeValue }}; border-radius: 50%; background-color: var(--color-secondary); color: var(--color-text-inverted); font-weight: 500;">
+            {{ initials }}
         </span>
     {% endif %}
 {% endmacro %}
@@ -73,23 +72,18 @@
 {# Loading spinner #}
 {% macro spinner(options = {}) %}
     {% set size = options.size|default('md') %}
-    {% set color = options.color|default('blue') %}
 
-    {% set sizeClasses = {
-        'sm': 'w-4 h-4',
-        'md': 'w-6 h-6',
-        'lg': 'w-8 h-8'
+    {% set sizes = {
+        'sm': '1rem',
+        'md': '1.5rem',
+        'lg': '2rem'
     } %}
 
-    {% set colorClasses = {
-        'blue': 'text-blue-600',
-        'gray': 'text-gray-600',
-        'white': 'text-white'
-    } %}
+    {% set sizeValue = sizes[size]|default('1.5rem') %}
 
-    <svg class="animate-spin {{ sizeClasses[size] }} {{ colorClasses[color] }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    <svg style="width: {{ sizeValue }}; height: {{ sizeValue }}; animation: spin 1s linear infinite; color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
     </svg>
 {% endmacro %}
 
@@ -105,13 +99,13 @@
         'users': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>'
     } %}
 
-    <div class="text-center py-12">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="section-lg" style="text-align: center;">
+        <svg style="margin: 0 auto; width: 3rem; height: 3rem; color: var(--color-text-muted);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             {{ icons[icon]|default(icons.inbox)|raw }}
         </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ title }}</h3>
+        <h3 class="heading-sm" style="margin-top: 0.5rem;">{{ title }}</h3>
         {% if description %}
-            <p class="mt-1 text-sm text-gray-500">{{ description }}</p>
+            <p class="text-small text-muted" style="margin-top: 0.25rem;">{{ description }}</p>
         {% endif %}
         {% block action %}{% endblock %}
     </div>
@@ -120,27 +114,27 @@
 {# Progress bar #}
 {% macro progress(value, options = {}) %}
     {% set max = options.max|default(100) %}
-    {% set color = options.color|default('blue') %}
+    {% set variant = options.variant|default('primary') %}
     {% set showLabel = options.showLabel|default(false) %}
 
     {% set percentage = (value / max) * 100 %}
 
-    {% set colorClasses = {
-        'blue': 'bg-blue-600',
-        'green': 'bg-green-600',
-        'red': 'bg-red-600',
-        'yellow': 'bg-yellow-600'
+    {% set colorVars = {
+        'primary': 'var(--color-primary)',
+        'success': 'var(--color-success)',
+        'danger': 'var(--color-danger)',
+        'warning': 'var(--color-warning)'
     } %}
 
-    <div class="w-full">
-        <div class="flex justify-between mb-1">
-            {% if showLabel %}
-                <span class="text-sm font-medium text-gray-700">{{ value }}/{{ max }}</span>
-                <span class="text-sm font-medium text-gray-500">{{ percentage|number_format(0) }}%</span>
-            {% endif %}
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-2.5">
-            <div class="{{ colorClasses[color] }} h-2.5 rounded-full" style="width: {{ percentage }}%"></div>
+    <div style="width: 100%;">
+        {% if showLabel %}
+            <div class="flex-between" style="margin-bottom: 0.25rem;">
+                <span class="text-small">{{ value }}/{{ max }}</span>
+                <span class="text-small text-muted">{{ percentage|number_format(0) }}%</span>
+            </div>
+        {% endif %}
+        <div style="width: 100%; background-color: var(--color-border-muted); border-radius: var(--radius-full); height: 0.5rem;">
+            <div style="background-color: {{ colorVars[variant]|default('var(--color-primary)') }}; height: 0.5rem; border-radius: var(--radius-full); width: {{ percentage }}%;"></div>
         </div>
     </div>
 {% endmacro %}

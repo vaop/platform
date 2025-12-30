@@ -2,10 +2,10 @@
  # Navigation menu
  # Displays different items based on authentication status
  #}
-<nav class="flex items-center space-x-4">
+<nav class="navbar-nav">
     {% if is_authenticated() %}
         {# Authenticated navigation items will be added in later phases #}
-        <span class="text-gray-600">
+        <span class="nav-link">
             {{ __('Welcome') }}
         </span>
     {% else %}

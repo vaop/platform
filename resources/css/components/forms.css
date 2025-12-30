@@ -1,0 +1,171 @@
+/**
+ * Forms
+ * Form inputs, labels, and validation styles.
+ */
+
+/* Form group (label + input + error) */
+.form-group {
+    @apply mb-4;
+}
+
+/* Labels */
+.form-label {
+    @apply block text-sm font-medium mb-1;
+    color: var(--color-text);
+}
+
+.form-label-required::after {
+    content: ' *';
+    color: var(--color-danger);
+}
+
+/* Base input styles */
+.form-input,
+.form-select,
+.form-textarea {
+    @apply block w-full rounded-lg px-3 py-2 text-base
+           transition-colors focus:outline-none focus:ring-2;
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--color-text-muted);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: var(--color-primary);
+    --tw-ring-color: var(--color-primary);
+}
+
+/* Disabled state */
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    @apply cursor-not-allowed opacity-50;
+    background-color: var(--color-surface-muted);
+}
+
+/* Error state */
+.form-input-error,
+.form-input.is-invalid {
+    border-color: var(--color-danger);
+}
+
+.form-input-error:focus,
+.form-input.is-invalid:focus {
+    --tw-ring-color: var(--color-danger);
+}
+
+/* Form error message */
+.form-error {
+    @apply text-sm mt-1;
+    color: var(--color-danger);
+}
+
+/* Form hint/help text */
+.form-hint {
+    @apply text-sm mt-1;
+    color: var(--color-text-muted);
+}
+
+/* Select specific */
+.form-select {
+    @apply pr-10 appearance-none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+}
+
+/* Textarea specific */
+.form-textarea {
+    @apply min-h-[100px] resize-y;
+}
+
+/* Checkbox and Radio */
+.form-checkbox,
+.form-radio {
+    @apply w-4 h-4 rounded border transition-colors;
+    border-color: var(--color-border);
+    color: var(--color-primary);
+}
+
+.form-radio {
+    @apply rounded-full;
+}
+
+.form-checkbox:checked,
+.form-radio:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.form-checkbox:focus,
+.form-radio:focus {
+    @apply ring-2 ring-offset-2;
+    --tw-ring-color: var(--color-primary);
+}
+
+/* Checkbox/Radio with label */
+.form-check {
+    @apply flex items-center gap-2;
+}
+
+.form-check-label {
+    @apply text-sm;
+    color: var(--color-text);
+}
+
+/* Input sizes */
+.form-input-sm {
+    @apply px-2.5 py-1.5 text-sm;
+}
+
+.form-input-lg {
+    @apply px-4 py-3 text-lg;
+}
+
+/* Input with icon */
+.form-input-icon {
+    @apply relative;
+}
+
+.form-input-icon .form-input {
+    @apply pl-10;
+}
+
+.form-input-icon-left {
+    @apply absolute left-3 top-1/2 -translate-y-1/2;
+    color: var(--color-text-muted);
+}
+
+/* Input group (input with button/addon) */
+.input-group {
+    @apply flex;
+}
+
+.input-group .form-input {
+    @apply rounded-r-none;
+}
+
+.input-group .btn {
+    @apply rounded-l-none;
+}
+
+/* Horizontal form layout */
+.form-horizontal .form-group {
+    @apply sm:flex sm:items-start sm:gap-4;
+}
+
+.form-horizontal .form-label {
+    @apply sm:w-1/4 sm:pt-2 sm:mb-0;
+}
+
+.form-horizontal .form-control-wrapper {
+    @apply sm:flex-1;
+}

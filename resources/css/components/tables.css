@@ -1,0 +1,136 @@
+/**
+ * Tables
+ * Data table styles.
+ */
+
+/* Base table */
+.table {
+    @apply w-full text-sm text-left;
+    border-collapse: collapse;
+}
+
+/* Table wrapper for horizontal scroll */
+.table-wrapper {
+    @apply overflow-x-auto;
+}
+
+/* Table header */
+.table thead {
+    @apply text-xs uppercase tracking-wider;
+    background-color: var(--color-surface-muted);
+    color: var(--color-text-muted);
+}
+
+.table th {
+    @apply px-4 py-3 font-semibold;
+}
+
+/* Table body */
+.table tbody tr {
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.table td {
+    @apply px-4 py-3;
+    color: var(--color-text);
+}
+
+/* Table variants */
+.table-striped tbody tr:nth-child(even) {
+    background-color: var(--color-surface-muted);
+}
+
+.table-hover tbody tr {
+    @apply transition-colors;
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--color-surface-muted);
+}
+
+/* Bordered table */
+.table-bordered {
+    border: 1px solid var(--color-border-muted);
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid var(--color-border-muted);
+}
+
+/* Compact table */
+.table-compact th,
+.table-compact td {
+    @apply px-3 py-2;
+}
+
+/* Responsive table (card-like on mobile) */
+@media (max-width: 640px) {
+    .table-responsive thead {
+        @apply hidden;
+    }
+
+    .table-responsive tbody tr {
+        @apply block mb-4 rounded-lg;
+        background-color: var(--color-surface-elevated);
+        border: 1px solid var(--color-border-muted);
+    }
+
+    .table-responsive td {
+        @apply block px-4 py-2 text-right;
+        border-bottom: 1px solid var(--color-border-muted);
+    }
+
+    .table-responsive td:last-child {
+        border-bottom: none;
+    }
+
+    .table-responsive td::before {
+        content: attr(data-label);
+        @apply float-left font-semibold;
+    }
+}
+
+/* Sortable table header */
+.table-sortable th {
+    @apply cursor-pointer select-none;
+}
+
+.table-sortable th:hover {
+    background-color: var(--color-border-muted);
+}
+
+.table-sort-icon {
+    @apply inline-block ml-1 opacity-50;
+}
+
+.table-sortable th[aria-sort] .table-sort-icon {
+    @apply opacity-100;
+}
+
+/* Table with actions column */
+.table-actions {
+    @apply text-right whitespace-nowrap;
+}
+
+/* Empty state */
+.table-empty {
+    @apply text-center py-8;
+    color: var(--color-text-muted);
+}
+
+/* Table footer */
+.table tfoot {
+    @apply font-semibold;
+    background-color: var(--color-surface-muted);
+}
+
+/* Selected row */
+.table tbody tr.selected {
+    background-color: var(--color-primary-light);
+}
+
+/* Sticky header */
+.table-sticky thead {
+    @apply sticky top-0 z-10;
+}

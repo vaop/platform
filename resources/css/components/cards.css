@@ -1,0 +1,88 @@
+/**
+ * Cards
+ * Container components for grouped content.
+ */
+
+/* Base card */
+.card {
+    @apply rounded-lg overflow-hidden;
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-muted);
+}
+
+/* Card variants */
+.card-flat {
+    @apply shadow-none border-0;
+    background-color: var(--color-surface);
+}
+
+.card-elevated {
+    box-shadow: var(--shadow-md);
+    border: none;
+}
+
+.card-bordered {
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+}
+
+/* Card sections */
+.card-header {
+    @apply px-4 py-4 sm:px-6;
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.card-body {
+    @apply px-4 py-4 sm:px-6;
+}
+
+.card-footer {
+    @apply px-4 py-4 sm:px-6;
+    background-color: var(--color-surface-muted);
+    border-top: 1px solid var(--color-border-muted);
+}
+
+/* Card with padding shorthand */
+.card-padded {
+    @apply p-4 sm:p-6;
+}
+
+/* Card title */
+.card-title {
+    @apply text-lg font-semibold;
+    color: var(--color-text);
+}
+
+/* Card description */
+.card-description {
+    @apply text-sm mt-1;
+    color: var(--color-text-muted);
+}
+
+/* Clickable/interactive card */
+.card-interactive {
+    @apply cursor-pointer;
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.card-interactive:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border);
+}
+
+/* Card grid layout */
+.card-grid {
+    @apply grid gap-4 sm:gap-6;
+}
+
+.card-grid-2 {
+    @apply grid-cols-1 sm:grid-cols-2;
+}
+
+.card-grid-3 {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+}
+
+.card-grid-4 {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-4;
+}

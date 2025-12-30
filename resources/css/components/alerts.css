@@ -1,0 +1,94 @@
+/**
+ * Alerts
+ * Status messages and notifications.
+ */
+
+/* Base alert */
+.alert {
+    @apply rounded-lg p-4 flex gap-3;
+    border: 1px solid transparent;
+}
+
+/* Alert variants */
+.alert-info {
+    background-color: var(--color-info-light);
+    border-color: var(--color-info);
+    color: var(--color-info-dark);
+}
+
+.alert-success {
+    background-color: var(--color-success-light);
+    border-color: var(--color-success);
+    color: var(--color-success-dark);
+}
+
+.alert-warning {
+    background-color: var(--color-warning-light);
+    border-color: var(--color-warning);
+    color: var(--color-warning-dark);
+}
+
+.alert-danger,
+.alert-error {
+    background-color: var(--color-danger-light);
+    border-color: var(--color-danger);
+    color: var(--color-danger-dark);
+}
+
+/* Alert icon container */
+.alert-icon {
+    @apply flex-shrink-0;
+}
+
+.alert-icon svg {
+    @apply w-5 h-5;
+}
+
+/* Alert content */
+.alert-content {
+    @apply flex-1;
+}
+
+.alert-title {
+    @apply font-medium;
+}
+
+.alert-description {
+    @apply text-sm mt-1 opacity-90;
+}
+
+/* Dismissible alert */
+.alert-dismissible {
+    @apply pr-10 relative;
+}
+
+.alert-dismiss {
+    @apply absolute top-3 right-3 p-1 rounded opacity-70 hover:opacity-100 transition-opacity;
+}
+
+.alert-dismiss svg {
+    @apply w-4 h-4;
+}
+
+/* Inline alert (no background, just text) */
+.alert-inline {
+    @apply p-0 bg-transparent border-0 text-sm;
+}
+
+.alert-inline.alert-danger {
+    color: var(--color-danger);
+}
+
+.alert-inline.alert-success {
+    color: var(--color-success);
+}
+
+/* Alert with actions */
+.alert-actions {
+    @apply mt-3 flex gap-2;
+}
+
+/* Compact alert */
+.alert-compact {
+    @apply p-2 text-sm;
+}

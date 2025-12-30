@@ -1,0 +1,182 @@
+/**
+ * Navigation
+ * Navigation menus, navbars, and breadcrumbs.
+ */
+
+/* Base navigation */
+.nav {
+    @apply flex;
+}
+
+.nav-horizontal {
+    @apply flex-row gap-1;
+}
+
+.nav-vertical {
+    @apply flex-col gap-1;
+}
+
+/* Navigation items */
+.nav-item {
+    @apply relative;
+}
+
+.nav-link {
+    @apply flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors;
+    color: var(--color-text-muted);
+}
+
+.nav-link:hover {
+    background-color: var(--color-surface-muted);
+    color: var(--color-text);
+}
+
+.nav-link.active,
+.nav-link[aria-current="page"] {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+/* Nav link with icon */
+.nav-link-icon {
+    @apply w-5 h-5 flex-shrink-0;
+}
+
+/* Navbar (horizontal header nav) */
+.navbar {
+    @apply flex items-center justify-between px-4 h-16;
+    background-color: var(--color-surface-elevated);
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.navbar-brand {
+    @apply text-xl font-bold;
+    color: var(--color-text);
+}
+
+.navbar-nav {
+    @apply flex items-center gap-1;
+}
+
+.navbar-nav .nav-link {
+    @apply px-4;
+}
+
+/* Sidebar navigation */
+.sidebar {
+    @apply flex flex-col h-full py-4;
+    background-color: var(--color-surface-elevated);
+    border-right: 1px solid var(--color-border-muted);
+}
+
+.sidebar-header {
+    @apply px-4 mb-4;
+}
+
+.sidebar-nav {
+    @apply flex-1 px-2;
+}
+
+.sidebar-footer {
+    @apply px-2 pt-4 mt-auto;
+    border-top: 1px solid var(--color-border-muted);
+}
+
+/* Nav section with title */
+.nav-section {
+    @apply mb-4;
+}
+
+.nav-section-title {
+    @apply px-3 py-2 text-xs font-semibold uppercase tracking-wider;
+    color: var(--color-text-muted);
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    @apply flex items-center gap-2 text-sm;
+}
+
+.breadcrumb-item {
+    @apply flex items-center gap-2;
+    color: var(--color-text-muted);
+}
+
+.breadcrumb-item a {
+    @apply hover:underline transition-colors;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--color-text);
+}
+
+.breadcrumb-item.active {
+    color: var(--color-text);
+}
+
+.breadcrumb-separator {
+    color: var(--color-border);
+}
+
+/* Tabs */
+.tabs {
+    @apply flex;
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.tab {
+    @apply px-4 py-2 text-sm font-medium -mb-px transition-colors;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+    color: var(--color-text);
+}
+
+.tab.active,
+.tab[aria-selected="true"] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+/* Pills (alternative tab style) */
+.pills {
+    @apply flex gap-1;
+}
+
+.pill {
+    @apply px-4 py-2 text-sm font-medium rounded-lg transition-colors;
+    color: var(--color-text-muted);
+}
+
+.pill:hover {
+    background-color: var(--color-surface-muted);
+    color: var(--color-text);
+}
+
+.pill.active {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    @apply absolute z-50 mt-1 py-1 rounded-lg shadow-lg min-w-[12rem];
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-muted);
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 text-sm transition-colors;
+    color: var(--color-text);
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-surface-muted);
+}
+
+.dropdown-divider {
+    @apply my-1;
+    border-top: 1px solid var(--color-border-muted);
+}

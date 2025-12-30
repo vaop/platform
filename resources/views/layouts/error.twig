@@ -12,29 +12,25 @@
 
     {{ vite(['resources/css/app.css', 'resources/js/app.js']) }}
 </head>
-<body class="min-h-screen bg-gray-50">
-    <div class="min-h-screen flex flex-col">
-        <header class="bg-white shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <a href="{{ url('/') }}" class="text-xl font-bold text-gray-900">
-                        {{ app.name }}
-                    </a>
-                </div>
-            </div>
-        </header>
+<body class="page">
+    <header class="page-header">
+        <div class="container flex-between" style="height: 4rem;">
+            <a href="{{ url('/') }}" class="heading-lg">
+                {{ app.name }}
+            </a>
+        </div>
+    </header>
 
-        <main class="flex-1">
-            {% block content %}{% endblock %}
-        </main>
+    <main class="page-content">
+        {% block content %}{% endblock %}
+    </main>
 
-        <footer class="bg-white border-t border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <p class="text-center text-gray-500 text-sm">
-                    &copy; {{ now('Y') }} {{ app.name }}
-                </p>
-            </div>
-        </footer>
-    </div>
+    <footer class="page-footer">
+        <div class="container section-sm">
+            <p class="text-small text-muted" style="text-align: center;">
+                &copy; {{ now('Y') }} {{ app.name }}
+            </p>
+        </div>
+    </footer>
 </body>
 </html>

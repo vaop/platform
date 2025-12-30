@@ -6,12 +6,12 @@
 {% block title %}{{ __('Unauthorized') }} - {{ app.name }}{% endblock %}
 
 {% block content %}
-<div class="min-h-[60vh] flex items-center justify-center">
-    <div class="text-center">
-        <h1 class="text-8xl font-bold text-gray-200">401</h1>
-        <h2 class="text-2xl font-semibold text-gray-900 mt-4">{{ __('Unauthorized') }}</h2>
-        <p class="text-gray-600 mt-2">{{ __('Please log in to access this page.') }}</p>
-        <div class="mt-6">
+<div class="center-content section-lg">
+    <div style="text-align: center;">
+        <h1 class="heading-2xl" style="font-size: 6rem; color: var(--color-border);">401</h1>
+        <h2 class="heading-lg" style="margin-top: 1rem;">{{ __('Unauthorized') }}</h2>
+        <p class="text-muted" style="margin-top: 0.5rem;">{{ __('Please log in to access this page.') }}</p>
+        <div style="margin-top: 1.5rem;">
             {% include 'components/button.twig' with {
                 href: url('/login'),
                 label: __('Log In'),

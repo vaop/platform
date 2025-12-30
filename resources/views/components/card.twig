@@ -2,27 +2,35 @@
  # Card component
  #
  # @param string title - Card title (optional)
+ # @param string subtitle - Card subtitle (optional)
  # @param string footer - Card footer content (optional)
+ # @param string variant - flat, elevated, bordered (default: none)
  # @param bool padded - Whether to add padding to body (default: true)
+ # @param string class - Additional CSS classes
  #}
 {% set padded = padded|default(true) %}
+{% set variant = variant|default('') %}
+{% set extraClass = class|default('') %}
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
+{% set variantClass = variant ? 'card-' ~ variant : '' %}
+{% set classes = 'card ' ~ variantClass ~ ' ' ~ extraClass %}
+
+<div class="{{ classes }}">
     {% if title is defined and title %}
-        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">{{ title }}</h3>
+        <div class="card-header">
+            <h3 class="card-title">{{ title }}</h3>
             {% if subtitle is defined and subtitle %}
-                <p class="mt-1 text-sm text-gray-500">{{ subtitle }}</p>
+                <p class="card-description">{{ subtitle }}</p>
             {% endif %}
         </div>
     {% endif %}
 
-    <div class="{{ padded ? 'px-4 py-5 sm:p-6' : '' }}">
+    <div class="{{ padded ? 'card-body' : '' }}">
         {% block content %}{% endblock %}
     </div>
 
     {% if footer is defined and footer %}
-        <div class="px-4 py-4 sm:px-6 bg-gray-50 border-t border-gray-200">
+        <div class="card-footer">
             {{ footer }}
         </div>
     {% endif %}

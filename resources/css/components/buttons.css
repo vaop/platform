@@ -1,0 +1,155 @@
+/**
+ * Buttons
+ * Semantic button classes built with Tailwind.
+ */
+
+/* Base button */
+.btn {
+    @apply inline-flex items-center justify-center font-medium rounded-lg
+           transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Sizes */
+.btn-sm {
+    @apply px-3 py-1.5 text-sm;
+}
+
+.btn-md {
+    @apply px-4 py-2 text-base;
+}
+
+.btn-lg {
+    @apply px-6 py-3 text-lg;
+}
+
+/* Default size if none specified */
+.btn:not(.btn-sm):not(.btn-lg) {
+    @apply px-4 py-2 text-base;
+}
+
+/* Variants */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-primary:focus {
+    --tw-ring-color: var(--color-primary);
+}
+
+.btn-secondary {
+    background-color: var(--color-surface-muted);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-border-muted);
+}
+
+.btn-secondary:focus {
+    --tw-ring-color: var(--color-secondary);
+}
+
+.btn-outline {
+    @apply bg-transparent border-2;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+}
+
+.btn-outline:focus {
+    --tw-ring-color: var(--color-primary);
+}
+
+.btn-ghost {
+    @apply bg-transparent;
+    color: var(--color-text);
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background-color: var(--color-surface-muted);
+}
+
+.btn-ghost:focus {
+    --tw-ring-color: var(--color-secondary);
+}
+
+.btn-danger {
+    background-color: var(--color-danger);
+    color: var(--color-text-inverted);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: var(--color-danger-dark);
+}
+
+.btn-danger:focus {
+    --tw-ring-color: var(--color-danger);
+}
+
+.btn-success {
+    background-color: var(--color-success);
+    color: var(--color-text-inverted);
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: var(--color-success-dark);
+}
+
+.btn-success:focus {
+    --tw-ring-color: var(--color-success);
+}
+
+/* Link-style button */
+.btn-link {
+    @apply bg-transparent underline underline-offset-4 p-0;
+    color: var(--color-primary);
+}
+
+.btn-link:hover:not(:disabled) {
+    color: var(--color-primary-hover);
+}
+
+/* Icon buttons */
+.btn-icon {
+    @apply p-2;
+}
+
+.btn-icon.btn-sm {
+    @apply p-1.5;
+}
+
+.btn-icon.btn-lg {
+    @apply p-3;
+}
+
+/* Button groups */
+.btn-group {
+    @apply inline-flex;
+}
+
+.btn-group .btn {
+    @apply rounded-none;
+}
+
+.btn-group .btn:first-child {
+    @apply rounded-l-lg;
+}
+
+.btn-group .btn:last-child {
+    @apply rounded-r-lg;
+}
+
+.btn-group .btn:not(:last-child) {
+    border-right-width: 0;
+}

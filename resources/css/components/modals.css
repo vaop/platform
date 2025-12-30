@@ -1,0 +1,154 @@
+/**
+ * Modals
+ * Dialog windows and overlays.
+ */
+
+/* Modal backdrop */
+.modal-backdrop {
+    @apply fixed inset-0 z-40 bg-black/50;
+}
+
+/* Modal container (centers the modal) */
+.modal-container {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+}
+
+/* Modal dialog */
+.modal {
+    @apply relative w-full max-w-lg rounded-xl shadow-xl;
+    background-color: var(--color-surface-elevated);
+}
+
+/* Modal sizes */
+.modal-sm {
+    @apply max-w-sm;
+}
+
+.modal-lg {
+    @apply max-w-2xl;
+}
+
+.modal-xl {
+    @apply max-w-4xl;
+}
+
+.modal-full {
+    @apply max-w-full mx-4 my-4 h-[calc(100vh-2rem)];
+}
+
+/* Modal sections */
+.modal-header {
+    @apply flex items-center justify-between px-6 py-4;
+    border-bottom: 1px solid var(--color-border-muted);
+}
+
+.modal-title {
+    @apply text-lg font-semibold;
+    color: var(--color-text);
+}
+
+.modal-close {
+    @apply p-1 rounded-lg transition-colors;
+    color: var(--color-text-muted);
+}
+
+.modal-close:hover {
+    background-color: var(--color-surface-muted);
+    color: var(--color-text);
+}
+
+.modal-close svg {
+    @apply w-5 h-5;
+}
+
+.modal-body {
+    @apply px-6 py-4 overflow-y-auto;
+    max-height: calc(100vh - 200px);
+}
+
+.modal-footer {
+    @apply flex items-center justify-end gap-2 px-6 py-4;
+    border-top: 1px solid var(--color-border-muted);
+}
+
+/* Modal with scrollable body */
+.modal-scrollable .modal-body {
+    @apply overflow-y-auto;
+}
+
+/* Confirm dialog */
+.modal-confirm {
+    @apply text-center;
+}
+
+.modal-confirm .modal-body {
+    @apply py-6;
+}
+
+.modal-confirm .modal-icon {
+    @apply mx-auto mb-4 w-12 h-12 flex items-center justify-center rounded-full;
+}
+
+.modal-confirm .modal-icon-danger {
+    background-color: var(--color-danger-light);
+    color: var(--color-danger);
+}
+
+.modal-confirm .modal-icon-warning {
+    background-color: var(--color-warning-light);
+    color: var(--color-warning);
+}
+
+.modal-confirm .modal-icon-success {
+    background-color: var(--color-success-light);
+    color: var(--color-success);
+}
+
+.modal-confirm .modal-icon-info {
+    background-color: var(--color-info-light);
+    color: var(--color-info);
+}
+
+.modal-confirm .modal-footer {
+    @apply justify-center;
+}
+
+/* Animations (when using JS to show/hide) */
+.modal-enter {
+    @apply opacity-0 scale-95;
+}
+
+.modal-enter-active {
+    @apply transition-all duration-200 ease-out;
+}
+
+.modal-enter-to {
+    @apply opacity-100 scale-100;
+}
+
+.modal-leave {
+    @apply opacity-100 scale-100;
+}
+
+.modal-leave-active {
+    @apply transition-all duration-150 ease-in;
+}
+
+.modal-leave-to {
+    @apply opacity-0 scale-95;
+}
+
+/* Drawer (slide-in modal) */
+.drawer {
+    @apply fixed inset-y-0 z-50 flex flex-col w-full max-w-md;
+    background-color: var(--color-surface-elevated);
+    box-shadow: var(--shadow-xl);
+}
+
+.drawer-right {
+    @apply right-0;
+}
+
+.drawer-left {
+    @apply left-0;
+}
