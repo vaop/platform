@@ -146,7 +146,7 @@ jobs:
       - name: Wait for container to be ready
         run: |
           for i in {1..30}; do
-            if curl -sf http://localhost:8080 > /dev/null 2>&1; then
+            if curl -sf http://localhost:8080/up > /dev/null 2>&1; then
               echo "Container is responding"
               exit 0
             fi
@@ -159,7 +159,7 @@ jobs:
 
       - name: Verify HTTP 200 response
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/up)
           echo "HTTP Status: $STATUS"
           if [ "$STATUS" != "200" ]; then
             echo "Expected 200, got $STATUS"
