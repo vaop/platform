@@ -15,7 +15,7 @@ class UpdateService
 
     public function __construct(
         private readonly GitHubReleaseService $github,
-        private readonly BackupService        $backup,
+        private readonly BackupService $backup,
     ) {
         $this->tempPath = storage_path('app/updates');
     }
@@ -302,7 +302,7 @@ class UpdateService
                 continue;
             }
 
-            $destPath = $destReal . DIRECTORY_SEPARATOR . $relativePath;
+            $destPath = $destReal.DIRECTORY_SEPARATOR.$relativePath;
 
             // Skip preserved paths
             $skip = false;
