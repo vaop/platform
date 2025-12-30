@@ -34,7 +34,7 @@ class FinalizeController extends Controller
         return view('install.steps.finalize', [
             'admin_email' => $adminUser['email'],
             'progress' => $progress,
-            'step' => $request->query('step', 'ready'),
+            'install_step' => $request->query('step', 'ready'),
         ]);
     }
 
@@ -72,7 +72,7 @@ class FinalizeController extends Controller
         return view('install.steps.finalize', [
             'admin_email' => $adminUser['email'],
             'progress' => $this->migrations->getProgress(),
-            'step' => 'running',
+            'install_step' => 'running',
             'next_step' => $nextStep,
         ]);
     }
@@ -91,7 +91,7 @@ class FinalizeController extends Controller
         return view('install.steps.finalize', [
             'admin_email' => $adminUser['email'],
             'progress' => $this->migrations->getProgress(),
-            'step' => 'running',
+            'install_step' => 'running',
             'next_step' => 'optimize',
         ]);
     }
@@ -115,7 +115,7 @@ class FinalizeController extends Controller
         return view('install.steps.finalize', [
             'admin_email' => $adminUser['email'],
             'progress' => $this->migrations->getProgress(),
-            'step' => 'running',
+            'install_step' => 'running',
             'next_step' => 'complete',
         ]);
     }

@@ -1,0 +1,83 @@
+{% set step = 'finalize' %}
+{% import 'macros/ui.twig' as ui %}
+
+{% extends 'install/layout.twig' %}
+
+{% block content %}
+<div class="p-6">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('install.finalize.title') }}</h2>
+
+    {% if install_step == 'ready' %}
+        <p class="text-gray-600 mb-6">
+            {{ __('install.finalize.ready_description') }}
+        </p>
+
+        <ul class="list-disc list-inside text-gray-600 mb-6 space-y-2">
+            <li>{{ __('install.finalize.will_create_tables', {count: progress.total}) }}</li>
+            <li>{{ __('install.finalize.will_create_admin', {email: admin_email}) }}</li>
+            <li>{{ __('install.finalize.will_finalize') }}</li>
+        </ul>
+
+        <form action="{{ route('install.finalize.store') }}" method="POST">
+            {{ csrf_field() }}
+            <input type="hidden" name="step" value="migrate">
+            <div class="flex justify-between mt-8">
+                {% include 'components/button.twig' with {
+                    href: route('install.admin'),
+                    label: __('install.back'),
+                    variant: 'ghost'
+                } %}
+
+                {% include 'components/button.twig' with {
+                    type: 'submit',
+                    label: __('install.finalize.install_button'),
+                    variant: 'primary'
+                } %}
+            </div>
+        </form>
+    {% else %}
+        <div class="mb-6">
+            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>{{ __('install.finalize.installing') }}</span>
+                <span>{{ progress.percent }}%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                     style="width: {{ progress.percent }}%"></div>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+            <div class="flex items-center space-x-3">
+                {{ ui.spinner({size: 'sm'}) }}
+                <span class="text-gray-700">
+                    {% if next_step == 'migrate' %}
+                        {{ __('install.finalize.running_migrations', {completed: progress.completed, total: progress.total}) }}
+                    {% elseif next_step == 'user' %}
+                        {{ __('install.finalize.creating_admin') }}
+                    {% elseif next_step == 'optimize' %}
+                        {{ __('install.finalize.optimizing') }}
+                    {% elseif next_step == 'complete' %}
+                        {{ __('install.finalize.completing') }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-500">
+            {{ __('install.finalize.do_not_close') }}
+        </p>
+
+        <form id="continue-form" action="{{ route('install.finalize.store') }}" method="POST">
+            {{ csrf_field() }}
+            <input type="hidden" name="step" value="{{ next_step }}">
+        </form>
+
+        <script>
+            setTimeout(function() {
+                document.getElementById('continue-form').submit();
+            }, 300);
+        </script>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
-@extends('install.layout', ['step' => 'admin'])
+{% set step = 'admin' %}
+{% extends 'install/layout.twig' %}
 
-@section('content')
+{% block content %}
 <div class="p-6">
     <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('install.admin.title') }}</h2>
 
@@ -9,7 +10,7 @@
     </p>
 
     <form action="{{ route('install.admin.store') }}" method="POST">
-        @csrf
+        {{ csrf_field() }}
 
         <div class="space-y-4">
             <div>
@@ -19,9 +20,9 @@
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                        placeholder="{{ __('install.admin.name_placeholder') }}"
                        required>
-                @error('name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                {% if errors.has('name') %}
+                    <p class="mt-1 text-sm text-red-600">{{ errors.first('name') }}</p>
+                {% endif %}
             </div>
 
             <div>
@@ -31,9 +32,9 @@
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                        placeholder="{{ __('install.admin.email_placeholder') }}"
                        required>
-                @error('email')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                {% if errors.has('email') %}
+                    <p class="mt-1 text-sm text-red-600">{{ errors.first('email') }}</p>
+                {% endif %}
             </div>
 
             <div>
@@ -43,9 +44,9 @@
                        placeholder="{{ __('install.admin.password_placeholder') }}"
                        required
                        minlength="8">
-                @error('password')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                {% if errors.has('password') %}
+                    <p class="mt-1 text-sm text-red-600">{{ errors.first('password') }}</p>
+                {% endif %}
             </div>
 
             <div>
@@ -59,16 +60,18 @@
         </div>
 
         <div class="flex justify-between mt-8">
-            <a href="{{ route('install.environment') }}"
-               class="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors">
-                {{ __('install.back') }}
-            </a>
+            {% include 'components/button.twig' with {
+                href: route('install.environment'),
+                label: __('install.back'),
+                variant: 'ghost'
+            } %}
 
-            <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                {{ __('install.continue') }}
-            </button>
+            {% include 'components/button.twig' with {
+                type: 'submit',
+                label: __('install.continue'),
+                variant: 'primary'
+            } %}
         </div>
     </form>
 </div>
-@endsection
+{% endblock %}
