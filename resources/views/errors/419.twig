@@ -1,0 +1,23 @@
+{#
+ # 419 Page Expired error page (CSRF token mismatch)
+ #}
+{% extends 'layouts/error.twig' %}
+
+{% block title %}{{ __('Page Expired') }} - {{ app.name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-8xl font-bold text-gray-200">419</h1>
+        <h2 class="text-2xl font-semibold text-gray-900 mt-4">{{ __('Page Expired') }}</h2>
+        <p class="text-gray-600 mt-2">{{ __('Your session has expired. Please refresh and try again.') }}</p>
+        <div class="mt-6">
+            {% include 'components/button.twig' with {
+                href: 'javascript:location.reload()',
+                label: __('Refresh Page'),
+                variant: 'primary'
+            } %}
+        </div>
+    </div>
+</div>
+{% endblock %}

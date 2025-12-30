@@ -1,0 +1,31 @@
+{#
+ # Flash message display
+ # Shows success, error, warning, and info messages
+ #}
+{% if has_flash('success') %}
+    {% include 'components/alert.twig' with {
+        type: 'success',
+        message: flash('success')
+    } %}
+{% endif %}
+
+{% if has_flash('error') %}
+    {% include 'components/alert.twig' with {
+        type: 'error',
+        message: flash('error')
+    } %}
+{% endif %}
+
+{% if has_flash('warning') %}
+    {% include 'components/alert.twig' with {
+        type: 'warning',
+        message: flash('warning')
+    } %}
+{% endif %}
+
+{% if has_flash('info') %}
+    {% include 'components/alert.twig' with {
+        type: 'info',
+        message: flash('info')
+    } %}
+{% endif %}

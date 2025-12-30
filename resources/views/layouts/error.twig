@@ -1,0 +1,40 @@
+{#
+ # Error layout
+ # Minimal layout for error pages - no session dependencies
+ #}
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{{ app.name }}{% endblock %}</title>
+
+    {{ vite(['resources/css/app.css', 'resources/js/app.js']) }}
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <a href="{{ url('/') }}" class="text-xl font-bold text-gray-900">
+                        {{ app.name }}
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="bg-white border-t border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <p class="text-center text-gray-500 text-sm">
+                    &copy; {{ now('Y') }} {{ app.name }}
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

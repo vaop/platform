@@ -1,0 +1,14 @@
+{#
+ # Site footer
+ #}
+<footer class="bg-white border-t">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+            <p class="text-gray-500 text-sm">
+                &copy; {{ now('Y') }} {{ app.name }}. {{ __('All rights reserved.') }}
+            </p>
+
+            {% block footer_links %}{% endblock %}
+        </div>
+    </div>
+</footer>

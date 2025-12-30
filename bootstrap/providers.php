@@ -1,5 +1,7 @@
 <?php
 
 return [
-    \System\Providers\AppServiceProvider::class,
+    // Twig (order matters: TwigBridge must be first)
+    \TwigBridge\ServiceProvider::class,
+    \System\View\Providers\TwigServiceProvider::class,
 ];

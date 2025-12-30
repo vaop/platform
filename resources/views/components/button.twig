@@ -1,0 +1,41 @@
+{#
+ # Button component
+ #
+ # @param string type - button, submit, reset (default: button)
+ # @param string variant - primary, secondary, danger (default: primary)
+ # @param string size - sm, md, lg (default: md)
+ # @param bool disabled - Whether button is disabled (default: false)
+ # @param string href - If provided, renders as <a> tag instead of <button>
+ # @param string label - Button text (default: 'Button')
+ #}
+{% set type = type|default('button') %}
+{% set variant = variant|default('primary') %}
+{% set size = size|default('md') %}
+{% set disabled = disabled|default(false) %}
+{% set label = label|default('Button') %}
+
+{% set baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2' %}
+
+{% set variantClasses = {
+    'primary': 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+    'secondary': 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
+    'danger': 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
+} %}
+
+{% set sizeClasses = {
+    'sm': 'px-3 py-1.5 text-sm',
+    'md': 'px-4 py-2 text-base',
+    'lg': 'px-6 py-3 text-lg'
+} %}
+
+{% set classes = baseClasses ~ ' ' ~ variantClasses[variant] ~ ' ' ~ sizeClasses[size] %}
+
+{% if href %}
+    <a href="{{ href }}" class="{{ classes }} {{ disabled ? 'opacity-50 pointer-events-none' : '' }}">
+        {{ label }}
+    </a>
+{% else %}
+    <button type="{{ type }}" class="{{ classes }}" {{ disabled ? 'disabled' : '' }}>
+        {{ label }}
+    </button>
+{% endif %}

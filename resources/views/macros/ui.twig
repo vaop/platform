@@ -1,0 +1,146 @@
+{#
+ # UI helper macros
+ #}
+
+{# Badge/tag #}
+{% macro badge(text, options = {}) %}
+    {% set variant = options.variant|default('gray') %}
+    {% set size = options.size|default('md') %}
+
+    {% set variantClasses = {
+        'gray': 'bg-gray-100 text-gray-800',
+        'red': 'bg-red-100 text-red-800',
+        'yellow': 'bg-yellow-100 text-yellow-800',
+        'green': 'bg-green-100 text-green-800',
+        'blue': 'bg-blue-100 text-blue-800',
+        'indigo': 'bg-indigo-100 text-indigo-800',
+        'purple': 'bg-purple-100 text-purple-800',
+        'pink': 'bg-pink-100 text-pink-800'
+    } %}
+
+    {% set sizeClasses = {
+        'sm': 'px-2 py-0.5 text-xs',
+        'md': 'px-2.5 py-0.5 text-sm',
+        'lg': 'px-3 py-1 text-base'
+    } %}
+
+    <span class="inline-flex items-center font-medium rounded-full {{ variantClasses[variant] }} {{ sizeClasses[size] }}">
+        {{ text }}
+    </span>
+{% endmacro %}
+
+{# Status indicator dot #}
+{% macro status(status, label = '') %}
+    {% set statusColors = {
+        'online': 'bg-green-400',
+        'offline': 'bg-gray-400',
+        'busy': 'bg-red-400',
+        'away': 'bg-yellow-400'
+    } %}
+
+    <span class="inline-flex items-center">
+        <span class="w-2 h-2 rounded-full {{ statusColors[status]|default('bg-gray-400') }}"></span>
+        {% if label %}
+            <span class="ml-2 text-sm text-gray-600">{{ label }}</span>
+        {% endif %}
+    </span>
+{% endmacro %}
+
+{# Avatar/profile image #}
+{% macro avatar(options = {}) %}
+    {% set src = options.src|default('') %}
+    {% set alt = options.alt|default('Avatar') %}
+    {% set size = options.size|default('md') %}
+    {% set initials = options.initials|default('') %}
+
+    {% set sizeClasses = {
+        'xs': 'w-6 h-6 text-xs',
+        'sm': 'w-8 h-8 text-sm',
+        'md': 'w-10 h-10 text-base',
+        'lg': 'w-12 h-12 text-lg',
+        'xl': 'w-16 h-16 text-xl'
+    } %}
+
+    {% if src %}
+        <img src="{{ src }}" alt="{{ alt }}" class="rounded-full object-cover {{ sizeClasses[size] }}">
+    {% else %}
+        <span class="inline-flex items-center justify-center rounded-full bg-gray-500 {{ sizeClasses[size] }}">
+            <span class="font-medium text-white">{{ initials }}</span>
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{# Loading spinner #}
+{% macro spinner(options = {}) %}
+    {% set size = options.size|default('md') %}
+    {% set color = options.color|default('blue') %}
+
+    {% set sizeClasses = {
+        'sm': 'w-4 h-4',
+        'md': 'w-6 h-6',
+        'lg': 'w-8 h-8'
+    } %}
+
+    {% set colorClasses = {
+        'blue': 'text-blue-600',
+        'gray': 'text-gray-600',
+        'white': 'text-white'
+    } %}
+
+    <svg class="animate-spin {{ sizeClasses[size] }} {{ colorClasses[color] }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+{% endmacro %}
+
+{# Empty state #}
+{% macro empty(options = {}) %}
+    {% set title = options.title|default('No items') %}
+    {% set description = options.description|default('') %}
+    {% set icon = options.icon|default('inbox') %}
+
+    {% set icons = {
+        'inbox': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>',
+        'document': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>',
+        'users': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>'
+    } %}
+
+    <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {{ icons[icon]|default(icons.inbox)|raw }}
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">{{ title }}</h3>
+        {% if description %}
+            <p class="mt-1 text-sm text-gray-500">{{ description }}</p>
+        {% endif %}
+        {% block action %}{% endblock %}
+    </div>
+{% endmacro %}
+
+{# Progress bar #}
+{% macro progress(value, options = {}) %}
+    {% set max = options.max|default(100) %}
+    {% set color = options.color|default('blue') %}
+    {% set showLabel = options.showLabel|default(false) %}
+
+    {% set percentage = (value / max) * 100 %}
+
+    {% set colorClasses = {
+        'blue': 'bg-blue-600',
+        'green': 'bg-green-600',
+        'red': 'bg-red-600',
+        'yellow': 'bg-yellow-600'
+    } %}
+
+    <div class="w-full">
+        <div class="flex justify-between mb-1">
+            {% if showLabel %}
+                <span class="text-sm font-medium text-gray-700">{{ value }}/{{ max }}</span>
+                <span class="text-sm font-medium text-gray-500">{{ percentage|number_format(0) }}%</span>
+            {% endif %}
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="{{ colorClasses[color] }} h-2.5 rounded-full" style="width: {{ percentage }}%"></div>
+        </div>
+    </div>
+{% endmacro %}

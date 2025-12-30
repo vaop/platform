@@ -1,0 +1,23 @@
+{#
+ # 429 Too Many Requests error page
+ #}
+{% extends 'layouts/error.twig' %}
+
+{% block title %}{{ __('Too Many Requests') }} - {{ app.name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-8xl font-bold text-gray-200">429</h1>
+        <h2 class="text-2xl font-semibold text-gray-900 mt-4">{{ __('Too Many Requests') }}</h2>
+        <p class="text-gray-600 mt-2">{{ __('Please slow down. You have made too many requests.') }}</p>
+        <div class="mt-6">
+            {% include 'components/button.twig' with {
+                href: url('/'),
+                label: __('Go Home'),
+                variant: 'primary'
+            } %}
+        </div>
+    </div>
+</div>
+{% endblock %}

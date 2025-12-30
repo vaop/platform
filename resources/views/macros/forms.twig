@@ -1,0 +1,163 @@
+{#
+ # Form macros for consistent form element rendering
+ #}
+
+{# Text input field with label #}
+{% macro input(name, label, options = {}) %}
+    {% set type = options.type|default('text') %}
+    {% set value = options.value|default('') %}
+    {% set placeholder = options.placeholder|default('') %}
+    {% set required = options.required|default(false) %}
+    {% set disabled = options.disabled|default(false) %}
+    {% set autocomplete = options.autocomplete|default('') %}
+
+    <div class="mb-4">
+        <label for="{{ name }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ label }}
+            {% if required %}<span class="text-red-500">*</span>{% endif %}
+        </label>
+        <input
+            type="{{ type }}"
+            name="{{ name }}"
+            id="{{ name }}"
+            value="{{ old(name, value) }}"
+            placeholder="{{ placeholder }}"
+            {{ required ? 'required' : '' }}
+            {{ disabled ? 'disabled' : '' }}
+            {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 {{ disabled ? 'bg-gray-100' : '' }}"
+        >
+    </div>
+{% endmacro %}
+
+{# Email input (convenience wrapper) #}
+{% macro email(name, label, options = {}) %}
+    {% import _self as forms %}
+    {{ forms.input(name, label, options|merge({type: 'email', autocomplete: 'email'})) }}
+{% endmacro %}
+
+{# Password input (convenience wrapper) #}
+{% macro password(name, label, options = {}) %}
+    {% import _self as forms %}
+    {{ forms.input(name, label, options|merge({type: 'password'})) }}
+{% endmacro %}
+
+{# Textarea field #}
+{% macro textarea(name, label, options = {}) %}
+    {% set value = options.value|default('') %}
+    {% set rows = options.rows|default(4) %}
+    {% set placeholder = options.placeholder|default('') %}
+    {% set required = options.required|default(false) %}
+    {% set disabled = options.disabled|default(false) %}
+
+    <div class="mb-4">
+        <label for="{{ name }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ label }}
+            {% if required %}<span class="text-red-500">*</span>{% endif %}
+        </label>
+        <textarea
+            name="{{ name }}"
+            id="{{ name }}"
+            rows="{{ rows }}"
+            placeholder="{{ placeholder }}"
+            {{ required ? 'required' : '' }}
+            {{ disabled ? 'disabled' : '' }}
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 {{ disabled ? 'bg-gray-100' : '' }}"
+        >{{ old(name, value) }}</textarea>
+    </div>
+{% endmacro %}
+
+{# Select dropdown #}
+{% macro select(name, label, selectOptions, options = {}) %}
+    {% set selected = options.selected|default('') %}
+    {% set required = options.required|default(false) %}
+    {% set disabled = options.disabled|default(false) %}
+    {% set placeholder = options.placeholder|default('') %}
+
+    <div class="mb-4">
+        <label for="{{ name }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ label }}
+            {% if required %}<span class="text-red-500">*</span>{% endif %}
+        </label>
+        <select
+            name="{{ name }}"
+            id="{{ name }}"
+            {{ required ? 'required' : '' }}
+            {{ disabled ? 'disabled' : '' }}
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 {{ disabled ? 'bg-gray-100' : '' }}"
+        >
+            {% if placeholder %}
+                <option value="">{{ placeholder }}</option>
+            {% endif %}
+            {% for value, text in selectOptions %}
+                <option value="{{ value }}" {{ old(name, selected) == value ? 'selected' : '' }}>
+                    {{ text }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{# Checkbox #}
+{% macro checkbox(name, label, options = {}) %}
+    {% set checked = options.checked|default(false) %}
+    {% set value = options.value|default('1') %}
+    {% set disabled = options.disabled|default(false) %}
+
+    <div class="mb-4 flex items-start">
+        <div class="flex items-center h-5">
+            <input
+                type="checkbox"
+                name="{{ name }}"
+                id="{{ name }}"
+                value="{{ value }}"
+                {{ old(name, checked) ? 'checked' : '' }}
+                {{ disabled ? 'disabled' : '' }}
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            >
+        </div>
+        <div class="ml-2">
+            <label for="{{ name }}" class="text-sm text-gray-700">
+                {{ label }}
+            </label>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Radio button group #}
+{% macro radio(name, label, radioOptions, options = {}) %}
+    {% set selected = options.selected|default('') %}
+    {% set required = options.required|default(false) %}
+    {% set disabled = options.disabled|default(false) %}
+    {% set inline = options.inline|default(false) %}
+
+    <div class="mb-4">
+        <span class="block text-sm font-medium text-gray-700 mb-2">
+            {{ label }}
+            {% if required %}<span class="text-red-500">*</span>{% endif %}
+        </span>
+        <div class="{{ inline ? 'flex space-x-4' : 'space-y-2' }}">
+            {% for value, text in radioOptions %}
+                <div class="flex items-center">
+                    <input
+                        type="radio"
+                        name="{{ name }}"
+                        id="{{ name }}_{{ value }}"
+                        value="{{ value }}"
+                        {{ old(name, selected) == value ? 'checked' : '' }}
+                        {{ disabled ? 'disabled' : '' }}
+                        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    >
+                    <label for="{{ name }}_{{ value }}" class="ml-2 text-sm text-gray-700">
+                        {{ text }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{# Hidden input #}
+{% macro hidden(name, value) %}
+    <input type="hidden" name="{{ name }}" value="{{ value }}">
+{% endmacro %}

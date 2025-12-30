@@ -1,0 +1,25 @@
+{#
+ # Guest layout
+ # Used for public pages and unauthenticated users
+ #}
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+<head>
+    {% include 'layouts/partials/head.twig' %}
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+        {% include 'layouts/partials/header.twig' %}
+
+        <main class="flex-1">
+            {% include 'layouts/partials/flash-messages.twig' %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        {% include 'layouts/partials/footer.twig' %}
+    </div>
+
+    {% include 'layouts/partials/scripts.twig' %}
+</body>
+</html>
