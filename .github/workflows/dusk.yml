@@ -127,7 +127,9 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: dusk-screenshots-php-${{ matrix.php }}-mariadb-${{ matrix.mariadb }}
-          path: tests/Browser/screenshots
+          path: |
+            tests/Browser/screenshots/**/*.png
+            tests/Browser/screenshots/*.png
           if-no-files-found: ignore
 
       - name: Upload Dusk console logs
@@ -135,5 +137,7 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: dusk-console-php-${{ matrix.php }}-mariadb-${{ matrix.mariadb }}
-          path: tests/Browser/console
+          path: |
+            tests/Browser/console/**/*.log
+            tests/Browser/console/*.log
           if-no-files-found: ignore
