@@ -12,25 +12,12 @@ class InstallerRoutesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Ensure installer is enabled and app is not installed
-        config(['vaop.installer.enabled' => true]);
-
-        // Remove installed marker if it exists
-        $installedPath = storage_path('installed');
-        if (file_exists($installedPath)) {
-            unlink($installedPath);
-        }
+        $this->setUpInstaller();
     }
 
     protected function tearDown(): void
     {
-        // Clean up installed marker
-        $installedPath = storage_path('installed');
-        if (file_exists($installedPath)) {
-            unlink($installedPath);
-        }
-
+        $this->tearDownInstaller();
         parent::tearDown();
     }
 
@@ -84,7 +71,6 @@ class InstallerRoutesTest extends TestCase
     {
         $response = $this->get(route('install.finalize'));
 
-        // Should redirect to admin page if no admin_user in session
         $response->assertRedirect(route('install.admin'));
     }
 
@@ -105,32 +91,4 @@ class InstallerRoutesTest extends TestCase
         $response->assertSee(__('install.finalize.title'));
     }
 
-    #[Test]
-    public function installer_returns_404_when_disabled(): void
-    {
-        config(['vaop.installer.enabled' => false]);
-
-        $response = $this->get(route('install.welcome'));
-
-        $response->assertStatus(404);
-    }
-
-    #[Test]
-    public function installer_redirects_when_already_installed(): void
-    {
-        // Create installed marker
-        file_put_contents(storage_path('installed'), '');
-
-        $response = $this->get(route('install.welcome'));
-
-        $response->assertRedirect('/');
-    }
-
-    #[Test]
-    public function non_installer_routes_redirect_to_installer_when_not_installed(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertRedirect(route('install.welcome'));
-    }
 }

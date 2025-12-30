@@ -1,24 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    protected function setUp(): void
     {
-        // Mark app as installed so it doesn't redirect to installer
-        file_put_contents(storage_path('installed'), '');
+        parent::setUp();
+        $this->markAsInstalled();
+    }
 
-        try {
-            $response = $this->get('/');
-            $response->assertStatus(200);
-        } finally {
-            unlink(storage_path('installed'));
-        }
+    protected function tearDown(): void
+    {
+        $this->markAsNotInstalled();
+        parent::tearDown();
+    }
+
+    #[Test]
+    public function the_application_returns_a_successful_response(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Install\Services;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use System\Database\MigrationRunner;
 use Tests\TestCase;
@@ -15,30 +16,45 @@ class MigrationRunnerTest extends TestCase
 
     private MigrationRunner $runner;
 
+    private array $allMigrationFiles = [];
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->runner = new MigrationRunner;
+
+        // Get all migration files for reference
+        $files = glob(database_path('migrations/*.php'));
+        foreach ($files as $file) {
+            $this->allMigrationFiles[] = pathinfo($file, PATHINFO_FILENAME);
+        }
+        sort($this->allMigrationFiles);
     }
 
     #[Test]
-    public function it_can_get_pending_migrations(): void
+    public function migration_files_exist(): void
     {
+        $this->assertNotEmpty($this->allMigrationFiles, 'Migration files should exist');
+    }
+
+    #[Test]
+    public function it_returns_empty_array_when_all_migrations_complete(): void
+    {
+        // RefreshDatabase ensures all migrations are run
         $pending = $this->runner->getPendingMigrations();
 
         $this->assertIsArray($pending);
+        $this->assertEmpty($pending);
     }
 
     #[Test]
-    public function it_can_check_if_migrations_are_pending(): void
+    public function has_pending_returns_false_when_no_migrations_pending(): void
     {
-        $hasPending = $this->runner->hasPending();
-
-        $this->assertIsBool($hasPending);
+        $this->assertFalse($this->runner->hasPending());
     }
 
     #[Test]
-    public function it_can_get_progress_information(): void
+    public function progress_contains_all_required_keys(): void
     {
         $progress = $this->runner->getProgress();
 
@@ -46,21 +62,39 @@ class MigrationRunnerTest extends TestCase
         $this->assertArrayHasKey('completed', $progress);
         $this->assertArrayHasKey('pending', $progress);
         $this->assertArrayHasKey('percent', $progress);
+    }
+
+    #[Test]
+    public function progress_values_are_correct_types(): void
+    {
+        $progress = $this->runner->getProgress();
 
         $this->assertIsInt($progress['total']);
         $this->assertIsInt($progress['completed']);
         $this->assertIsInt($progress['pending']);
-        $this->assertIsNumeric($progress['percent']);
+        $this->assertIsFloat($progress['percent']);
+    }
 
-        $this->assertEquals($progress['total'], $progress['completed'] + $progress['pending']);
+    #[Test]
+    public function progress_math_is_correct(): void
+    {
+        $progress = $this->runner->getProgress();
+
+        // Verify the math: total = completed + pending
+        $this->assertEquals(
+            $progress['total'],
+            $progress['completed'] + $progress['pending'],
+            'Total should equal completed + pending'
+        );
+
+        // Verify percent is within valid range
         $this->assertGreaterThanOrEqual(0, $progress['percent']);
         $this->assertLessThanOrEqual(100, $progress['percent']);
     }
 
     #[Test]
-    public function it_returns_null_when_no_pending_migrations(): void
+    public function run_next_returns_null_when_no_pending_migrations(): void
     {
-        // After RefreshDatabase runs all migrations, there should be none pending
         $result = $this->runner->runNext();
 
         $this->assertNull($result);
@@ -69,10 +103,47 @@ class MigrationRunnerTest extends TestCase
     #[Test]
     public function progress_shows_100_percent_when_all_migrations_complete(): void
     {
-        // After RefreshDatabase, all migrations should be complete
         $progress = $this->runner->getProgress();
 
         $this->assertEquals(100, $progress['percent']);
         $this->assertEquals(0, $progress['pending']);
+        $this->assertEquals($progress['total'], $progress['completed']);
+    }
+
+    #[Test]
+    public function completed_migrations_match_database_count(): void
+    {
+        $progress = $this->runner->getProgress();
+        $dbCount = DB::table('migrations')->count();
+
+        $this->assertEquals($dbCount, $progress['completed']);
+    }
+
+    #[Test]
+    public function total_migrations_match_files_count(): void
+    {
+        $progress = $this->runner->getProgress();
+        $fileCount = count($this->allMigrationFiles);
+
+        $this->assertEquals($fileCount, $progress['total']);
+    }
+
+    #[Test]
+    public function pending_migrations_returns_array(): void
+    {
+        $pending = $this->runner->getPendingMigrations();
+
+        $this->assertIsArray($pending);
+    }
+
+    #[Test]
+    public function get_pending_migrations_returns_sorted_array(): void
+    {
+        $pending = $this->runner->getPendingMigrations();
+
+        // Even if empty, verify it's sorted
+        $sorted = $pending;
+        sort($sorted);
+        $this->assertEquals($sorted, $pending, 'Pending migrations should be sorted');
     }
 }

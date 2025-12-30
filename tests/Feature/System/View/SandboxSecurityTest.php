@@ -229,4 +229,135 @@ class SandboxSecurityTest extends TestCase
 
         $this->assertEquals('value', $result);
     }
+
+    #[Test]
+    public function it_allows_extends_tag(): void
+    {
+        // Test that extends works with actual template files
+        $template = Twig::createTemplate('{% extends "layouts/guest.twig" %}{% block content %}Test content{% endblock %}');
+        $result = $template->render([]);
+
+        $this->assertStringContainsString('Test content', $result);
+    }
+
+    #[Test]
+    public function it_allows_include_tag(): void
+    {
+        $template = Twig::createTemplate('{% include "components/button.twig" with {label: "Test", variant: "primary"} %}');
+        $result = $template->render([]);
+
+        $this->assertStringContainsString('Test', $result);
+    }
+
+    #[Test]
+    public function it_allows_embed_tag(): void
+    {
+        $template = Twig::createTemplate('{% embed "layouts/guest.twig" %}{% block content %}Embedded content{% endblock %}{% endembed %}');
+        $result = $template->render([]);
+
+        $this->assertStringContainsString('Embedded content', $result);
+    }
+
+    #[Test]
+    public function it_allows_from_import(): void
+    {
+        // from/import allows importing macros
+        $template = Twig::createTemplate('{% macro test() %}Hello{% endmacro %}{% from _self import test %}{{ test() }}');
+        $result = $template->render([]);
+
+        $this->assertEquals('Hello', $result);
+    }
+
+    #[Test]
+    public function it_allows_autoescape_tag(): void
+    {
+        $template = Twig::createTemplate('{% autoescape "html" %}{{ text }}{% endautoescape %}');
+        $result = $template->render(['text' => '<script>']);
+
+        $this->assertEquals('&lt;script&gt;', $result);
+    }
+
+    #[Test]
+    public function it_allows_do_tag(): void
+    {
+        // do tag executes expression without outputting
+        $template = Twig::createTemplate('{% do 1 + 1 %}OK');
+        $result = $template->render([]);
+
+        $this->assertEquals('OK', $result);
+    }
+
+    #[Test]
+    public function it_allows_flush_tag(): void
+    {
+        // flush tag flushes output buffer
+        $template = Twig::createTemplate('{% flush %}OK');
+        $result = $template->render([]);
+
+        $this->assertEquals('OK', $result);
+    }
+
+    #[Test]
+    public function sandbox_blocks_dangerous_filters(): void
+    {
+        $env = $this->createSandboxedEnvironment([
+            'allowed_filters' => ['escape'], // Only allow escape
+        ]);
+
+        $this->expectException(SecurityError::class);
+
+        // Try to use a filter not in the allowed list
+        $template = $env->createTemplate('{{ text|upper }}');
+        $template->render(['text' => 'hello']);
+    }
+
+    #[Test]
+    public function sandbox_blocks_dangerous_functions(): void
+    {
+        $env = $this->createSandboxedEnvironment([
+            'allowed_functions' => ['range'], // Only allow range
+        ]);
+
+        $this->expectException(SecurityError::class);
+
+        // Try to use a function not in the allowed list
+        $template = $env->createTemplate('{{ random([1,2,3]) }}');
+        $template->render([]);
+    }
+
+    #[Test]
+    public function it_allows_defined_test(): void
+    {
+        $template = Twig::createTemplate('{% if var is defined %}yes{% else %}no{% endif %}');
+
+        $result = $template->render(['var' => 'value']);
+        $this->assertEquals('yes', $result);
+
+        $result = $template->render([]);
+        $this->assertEquals('no', $result);
+    }
+
+    #[Test]
+    public function it_allows_empty_test(): void
+    {
+        $template = Twig::createTemplate('{% if items is empty %}empty{% else %}has items{% endif %}');
+
+        $result = $template->render(['items' => []]);
+        $this->assertEquals('empty', $result);
+
+        $result = $template->render(['items' => [1, 2, 3]]);
+        $this->assertEquals('has items', $result);
+    }
+
+    #[Test]
+    public function it_allows_iterable_test(): void
+    {
+        $template = Twig::createTemplate('{% if items is iterable %}yes{% else %}no{% endif %}');
+
+        $result = $template->render(['items' => [1, 2, 3]]);
+        $this->assertEquals('yes', $result);
+
+        $result = $template->render(['items' => 'string']);
+        $this->assertEquals('no', $result);
+    }
 }

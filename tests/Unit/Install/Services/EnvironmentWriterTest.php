@@ -143,4 +143,109 @@ class EnvironmentWriterTest extends TestCase
 
         $this->assertEquals('hello world', $value);
     }
+
+    #[Test]
+    public function it_writes_values_with_quotes_correctly(): void
+    {
+        $valueWithQuotes = 'value with "quotes" inside';
+
+        $this->writer->set('QUOTED_KEY', $valueWithQuotes);
+
+        // Verify the file content has escaped quotes
+        $content = file_get_contents($this->testEnvPath);
+        $this->assertStringContainsString('QUOTED_KEY="value with \\"quotes\\" inside"', $content);
+    }
+
+    #[Test]
+    public function it_handles_values_with_newlines(): void
+    {
+        $this->writer->set('MULTILINE', "line1\nline2");
+
+        // Values with newlines should be quoted to preserve the newline
+        $content = file_get_contents($this->testEnvPath);
+        $this->assertStringContainsString('MULTILINE=', $content);
+    }
+
+    #[Test]
+    public function it_handles_values_with_tabs(): void
+    {
+        $this->writer->set('TABBED', "value\twith\ttabs");
+
+        $readValue = $this->writer->get('TABBED');
+        $this->assertStringContainsString("\t", $readValue);
+    }
+
+    #[Test]
+    public function it_handles_values_with_equals_sign(): void
+    {
+        $this->writer->set('URL', 'https://example.com?param=value&other=test');
+
+        $readValue = $this->writer->get('URL');
+        $this->assertEquals('https://example.com?param=value&other=test', $readValue);
+    }
+
+    #[Test]
+    public function it_handles_values_with_hash(): void
+    {
+        $this->writer->set('WITH_HASH', 'value#with#hash');
+
+        $readValue = $this->writer->get('WITH_HASH');
+        $this->assertEquals('value#with#hash', $readValue);
+    }
+
+    #[Test]
+    public function it_handles_values_with_dollar_sign(): void
+    {
+        $this->writer->set('PRICE', '$100.00');
+
+        $readValue = $this->writer->get('PRICE');
+        $this->assertEquals('$100.00', $readValue);
+    }
+
+    #[Test]
+    public function it_handles_unicode_values(): void
+    {
+        $unicodeValue = 'Héllo Wörld 日本語';
+        $this->writer->set('UNICODE', $unicodeValue);
+
+        $readValue = $this->writer->get('UNICODE');
+        $this->assertEquals($unicodeValue, $readValue);
+    }
+
+    #[Test]
+    public function it_handles_backslash_values(): void
+    {
+        $this->writer->set('PATH', 'C:\\Users\\Test');
+
+        $readValue = $this->writer->get('PATH');
+        $this->assertStringContainsString('\\', $readValue);
+    }
+
+    #[Test]
+    public function it_preserves_existing_keys_when_adding_new(): void
+    {
+        $this->writer->set('NEW_KEY', 'new_value');
+
+        // Original keys should still exist
+        $this->assertEquals('TestApp', $this->writer->get('APP_NAME'));
+        $this->assertEquals('testing', $this->writer->get('APP_ENV'));
+        $this->assertEquals('new_value', $this->writer->get('NEW_KEY'));
+    }
+
+    #[Test]
+    public function it_can_update_app_key(): void
+    {
+        // Generate first key
+        $firstKey = $this->writer->generateAppKey();
+
+        // Generate second key
+        $secondKey = $this->writer->generateAppKey();
+
+        // Keys should be different
+        $this->assertNotEquals($firstKey, $secondKey);
+
+        // Latest key should be stored
+        $storedKey = $this->writer->get('APP_KEY');
+        $this->assertEquals($secondKey, $storedKey);
+    }
 }

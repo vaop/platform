@@ -98,25 +98,32 @@ class BackupServiceTest extends TestCase
     #[Test]
     public function it_lists_backups_sorted_by_date_newest_first(): void
     {
-        // Create two backups with slight delay
-        $version1 = 'test-'.uniqid();
+        // Create two backups
+        $version1 = 'test-older-'.uniqid();
         $backup1 = $this->service->create($version1);
 
-        sleep(1);
-
-        $version2 = 'test-'.uniqid();
+        $version2 = 'test-newer-'.uniqid();
         $backup2 = $this->service->create($version2);
+
+        // Manipulate file timestamps to ensure deterministic ordering
+        // Set backup1 to be older (1 hour ago)
+        touch($backup1, time() - 3600);
+        // Set backup2 to be newer (current time)
+        touch($backup2, time());
+
+        // Clear any file stat cache
+        clearstatcache();
 
         $backups = $this->service->list();
 
         // Find our test backups
-        $testBackups = array_filter($backups, fn ($b) => str_contains($b['filename'], 'backup-test-'));
+        $testBackups = array_values(array_filter($backups, fn ($b) => str_contains($b['filename'], 'backup-test-')));
 
         $this->assertGreaterThanOrEqual(2, count($testBackups));
 
-        // Verify order (newest first)
-        $firstBackup = reset($testBackups);
-        $this->assertStringContainsString($version2, $firstBackup['filename']);
+        // Verify order (newest first) - backup2 should come before backup1
+        $this->assertStringContainsString('newer', $testBackups[0]['filename']);
+        $this->assertStringContainsString('older', $testBackups[1]['filename']);
 
         // Clean up
         unlink($backup1);
@@ -159,25 +166,40 @@ class BackupServiceTest extends TestCase
     #[Test]
     public function it_can_restore_from_backup(): void
     {
-        // Create a test file
-        $testDir = storage_path('app/test-restore-'.uniqid());
-        mkdir($testDir, 0755, true);
-        file_put_contents($testDir.'/test.txt', 'original content');
+        // Use a file that's included in backups (config directory)
+        $testFile = base_path('config/.backup-test-'.uniqid().'.php');
+        $originalContent = '<?php return ["test" => true];';
 
-        // Create backup
-        $version = 'test-'.uniqid();
-        $backupFile = $this->service->create($version);
+        // Create test file
+        file_put_contents($testFile, $originalContent);
 
-        // Modify the test file
-        file_put_contents(base_path('src/System/Filesystem/BackupService.php'), file_get_contents(base_path('src/System/Filesystem/BackupService.php')));
+        try {
+            // Create backup (this will include our test file)
+            $version = 'test-'.uniqid();
+            $backupFile = $this->service->create($version);
 
-        // The backup was created, verify it exists
-        $this->assertFileExists($backupFile);
+            // Verify backup was created
+            $this->assertFileExists($backupFile);
 
-        // Clean up
-        unlink($backupFile);
-        @unlink($testDir.'/test.txt');
-        @rmdir($testDir);
+            // Modify the test file
+            $modifiedContent = '<?php return ["test" => false, "modified" => true];';
+            file_put_contents($testFile, $modifiedContent);
+
+            // Verify file was modified
+            $this->assertEquals($modifiedContent, file_get_contents($testFile));
+
+            // Restore from backup
+            $this->service->restore($backupFile);
+
+            // Verify file was restored to original content
+            $this->assertEquals($originalContent, file_get_contents($testFile));
+
+            // Clean up backup
+            unlink($backupFile);
+        } finally {
+            // Always clean up test file
+            @unlink($testFile);
+        }
     }
 
     #[Test]
@@ -237,6 +259,33 @@ class BackupServiceTest extends TestCase
         $zip->close();
 
         $this->assertFalse($vendorFound, 'vendor directory should not be included in backup');
+
+        // Clean up
+        unlink($backupFile);
+    }
+
+    #[Test]
+    public function it_excludes_bootstrap_cache_from_backup(): void
+    {
+        $version = 'test-'.uniqid();
+        $backupFile = $this->service->create($version);
+
+        $zip = new \ZipArchive;
+        $zip->open($backupFile);
+
+        // Check that bootstrap/cache is not included
+        $cacheFound = false;
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $name = $zip->getNameIndex($i);
+            if (str_contains($name, 'bootstrap/cache/')) {
+                $cacheFound = true;
+                break;
+            }
+        }
+
+        $zip->close();
+
+        $this->assertFalse($cacheFound, 'bootstrap/cache directory should not be included in backup');
 
         // Clean up
         unlink($backupFile);

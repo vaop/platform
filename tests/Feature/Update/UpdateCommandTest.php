@@ -23,11 +23,26 @@ class UpdateCommandTest extends TestCase
     #[Test]
     public function it_shows_update_available_with_check_option(): void
     {
-        // Use the real GitHub API - this tests actual update check functionality
-        // Since there's a real release (v0.0.2), the update should be available
+        $this->mock(UpdateService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('checkForUpdate')
+                ->once()
+                ->andReturn([
+                    'available' => true,
+                    'current' => '1.0.0',
+                    'latest' => '2.0.0',
+                    'release' => [
+                        'tag_name' => 'v2.0.0',
+                        'name' => 'Version 2.0.0',
+                        'body' => 'New features and improvements',
+                        'published_at' => '2024-01-15T10:00:00Z',
+                        'assets' => [],
+                    ],
+                ]);
+        });
+
         $this->artisan('vaop:update', ['--check' => true])
-            ->expectsOutputToContain(__('update.current_version', ['version' => '']))
-            ->expectsOutputToContain(__('update.latest_version', ['version' => '']))
+            ->expectsOutputToContain(__('update.current_version', ['version' => '1.0.0']))
+            ->expectsOutputToContain(__('update.latest_version', ['version' => '2.0.0']))
             ->expectsOutputToContain(__('update.update_available'))
             ->assertSuccessful();
     }
@@ -209,22 +224,22 @@ class UpdateCommandTest extends TestCase
     #[Test]
     public function it_prompts_for_restore_confirmation(): void
     {
-        // Create a temporary backup file
+        // Create a minimal test backup file
         $backupPath = storage_path('app/backups');
         if (! is_dir($backupPath)) {
             mkdir($backupPath, 0755, true);
         }
 
         $testBackup = $backupPath.'/test-restore-backup.zip';
-        $zip = new \ZipArchive;
-        $zip->open($testBackup, \ZipArchive::CREATE);
-        $zip->addFromString('test.txt', 'test content');
-        $zip->close();
+
+        // Create minimal valid zip without ZipArchive to keep test fast
+        // ZIP file structure: local file header + central directory + end of central directory
+        file_put_contents($testBackup, base64_decode('UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=='));
 
         try {
-            $this->mock(BackupService::class, function (MockInterface $mock) {
+            $this->mock(BackupService::class, function (MockInterface $mock) use ($backupPath) {
                 $mock->shouldReceive('getBackupPath')
-                    ->andReturn(storage_path('app/backups'));
+                    ->andReturn($backupPath);
             });
 
             $this->artisan('vaop:update', ['--restore' => 'test-restore-backup.zip'])

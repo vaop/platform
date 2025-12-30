@@ -196,15 +196,100 @@ class UpdateServiceTest extends TestCase
             'assets' => [],
         ];
 
+        $exceptionThrown = false;
         try {
             $this->service->update($release, function ($message) use (&$progressMessages) {
                 $progressMessages[] = $message;
             });
         } catch (\Exception $e) {
+            $exceptionThrown = true;
+            // Expected to fail at extraction stage since we're providing fake tar content
+        }
+
+        // The update should have progressed to at least the fetching stage
+        $this->assertNotEmpty($progressMessages, 'Progress callback should have been called at least once');
+        $this->assertContains(__('update.progress.fetching'), $progressMessages, 'Should include fetching progress message');
+
+        // It's expected to fail at extraction because we're not providing a real archive
+        $this->assertTrue($exceptionThrown, 'Update should fail at extraction stage with fake content');
+    }
+
+    #[Test]
+    public function it_creates_backup_before_update(): void
+    {
+        $backupCreated = false;
+
+        $this->githubMock->shouldReceive('parseVersion')
+            ->andReturn('99.0.0');
+
+        $this->githubMock->shouldReceive('compareVersions')
+            ->andReturn(1);
+
+        $this->githubMock->shouldReceive('getDownloadUrl')
+            ->andReturn('https://example.com/release.tar.gz');
+
+        // Verify backup is created with current version
+        $this->backupMock->shouldReceive('create')
+            ->once()
+            ->withArgs(function ($version) use (&$backupCreated) {
+                $backupCreated = is_string($version);
+
+                return $backupCreated;
+            })
+            ->andReturn(storage_path('app/backups/test-backup.zip'));
+
+        $this->backupMock->shouldReceive('restore')->andReturnNull();
+        $this->backupMock->shouldReceive('cleanup')->andReturn(0);
+
+        Http::fake([
+            'example.com/*' => Http::response('fake tar content', 200),
+        ]);
+
+        $release = [
+            'tag_name' => 'v99.0.0',
+            'assets' => [],
+        ];
+
+        try {
+            $this->service->update($release);
+        } catch (\Exception $e) {
             // Expected to fail at extraction stage
         }
 
-        $this->assertNotEmpty($progressMessages);
-        $this->assertContains(__('update.progress.fetching'), $progressMessages);
+        // Verify backup was created
+        $this->assertTrue($backupCreated, 'Backup should have been created with a version string');
+    }
+
+    #[Test]
+    public function check_for_update_returns_required_structure(): void
+    {
+        $this->githubMock->shouldReceive('getLatestRelease')
+            ->once()
+            ->andReturn([
+                'tag_name' => 'v1.0.0',
+                'name' => 'Version 1.0.0',
+                'body' => 'Release notes',
+                'assets' => [],
+            ]);
+
+        $this->githubMock->shouldReceive('parseVersion')
+            ->with('v1.0.0')
+            ->andReturn('1.0.0');
+
+        $this->githubMock->shouldReceive('compareVersions')
+            ->andReturn(0); // Same version
+
+        $result = $this->service->checkForUpdate();
+
+        // Verify all required keys exist
+        $this->assertArrayHasKey('available', $result);
+        $this->assertArrayHasKey('current', $result);
+        $this->assertArrayHasKey('latest', $result);
+        $this->assertArrayHasKey('release', $result);
+
+        // Verify types
+        $this->assertIsBool($result['available']);
+        $this->assertIsString($result['current']);
+        $this->assertIsString($result['latest']);
     }
 }

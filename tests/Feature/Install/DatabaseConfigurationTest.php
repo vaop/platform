@@ -12,22 +12,12 @@ class DatabaseConfigurationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        config(['vaop.installer.enabled' => true]);
-
-        $installedPath = storage_path('installed');
-        if (file_exists($installedPath)) {
-            unlink($installedPath);
-        }
+        $this->setUpInstaller();
     }
 
     protected function tearDown(): void
     {
-        $installedPath = storage_path('installed');
-        if (file_exists($installedPath)) {
-            unlink($installedPath);
-        }
-
+        $this->tearDownInstaller();
         parent::tearDown();
     }
 
@@ -42,6 +32,20 @@ class DatabaseConfigurationTest extends TestCase
         $response->assertSee(__('install.database.name'));
         $response->assertSee(__('install.database.username'));
         $response->assertSee(__('install.database.password'));
+    }
+
+    #[Test]
+    public function database_form_contains_required_input_fields(): void
+    {
+        $response = $this->get(route('install.database'));
+
+        $response->assertStatus(200);
+        // Verify form structure
+        $response->assertSee('name="host"', false);
+        $response->assertSee('name="port"', false);
+        $response->assertSee('name="database"', false);
+        $response->assertSee('name="username"', false);
+        $response->assertSee('name="password"', false);
     }
 
     #[Test]
@@ -96,5 +100,15 @@ class DatabaseConfigurationTest extends TestCase
         ]);
 
         $response->assertRedirect(route('install.environment'));
+    }
+
+    #[Test]
+    public function database_form_has_default_port_value(): void
+    {
+        $response = $this->get(route('install.database'));
+
+        $response->assertStatus(200);
+        // Default MySQL port should be present
+        $response->assertSee('3306');
     }
 }

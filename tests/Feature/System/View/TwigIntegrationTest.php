@@ -86,7 +86,19 @@ class TwigIntegrationTest extends TestCase
         $template = Twig::createTemplate('{{ __("validation.required") }}');
         $result = $template->render([]);
 
-        $this->assertIsString($result);
+        // Should return the actual translation, not just a string
+        $this->assertNotEmpty($result);
+        $this->assertEquals(__('validation.required'), $result);
+    }
+
+    #[Test]
+    public function it_uses_translation_function_with_replacements(): void
+    {
+        $template = Twig::createTemplate('{{ __("validation.min.string", {"attribute": "name", "min": "3"}) }}');
+        $result = $template->render([]);
+
+        $this->assertNotEmpty($result);
+        $this->assertStringContainsString('3', $result);
     }
 
     #[Test]
@@ -141,8 +153,31 @@ class TwigIntegrationTest extends TestCase
         $template = Twig::createTemplate('{{ request.method }}');
         $result = $template->render([]);
 
-        // In test context, method might vary
+        // Request method should be a valid HTTP method
+        $validMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
+        $this->assertContains($result, $validMethods, "Request method should be a valid HTTP method, got: {$result}");
+    }
+
+    #[Test]
+    public function it_provides_request_path(): void
+    {
+        $template = Twig::createTemplate('{{ request.path }}');
+        $result = $template->render([]);
+
         $this->assertIsString($result);
+        // Path should start with / or be empty
+        $this->assertTrue($result === '' || str_starts_with($result, '/') || $result === '/', "Path should be empty or start with /");
+    }
+
+    #[Test]
+    public function it_provides_request_url(): void
+    {
+        $template = Twig::createTemplate('{{ request.url }}');
+        $result = $template->render([]);
+
+        $this->assertNotEmpty($result);
+        // URL should be a valid URL format
+        $this->assertStringStartsWith('http', $result);
     }
 
     #[Test]
@@ -181,5 +216,63 @@ class TwigIntegrationTest extends TestCase
         $result = $template->render([]);
 
         $this->assertEquals(config('app.name'), $result);
+    }
+
+    #[Test]
+    public function it_renders_include_tag(): void
+    {
+        // Test include using inline template
+        $template = Twig::createTemplate('{% include "components/button.twig" with {label: "Click me", variant: "primary"} %}');
+        $result = $template->render([]);
+
+        $this->assertStringContainsString('Click me', $result);
+    }
+
+    #[Test]
+    public function it_renders_embed_tag(): void
+    {
+        // Embed allows overriding blocks from included template
+        $template = Twig::createTemplate('{% embed "layouts/guest.twig" %}{% block content %}Custom content{% endblock %}{% endembed %}');
+        $result = $template->render([]);
+
+        $this->assertStringContainsString('Custom content', $result);
+    }
+
+    #[Test]
+    public function it_uses_dump_function_in_debug_mode(): void
+    {
+        // dump() should work (outputs debug info)
+        $template = Twig::createTemplate('{{ dump("test") }}');
+        $result = $template->render([]);
+
+        // dump returns a string representation
+        $this->assertIsString($result);
+    }
+
+    #[Test]
+    public function it_uses_date_function(): void
+    {
+        $template = Twig::createTemplate('{{ date("2025-01-15")|date("Y-m-d") }}');
+        $result = $template->render([]);
+
+        $this->assertEquals('2025-01-15', $result);
+    }
+
+    #[Test]
+    public function it_uses_cycle_function(): void
+    {
+        $template = Twig::createTemplate('{% for i in range(0, 3) %}{{ cycle(["odd", "even"], i) }}{% endfor %}');
+        $result = $template->render([]);
+
+        $this->assertEquals('oddevenoddeven', $result);
+    }
+
+    #[Test]
+    public function it_uses_random_function(): void
+    {
+        $template = Twig::createTemplate('{{ random([1, 2, 3]) }}');
+        $result = $template->render([]);
+
+        $this->assertContains((int) $result, [1, 2, 3]);
     }
 }

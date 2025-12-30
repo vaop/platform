@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
@@ -19,7 +21,8 @@ class HomePage extends Page
      */
     public function assert(Browser $browser): void
     {
-        //
+        $browser->assertPathIs('/')
+            ->assertSee('Welcome to');
     }
 
     /**
@@ -30,7 +33,10 @@ class HomePage extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@heading' => 'h1',
+            '@login-button' => 'a[href*="login"]',
+            '@register-button' => 'a[href*="register"]',
+            '@dashboard-button' => 'a[href*="dashboard"]',
         ];
     }
 }

@@ -176,6 +176,13 @@ class BackupService
             if ($item->isDir()) {
                 $zip->addEmptyDir($relPath);
             } else {
+                // Check file still exists before adding (handles race conditions)
+                if (! file_exists($itemPath) || ! is_readable($itemPath)) {
+                    logger()->warning("Backup: Skipping missing or unreadable file: {$relPath}");
+
+                    continue;
+                }
+
                 $zip->addFile($itemPath, $relPath);
             }
         }
@@ -227,18 +234,20 @@ class BackupService
     private function shouldSkip(string $path): bool
     {
         $skipPatterns = [
-            'vendor/',
-            'node_modules/',
-            'storage/logs/',
-            'storage/framework/cache/',
-            'storage/framework/sessions/',
-            'storage/framework/views/',
-            'storage/app/backups/',
-            '.git/',
+            'vendor',
+            'node_modules',
+            'storage/logs',
+            'storage/framework/cache',
+            'storage/framework/sessions',
+            'storage/framework/views',
+            'storage/app/backups',
+            'bootstrap/cache',
+            '.git',
         ];
 
         foreach ($skipPatterns as $pattern) {
-            if (str_contains($path, $pattern)) {
+            // Match exact directory name or path containing the pattern with separator
+            if ($path === $pattern || str_contains($path, $pattern.'/')) {
                 return true;
             }
         }
