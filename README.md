@@ -34,7 +34,7 @@ VAOP takes a different approach:
 | Container support      | Yes        | Community  | N/A       | No        | No        |
 | **Licensing**          |            |            |           |           |           |
 | Open source            | Yes        | Yes        | No        | No        | Yes       |
-| Monthly cost           | Free       | Free       | ~$32/mo   | ~$20/mo   | Free      |
+| Monthly cost           | Free       | Free       | £25/mo    | £14.99/mo | Free      |
 | **Features**           |            |            |           |           |           |
 | No plugins required    | Yes        | No         | Yes       | Yes       | Yes       |
 | Financial system       | Yes        | Yes        | No        | Limited   | Limited   |
