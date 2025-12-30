@@ -166,7 +166,7 @@ class TwigIntegrationTest extends TestCase
 
         $this->assertIsString($result);
         // Path should start with / or be empty
-        $this->assertTrue($result === '' || str_starts_with($result, '/') || $result === '/', "Path should be empty or start with /");
+        $this->assertTrue($result === '' || str_starts_with($result, '/') || $result === '/', 'Path should be empty or start with /');
     }
 
     #[Test]

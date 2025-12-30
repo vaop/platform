@@ -215,7 +215,7 @@ class AdminCreationTest extends TestCase
     #[Test]
     public function admin_creation_rejects_excessively_long_email(): void
     {
-        $longEmail = str_repeat('a', 250) . '@example.com';
+        $longEmail = str_repeat('a', 250).'@example.com';
 
         $response = $this->post(route('install.admin.store'), [
             'name' => 'Admin User',
@@ -262,7 +262,7 @@ class AdminCreationTest extends TestCase
         // Test that names with unusual characters are handled gracefully
         // PHP/Laravel will typically strip null bytes from request input
         $response = $this->post(route('install.admin.store'), [
-            'name' => "Admin User",
+            'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',

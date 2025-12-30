@@ -7,13 +7,11 @@ namespace Tests\Feature\Update;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Mockery;
-use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Services\GitHub\GitHubReleaseService;
 use Services\Update\UpdateService;
 use System\Filesystem\BackupService;
 use Tests\TestCase;
-use ZipArchive;
 
 class UpdateExtractionTest extends TestCase
 {

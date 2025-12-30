@@ -90,5 +90,4 @@ class InstallerRoutesTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee(__('install.finalize.title'));
     }
-
 }
