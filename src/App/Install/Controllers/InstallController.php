@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
-use App\Install\Services\RequirementsChecker;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
+use System\Platform\RequirementsChecker;
 
 class InstallController extends Controller
 {

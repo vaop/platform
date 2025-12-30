@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
-use App\Install\Services\EnvironmentWriter;
-use App\Install\Services\MigrationRunner;
 use Domain\User\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Artisan;
+use System\Database\MigrationRunner;
+use System\Environment\EnvironmentWriter;
 use Throwable;
 
 class FinalizeController extends Controller

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Update\Services;
 
-use App\Update\Exceptions\UpdateException;
-use App\Update\Services\GitHubReleaseService;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
+use Services\GitHub\GitHubReleaseService;
+use Services\Update\Exceptions\UpdateException;
 use Tests\TestCase;
 
 class GitHubReleaseServiceTest extends TestCase

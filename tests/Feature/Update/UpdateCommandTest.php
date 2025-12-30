@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Update;
 
-use App\Update\Exceptions\UpdateException;
-use App\Update\Services\BackupService;
-use App\Update\Services\UpdateService;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Services\Update\Exceptions\UpdateException;
+use Services\Update\UpdateService;
+use System\Filesystem\BackupService;
 use Tests\TestCase;
 
 class UpdateCommandTest extends TestCase

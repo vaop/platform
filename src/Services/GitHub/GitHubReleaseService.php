@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Update\Services;
+namespace Services\GitHub;
 
-use App\Update\Exceptions\UpdateException;
 use Illuminate\Support\Facades\Http;
+use Services\Update\Exceptions\UpdateException;
 
 class GitHubReleaseService
 {

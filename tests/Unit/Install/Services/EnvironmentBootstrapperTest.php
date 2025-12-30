@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Install\Services;
 
-use App\Install\Services\EnvironmentBootstrapper;
 use PHPUnit\Framework\Attributes\Test;
+use System\Environment\EnvironmentBootstrapper;
 use Tests\TestCase;
 
 class EnvironmentBootstrapperTest extends TestCase

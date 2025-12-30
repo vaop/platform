@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Update\Services;
 
-use App\Update\Exceptions\UpdateException;
-use App\Update\Services\BackupService;
 use PHPUnit\Framework\Attributes\Test;
+use Services\Update\Exceptions\UpdateException;
+use System\Filesystem\BackupService;
 use Tests\TestCase;
 
 class BackupServiceTest extends TestCase
@@ -169,7 +169,7 @@ class BackupServiceTest extends TestCase
         $backupFile = $this->service->create($version);
 
         // Modify the test file
-        file_put_contents(base_path('src/App/Update/Services/BackupService.php'), file_get_contents(base_path('src/App/Update/Services/BackupService.php')));
+        file_put_contents(base_path('src/System/Filesystem/BackupService.php'), file_get_contents(base_path('src/System/Filesystem/BackupService.php')));
 
         // The backup was created, verify it exists
         $this->assertFileExists($backupFile);

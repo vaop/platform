@@ -14,7 +14,7 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 require __DIR__.'/../vendor/autoload.php';
 
 // Ensure .env file exists for fresh installations...
-\App\Install\Services\EnvironmentBootstrapper::ensure();
+\System\Environment\EnvironmentBootstrapper::ensure();
 
 // Bootstrap Laravel and handle the request...
 /** @var Application $app */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Update\Exceptions;
+namespace Services\Update\Exceptions;
 
 use Exception;
 

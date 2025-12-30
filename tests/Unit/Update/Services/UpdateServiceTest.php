@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Update\Services;
 
-use App\Update\Exceptions\UpdateException;
-use App\Update\Services\BackupService;
-use App\Update\Services\GitHubReleaseService;
-use App\Update\Services\UpdateService;
 use Illuminate\Support\Facades\Http;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
+use Services\GitHub\GitHubReleaseService;
+use Services\Update\Exceptions\UpdateException;
+use Services\Update\UpdateService;
+use System\Filesystem\BackupService;
 use Tests\TestCase;
 
 class UpdateServiceTest extends TestCase

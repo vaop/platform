@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Install\Services;
 
-use App\Install\Services\DatabaseValidator;
 use PHPUnit\Framework\Attributes\Test;
+use System\Database\DatabaseValidator;
 use Tests\TestCase;
 
 class DatabaseValidatorTest extends TestCase

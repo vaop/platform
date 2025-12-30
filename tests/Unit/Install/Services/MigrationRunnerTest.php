@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Install\Services;
 
-use App\Install\Services\MigrationRunner;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use System\Database\MigrationRunner;
 use Tests\TestCase;
 
 class MigrationRunnerTest extends TestCase

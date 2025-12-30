@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Install\Services;
 
-use App\Install\Services\EnvironmentWriter;
 use PHPUnit\Framework\Attributes\Test;
+use System\Environment\EnvironmentWriter;
 use Tests\TestCase;
 
 class EnvironmentWriterTest extends TestCase

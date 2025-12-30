@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Install\Services;
+namespace System\Platform;
 
 class RequirementsChecker
 {

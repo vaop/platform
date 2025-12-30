@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
-use App\Install\Services\EnvironmentWriter;
 use DateTimeZone;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use System\Environment\EnvironmentWriter;
 
 class EnvironmentController extends Controller
 {

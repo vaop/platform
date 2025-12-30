@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Update\Services;
+namespace Services\Update;
 
-use App\Update\Exceptions\UpdateException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
+use Services\GitHub\GitHubReleaseService;
+use Services\Update\Exceptions\UpdateException;
+use System\Filesystem\BackupService;
 use ZipArchive;
 
 class UpdateService

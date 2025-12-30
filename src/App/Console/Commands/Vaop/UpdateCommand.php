@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Vaop;
 
-use App\Update\Exceptions\UpdateException;
-use App\Update\Services\BackupService;
-use App\Update\Services\GitHubReleaseService;
-use App\Update\Services\UpdateService;
 use Illuminate\Console\Command;
+use Services\GitHub\GitHubReleaseService;
+use Services\Update\Exceptions\UpdateException;
+use Services\Update\UpdateService;
+use System\Filesystem\BackupService;
 
 class UpdateCommand extends Command
 {

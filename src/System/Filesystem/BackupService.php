@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Update\Services;
+namespace System\Filesystem;
 
-use App\Update\Exceptions\UpdateException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Services\Update\Exceptions\UpdateException;
 use ZipArchive;
 
 class BackupService

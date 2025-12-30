@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
-use App\Install\Services\DatabaseValidator;
-use App\Install\Services\EnvironmentWriter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use System\Database\DatabaseValidator;
+use System\Environment\EnvironmentWriter;
 
 class DatabaseController extends Controller
 {

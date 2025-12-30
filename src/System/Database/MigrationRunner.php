@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Install\Services;
+namespace System\Database;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
