@@ -154,7 +154,7 @@ class CoreFunctionsExtensionTest extends TestCase
             'csrf_token',
             'method_field',
             'old',
-            '__',
+            't',
             'trans_choice',
             'session',
             'has_flash',

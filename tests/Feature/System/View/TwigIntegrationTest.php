@@ -83,7 +83,7 @@ class TwigIntegrationTest extends TestCase
     #[Test]
     public function it_uses_translation_function(): void
     {
-        $template = Twig::createTemplate('{{ __("validation.required") }}');
+        $template = Twig::createTemplate('{{ t("validation.required") }}');
         $result = $template->render([]);
 
         // Should return the actual translation, not just a string
@@ -94,7 +94,7 @@ class TwigIntegrationTest extends TestCase
     #[Test]
     public function it_uses_translation_function_with_replacements(): void
     {
-        $template = Twig::createTemplate('{{ __("validation.min.string", {"attribute": "name", "min": "3"}) }}');
+        $template = Twig::createTemplate('{{ t("validation.min.string", {"attribute": "name", "min": "3"}) }}');
         $result = $template->render([]);
 
         $this->assertNotEmpty($result);

@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ __('install.title') }}</title>
+    <title>{{ t('install.title') }}</title>
     {{ vite(['resources/css/app.css']) }}
 </head>
 <body class="bg-gray-100 min-h-screen">
     <div class="min-h-screen flex flex-col">
         <header class="bg-white shadow-sm">
             <div class="max-w-3xl mx-auto px-4 py-4">
-                <h1 class="text-xl font-semibold text-gray-900">{{ __('install.header') }}</h1>
+                <h1 class="text-xl font-semibold text-gray-900">{{ t('install.header') }}</h1>
             </div>
         </header>
 
@@ -19,12 +19,12 @@
             <div class="max-w-3xl mx-auto px-4">
                 {% if step is defined %}
                 {% set steps = {
-                    'welcome': __('install.steps.welcome'),
-                    'requirements': __('install.steps.requirements'),
-                    'database': __('install.steps.database'),
-                    'environment': __('install.steps.environment'),
-                    'admin': __('install.steps.admin'),
-                    'finalize': __('install.steps.finalize')
+                    'welcome': t('install.steps.welcome'),
+                    'requirements': t('install.steps.requirements'),
+                    'database': t('install.steps.database'),
+                    'environment': t('install.steps.environment'),
+                    'admin': t('install.steps.admin'),
+                    'finalize': t('install.steps.finalize')
                 } %}
                 {% set currentFound = false %}
                 <nav class="mb-8">

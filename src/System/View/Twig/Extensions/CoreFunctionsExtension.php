@@ -50,7 +50,7 @@ class CoreFunctionsExtension extends AbstractExtension
             new TwigFunction('old', [$this, 'old']),
 
             // Localization
-            new TwigFunction('__', [$this, 'trans']),
+            new TwigFunction('t', [$this, 'trans']),
             new TwigFunction('trans_choice', [$this, 'transChoice']),
 
             // Session

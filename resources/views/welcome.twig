@@ -3,36 +3,36 @@
  #}
 {% extends 'layouts/guest.twig' %}
 
-{% block title %}{{ __('Welcome') }} - {{ app.name }}{% endblock %}
+{% block title %}{{ t('Welcome') }} - {{ app.name }}{% endblock %}
 
 {% block content %}
 <div class="center-content section-lg">
     <div class="container container-lg" style="text-align: center;">
         <h1 class="heading-2xl">
-            {{ __('Welcome to') }}
+            {{ t('Welcome to') }}
             <span style="color: var(--color-primary);">{{ app.name }}</span>
         </h1>
         <p class="text-lead text-muted" style="max-width: 48rem; margin: 1rem auto;">
-            {{ __('Your virtual airline operations platform.') }}
+            {{ t('Your virtual airline operations platform.') }}
         </p>
         <div class="cluster cluster-4" style="justify-content: center; margin-top: 2rem;">
             {% if is_guest() %}
                 {% include 'components/button.twig' with {
                     href: url('/login'),
-                    label: __('Log In'),
+                    label: t('Log In'),
                     variant: 'primary',
                     size: 'lg'
                 } %}
                 {% include 'components/button.twig' with {
                     href: url('/register'),
-                    label: __('Register'),
+                    label: t('Register'),
                     variant: 'secondary',
                     size: 'lg'
                 } %}
             {% else %}
                 {% include 'components/button.twig' with {
                     href: url('/dashboard'),
-                    label: __('Go to Dashboard'),
+                    label: t('Go to Dashboard'),
                     variant: 'primary',
                     size: 'lg'
                 } %}

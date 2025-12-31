@@ -5,17 +5,17 @@
 
 {% block content %}
 <div class="p-6">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('install.finalize.title') }}</h2>
+    <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ t('install.finalize.title') }}</h2>
 
     {% if install_step == 'ready' %}
         <p class="text-gray-600 mb-6">
-            {{ __('install.finalize.ready_description') }}
+            {{ t('install.finalize.ready_description') }}
         </p>
 
         <ul class="list-disc list-inside text-gray-600 mb-6 space-y-2">
-            <li>{{ __('install.finalize.will_create_tables', {count: progress.total}) }}</li>
-            <li>{{ __('install.finalize.will_create_admin', {email: admin_email}) }}</li>
-            <li>{{ __('install.finalize.will_finalize') }}</li>
+            <li>{{ t('install.finalize.will_create_tables', {count: progress.total}) }}</li>
+            <li>{{ t('install.finalize.will_create_admin', {email: admin_email}) }}</li>
+            <li>{{ t('install.finalize.will_finalize') }}</li>
         </ul>
 
         <form action="{{ route('install.finalize.store') }}" method="POST">
@@ -24,13 +24,13 @@
             <div class="flex justify-between mt-8">
                 {% include 'components/button.twig' with {
                     href: route('install.admin'),
-                    label: __('install.back'),
+                    label: t('install.back'),
                     variant: 'ghost'
                 } %}
 
                 {% include 'components/button.twig' with {
                     type: 'submit',
-                    label: __('install.finalize.install_button'),
+                    label: t('install.finalize.install_button'),
                     variant: 'primary'
                 } %}
             </div>
@@ -38,7 +38,7 @@
     {% else %}
         <div class="mb-6">
             <div class="flex justify-between text-sm text-gray-600 mb-2">
-                <span>{{ __('install.finalize.installing') }}</span>
+                <span>{{ t('install.finalize.installing') }}</span>
                 <span>{{ progress.percent }}%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -52,20 +52,20 @@
                 {{ ui.spinner({size: 'sm'}) }}
                 <span class="text-gray-700">
                     {% if next_step == 'migrate' %}
-                        {{ __('install.finalize.running_migrations', {completed: progress.completed, total: progress.total}) }}
+                        {{ t('install.finalize.running_migrations', {completed: progress.completed, total: progress.total}) }}
                     {% elseif next_step == 'user' %}
-                        {{ __('install.finalize.creating_admin') }}
+                        {{ t('install.finalize.creating_admin') }}
                     {% elseif next_step == 'optimize' %}
-                        {{ __('install.finalize.optimizing') }}
+                        {{ t('install.finalize.optimizing') }}
                     {% elseif next_step == 'complete' %}
-                        {{ __('install.finalize.completing') }}
+                        {{ t('install.finalize.completing') }}
                     {% endif %}
                 </span>
             </div>
         </div>
 
         <p class="text-sm text-gray-500">
-            {{ __('install.finalize.do_not_close') }}
+            {{ t('install.finalize.do_not_close') }}
         </p>
 
         <form id="continue-form" action="{{ route('install.finalize.store') }}" method="POST">

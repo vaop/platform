@@ -7,13 +7,13 @@
     <nav class="flex-between" aria-label="Pagination">
         <div class="hide-mobile">
             <p class="text-small text-muted">
-                {{ __('Showing') }}
+                {{ t('Showing') }}
                 <span class="font-medium">{{ paginator.firstItem() }}</span>
-                {{ __('to') }}
+                {{ t('to') }}
                 <span class="font-medium">{{ paginator.lastItem() }}</span>
-                {{ __('of') }}
+                {{ t('of') }}
                 <span class="font-medium">{{ paginator.total() }}</span>
-                {{ __('results') }}
+                {{ t('results') }}
             </p>
         </div>
 
@@ -21,22 +21,22 @@
             {# Previous #}
             {% if paginator.onFirstPage() %}
                 <span class="btn btn-secondary btn-sm" style="opacity: 0.5; cursor: not-allowed;">
-                    {{ __('Previous') }}
+                    {{ t('Previous') }}
                 </span>
             {% else %}
                 <a href="{{ paginator.previousPageUrl() }}" class="btn btn-secondary btn-sm">
-                    {{ __('Previous') }}
+                    {{ t('Previous') }}
                 </a>
             {% endif %}
 
             {# Next #}
             {% if paginator.hasMorePages() %}
                 <a href="{{ paginator.nextPageUrl() }}" class="btn btn-secondary btn-sm">
-                    {{ __('Next') }}
+                    {{ t('Next') }}
                 </a>
             {% else %}
                 <span class="btn btn-secondary btn-sm" style="opacity: 0.5; cursor: not-allowed;">
-                    {{ __('Next') }}
+                    {{ t('Next') }}
                 </span>
             {% endif %}
         </div>

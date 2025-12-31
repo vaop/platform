@@ -3,18 +3,18 @@
  #}
 {% extends 'layouts/error.twig' %}
 
-{% block title %}{{ __('Access Denied') }} - {{ app.name }}{% endblock %}
+{% block title %}{{ t('Access Denied') }} - {{ app.name }}{% endblock %}
 
 {% block content %}
 <div class="center-content section-lg">
     <div style="text-align: center;">
         <h1 class="heading-2xl" style="font-size: 6rem; color: var(--color-border);">403</h1>
-        <h2 class="heading-lg" style="margin-top: 1rem;">{{ __('Access Denied') }}</h2>
-        <p class="text-muted" style="margin-top: 0.5rem;">{{ __("Sorry, you don't have permission to access this page.") }}</p>
+        <h2 class="heading-lg" style="margin-top: 1rem;">{{ t('Access Denied') }}</h2>
+        <p class="text-muted" style="margin-top: 0.5rem;">{{ t("Sorry, you don't have permission to access this page.") }}</p>
         <div style="margin-top: 1.5rem;">
             {% include 'components/button.twig' with {
                 href: url('/'),
-                label: __('Go Home'),
+                label: t('Go Home'),
                 variant: 'primary'
             } %}
         </div>
