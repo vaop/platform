@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mariadb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return [
     */
 
     'migrations' => [
-        'table' => 'migrations',
+        'table' => 'system_migrations',
         'update_date_on_publish' => true,
     ],
 

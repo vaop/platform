@@ -38,29 +38,9 @@ return [
         'database' => [
             'driver' => 'database',
             'connection' => env('DB_QUEUE_CONNECTION'),
-            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'table' => 'system_jobs',
             'queue' => env('DB_QUEUE', 'default'),
             'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
-            'after_commit' => false,
-        ],
-
-        'beanstalkd' => [
-            'driver' => 'beanstalkd',
-            'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),
-            'queue' => env('BEANSTALKD_QUEUE', 'default'),
-            'retry_after' => (int) env('BEANSTALKD_QUEUE_RETRY_AFTER', 90),
-            'block_for' => 0,
-            'after_commit' => false,
-        ],
-
-        'sqs' => [
-            'driver' => 'sqs',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
-            'queue' => env('SQS_QUEUE', 'default'),
-            'suffix' => env('SQS_SUFFIX'),
-            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'after_commit' => false,
         ],
 
@@ -81,14 +61,6 @@ return [
             'driver' => 'background',
         ],
 
-        'failover' => [
-            'driver' => 'failover',
-            'connections' => [
-                'database',
-                'deferred',
-            ],
-        ],
-
     ],
 
     /*
@@ -104,7 +76,7 @@ return [
 
     'batching' => [
         'database' => env('DB_CONNECTION', 'sqlite'),
-        'table' => 'job_batches',
+        'table' => 'system_job_batches',
     ],
 
     /*
@@ -121,9 +93,9 @@ return [
     */
 
     'failed' => [
-        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+        'driver' => 'database-uuids',
         'database' => env('DB_CONNECTION', 'sqlite'),
-        'table' => 'failed_jobs',
+        'table' => 'system_failed_jobs',
     ],
 
 ];
