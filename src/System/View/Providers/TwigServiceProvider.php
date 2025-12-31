@@ -29,7 +29,7 @@ class TwigServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../../../../config/twig.php',
+            config_path('twig.php'),
             'twig'
         );
 
@@ -38,10 +38,6 @@ class TwigServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../../../../config/twig.php' => config_path('twig.php'),
-        ], 'vaop-twig-config');
-
         // Ensure Twig cache directory exists
         $this->ensureCacheDirectoryExists();
 
