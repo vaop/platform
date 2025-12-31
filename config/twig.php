@@ -36,14 +36,12 @@ return [
     | The sandbox restricts what Twig templates can do. This is essential
     | for security when allowing user-editable templates.
     |
-    | See ADR: 0005-twig-templating-sandbox.md
-    |
     */
     'sandbox' => [
-        // Sandbox is disabled for internal templates. It will be enabled
-        // for user-editable templates in Phase 13 (database-backed themes).
-        'enabled' => false,
-        'global' => false,
+        // Sandbox enabled for all templates as defense-in-depth.
+        // Restricts templates to safe operations defined below.
+        'enabled' => true,
+        'global' => true,
 
         'allowed_tags' => [
             'if',
@@ -55,6 +53,7 @@ return [
             'embed',
             'macro',
             'import',
+            'from',
             'with',
             'spaceless',
             'verbatim',
@@ -106,6 +105,7 @@ return [
             'reduce',
             'url_encode',
             'spaceless',
+
             // Custom filters (defined in FiltersExtension)
             'truncate',
             'excerpt',
@@ -128,6 +128,7 @@ return [
             'parent',
             'attribute',
             'dump',
+
             // Custom functions (defined in CoreFunctionsExtension)
             'route',
             'url',
