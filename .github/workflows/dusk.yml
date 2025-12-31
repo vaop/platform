@@ -39,9 +39,6 @@ jobs:
 
     name: Dusk (PHP ${{ matrix.php }} / MariaDB ${{ matrix.mariadb }})
 
-    env:
-      APP_URL: "http://127.0.0.1:8000"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -91,17 +88,6 @@ jobs:
       - name: Setup environment
         run: |
           cp .env.example .env
-          # Update .env with test database credentials BEFORE key:generate
-          # (SettingsServiceProvider connects to DB during Laravel boot)
-          sed -i "s|^DB_CONNECTION=.*|DB_CONNECTION=mariadb|" .env
-          sed -i "s|^DB_HOST=.*|DB_HOST=127.0.0.1|" .env
-          sed -i "s|^DB_DATABASE=.*|DB_DATABASE=testing|" .env
-          sed -i "s|^DB_USERNAME=.*|DB_USERNAME=root|" .env
-          sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=password|" .env
-          # Use file drivers (no sessions table exists)
-          sed -i "s|^SESSION_DRIVER=.*|SESSION_DRIVER=file|" .env
-          sed -i "s|^CACHE_STORE=.*|CACHE_STORE=file|" .env
-          sed -i "s|^QUEUE_CONNECTION=.*|QUEUE_CONNECTION=sync|" .env
           php artisan key:generate
           APP_KEY=$(grep "^APP_KEY=" .env | cut -d '=' -f2-)
           sed -i "s|^APP_KEY=.*|APP_KEY=$APP_KEY|" .env.dusk.testing
@@ -127,7 +113,8 @@ jobs:
           DB_PASSWORD: password
 
       - name: Wait for server
-        run: timeout 60 bash -c 'until curl -sf http://127.0.0.1:8000/up -o /dev/null; do sleep 1; done'
+        run: |
+          timeout 60 bash -c 'until curl -sf http://127.0.0.1:8000/up -o /dev/null; do sleep 1; done'
 
       - name: Install ChromeDriver
         run: php artisan dusk:chrome-driver --detect
