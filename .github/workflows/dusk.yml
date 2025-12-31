@@ -88,12 +88,12 @@ jobs:
       - name: Setup environment
         run: |
           cp .env.example .env
-          php artisan key:generate
-          APP_KEY=$(grep "^APP_KEY=" .env | cut -d '=' -f2-)
-          sed -i "s|^APP_KEY=.*|APP_KEY=$APP_KEY|" .env.dusk.testing
-          # Update .env with test database credentials so the server has correct config
+          # Update .env with test database credentials BEFORE key:generate
+          # (SettingsServiceProvider connects to DB during Laravel boot)
           sed -i "s|^DB_CONNECTION=.*|DB_CONNECTION=mariadb|" .env
+          sed -i "s|^DB_HOST=.*|DB_HOST=127.0.0.1|" .env
           sed -i "s|^DB_DATABASE=.*|DB_DATABASE=testing|" .env
+          sed -i "s|^DB_USERNAME=.*|DB_USERNAME=root|" .env
           sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=password|" .env
 
       - name: Run migrations
