@@ -29,7 +29,6 @@ class EnvironmentConfigurationTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee(__('install.environment.airline_name'));
         $response->assertSee(__('install.environment.app_url'));
-        $response->assertSee(__('install.environment.timezone'));
     }
 
     #[Test]
@@ -41,18 +40,6 @@ class EnvironmentConfigurationTest extends TestCase
         // Verify form structure
         $response->assertSee('name="app_name"', false);
         $response->assertSee('name="app_url"', false);
-        $response->assertSee('name="timezone"', false);
-    }
-
-    #[Test]
-    public function environment_form_shows_timezone_options(): void
-    {
-        $response = $this->get(route('install.environment'));
-
-        $response->assertStatus(200);
-        $response->assertSee('UTC');
-        $response->assertSee('America/New_York');
-        $response->assertSee('Europe/London');
     }
 
     #[Test]
@@ -61,7 +48,6 @@ class EnvironmentConfigurationTest extends TestCase
         $response = $this->post(route('install.environment.store'), [
             'app_name' => '',
             'app_url' => 'https://example.com',
-            'timezone' => 'UTC',
         ]);
 
         $response->assertSessionHasErrors('app_name');
@@ -73,7 +59,6 @@ class EnvironmentConfigurationTest extends TestCase
         $response = $this->post(route('install.environment.store'), [
             'app_name' => 'My Airline',
             'app_url' => 'not-a-valid-url',
-            'timezone' => 'UTC',
         ]);
 
         $response->assertSessionHasErrors('app_url');
@@ -85,22 +70,21 @@ class EnvironmentConfigurationTest extends TestCase
         $response = $this->post(route('install.environment.store'), [
             'app_name' => 'My Virtual Airline',
             'app_url' => 'https://example.com',
-            'timezone' => 'UTC',
         ]);
 
         $response->assertRedirect(route('install.admin'));
     }
 
     #[Test]
-    public function environment_configuration_accepts_valid_timezone(): void
+    public function environment_configuration_stores_values_in_session(): void
     {
-        $response = $this->post(route('install.environment.store'), [
-            'app_name' => 'My Virtual Airline',
-            'app_url' => 'https://example.com',
-            'timezone' => 'America/Los_Angeles',
+        $this->post(route('install.environment.store'), [
+            'app_name' => 'Test VA',
+            'app_url' => 'https://test.example.com',
         ]);
 
-        $response->assertRedirect(route('install.admin'));
+        $this->assertEquals('Test VA', session('va_name'));
+        $this->assertEquals('https://test.example.com', session('site_url'));
     }
 
     #[Test]
@@ -109,7 +93,6 @@ class EnvironmentConfigurationTest extends TestCase
         $response = $this->post(route('install.environment.store'), [
             'app_name' => 'My Virtual Airline',
             'app_url' => 'https://example.com:8080',
-            'timezone' => 'UTC',
         ]);
 
         $response->assertRedirect(route('install.admin'));
@@ -121,9 +104,19 @@ class EnvironmentConfigurationTest extends TestCase
         $response = $this->post(route('install.environment.store'), [
             'app_name' => 'My Virtual Airline',
             'app_url' => 'http://localhost',
-            'timezone' => 'UTC',
         ]);
 
         $response->assertRedirect(route('install.admin'));
+    }
+
+    #[Test]
+    public function environment_configuration_strips_trailing_slash_from_url(): void
+    {
+        $this->post(route('install.environment.store'), [
+            'app_name' => 'My Virtual Airline',
+            'app_url' => 'https://example.com/',
+        ]);
+
+        $this->assertEquals('https://example.com', session('site_url'));
     }
 }

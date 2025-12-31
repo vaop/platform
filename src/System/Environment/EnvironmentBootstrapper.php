@@ -6,7 +6,7 @@ namespace System\Environment;
 
 class EnvironmentBootstrapper
 {
-    public static function ensure(): void
+    public static function ensure(string $basePath): void
     {
         // Skip bootstrapping if installer is disabled (e.g., in Docker)
         // Docker users configure via environment variables, not .env file
@@ -16,7 +16,6 @@ class EnvironmentBootstrapper
             return;
         }
 
-        $basePath = dirname(__DIR__, 4);
         $envPath = $basePath.'/.env';
 
         if (! file_exists($envPath)) {

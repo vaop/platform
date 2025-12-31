@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
+use Domain\Settings\GeneralSettings;
 use Domain\User\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -52,6 +53,7 @@ class FinalizeController extends Controller
             return match ($step) {
                 'migrate' => $this->handleMigrationStep($adminUser),
                 'user' => $this->handleUserStep($adminUser),
+                'settings' => $this->handleSettingsStep($adminUser),
                 'optimize' => $this->handleOptimizeStep($adminUser),
                 'complete' => $this->handleCompleteStep(),
                 default => redirect()->route('install.finalize'),
@@ -87,6 +89,30 @@ class FinalizeController extends Controller
                 'email_verified_at' => now(),
             ]);
         }
+
+        return view('install.steps.finalize', [
+            'admin_email' => $adminUser['email'],
+            'progress' => $this->migrations->getProgress(),
+            'install_step' => 'running',
+            'next_step' => 'settings',
+        ]);
+    }
+
+    private function handleSettingsStep(array $adminUser): View
+    {
+        // Run any remaining migrations (including settings migrations from database/settings/)
+        // that weren't handled by the custom MigrationRunner
+        Artisan::call('migrate', ['--force' => true]);
+
+        $vaName = session('va_name', 'My Virtual Airline');
+        $siteUrl = session('site_url', 'http://localhost');
+
+        $settings = app(GeneralSettings::class);
+        $settings->vaName = $vaName;
+        $settings->siteUrl = $siteUrl;
+        $settings->save();
+
+        session()->forget(['va_name', 'site_url']);
 
         return view('install.steps.finalize', [
             'admin_email' => $adminUser['email'],

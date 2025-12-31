@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
-use DateTimeZone;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,9 +22,7 @@ class EnvironmentController extends Controller
             'config' => [
                 'app_name' => 'My Virtual Airline',
                 'app_url' => request()->schemeAndHttpHost(),
-                'timezone' => 'UTC',
             ],
-            'timezones' => DateTimeZone::listIdentifiers(),
         ]);
     }
 
@@ -34,16 +31,15 @@ class EnvironmentController extends Controller
         $config = $request->validate([
             'app_name' => 'required|string|max:255',
             'app_url' => 'required|url',
-            'timezone' => 'required|string|timezone',
-        ]);
-
-        $this->env->setMultiple([
-            'APP_NAME' => $config['app_name'],
-            'APP_URL' => rtrim($config['app_url'], '/'),
-            'APP_TIMEZONE' => $config['timezone'],
         ]);
 
         $this->env->generateAppKey();
+
+        // Store VA name and URL in session (will be saved to settings after migrations)
+        session([
+            'va_name' => $config['app_name'],
+            'site_url' => rtrim($config['app_url'], '/'),
+        ]);
 
         return redirect()->route('install.admin');
     }
