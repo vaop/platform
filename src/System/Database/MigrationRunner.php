@@ -54,7 +54,7 @@ class MigrationRunner
             return $migrations;
         }
 
-        $ran = DB::table('migrations')->pluck('migration')->toArray();
+        $ran = DB::table('system_migrations')->pluck('migration')->toArray();
 
         return array_values(array_filter(
             $migrations,
@@ -100,7 +100,7 @@ class MigrationRunner
     private function migrationTableExists(): bool
     {
         try {
-            return Schema::hasTable('migrations');
+            return Schema::hasTable('system_migrations');
         } catch (\Exception $e) {
             return false;
         }
@@ -112,7 +112,7 @@ class MigrationRunner
             return;
         }
 
-        Schema::create('migrations', function ($table) {
+        Schema::create('system_migrations', function ($table) {
             $table->id();
             $table->string('migration');
             $table->integer('batch');
@@ -130,9 +130,9 @@ class MigrationRunner
             $class->up();
         }
 
-        $batch = DB::table('migrations')->max('batch') ?? 0;
+        $batch = DB::table('system_migrations')->max('batch') ?? 0;
 
-        DB::table('migrations')->insert([
+        DB::table('system_migrations')->insert([
             'migration' => $migration['name'],
             'batch' => $batch + 1,
         ]);

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table): void {
+        Schema::create('system_settings', function (Blueprint $table): void {
             $table->id();
 
             $table->string('group');

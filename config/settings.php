@@ -13,7 +13,7 @@ return [
     /*
      * The path where the settings classes will be created.
      */
-    'setting_class_path' => base_path('src/Domain/Settings'),
+    'setting_class_path' => base_path('src/System/Settings'),
 
     /*
      * In these directories settings migrations will be stored and ran when migrating. A settings
@@ -83,7 +83,7 @@ return [
      * register them.
      */
     'auto_discover_settings' => [
-        base_path('src/Domain/Settings'),
+        base_path('src/System/Settings'),
     ],
 
     /*

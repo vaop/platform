@@ -7,6 +7,7 @@ namespace System\Settings\Providers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use System\Settings\GeneralSettings;
+use System\Settings\MailSettings;
 
 class SettingsServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,7 @@ class SettingsServiceProvider extends ServiceProvider
     {
         if ($this->settingsReady()) {
             $this->overrideAppConfig();
+            $this->overrideMailConfig();
         }
     }
 
@@ -38,6 +40,26 @@ class SettingsServiceProvider extends ServiceProvider
             ]);
         } catch (\Throwable) {
             // Database connection or settings unavailable, skip override
+        }
+    }
+
+    private function overrideMailConfig(): void
+    {
+        try {
+            $settings = app(MailSettings::class);
+
+            config([
+                'mail.from.address' => $settings->fromAddress,
+                'mail.from.name' => $settings->fromName,
+                'mail.mailers.smtp.scheme' => $settings->smtpScheme,
+                'mail.mailers.smtp.host' => $settings->smtpHost,
+                'mail.mailers.smtp.port' => $settings->smtpPort,
+                'mail.mailers.smtp.username' => $settings->smtpUsername,
+                'mail.mailers.smtp.password' => $settings->smtpPassword,
+                'mail.mailers.smtp.local_domain' => $settings->ehloDomain,
+            ]);
+        } catch (\Throwable) {
+            // Settings unavailable, skip override
         }
     }
 }

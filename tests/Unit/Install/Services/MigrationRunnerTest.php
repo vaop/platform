@@ -117,7 +117,7 @@ class MigrationRunnerTest extends TestCase
     public function completed_migrations_match_database_count(): void
     {
         $progress = $this->runner->getProgress();
-        $dbCount = DB::table('migrations')->count();
+        $dbCount = DB::table('system_migrations')->count();
 
         // MigrationRunner now tracks both database/migrations/ and database/settings/
         $this->assertEquals($dbCount, $progress['completed']);
@@ -156,7 +156,7 @@ class MigrationRunnerTest extends TestCase
     public function pending_migrations_have_name_and_path_keys(): void
     {
         // Clear one migration to have a pending item to test
-        DB::table('migrations')->orderBy('id', 'desc')->limit(1)->delete();
+        DB::table('system_migrations')->orderBy('id', 'desc')->limit(1)->delete();
 
         $pending = $this->runner->getPendingMigrations();
 
