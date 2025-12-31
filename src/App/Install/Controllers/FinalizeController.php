@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
-use Domain\Settings\GeneralSettings;
 use Domain\User\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Artisan;
 use System\Database\MigrationRunner;
 use System\Environment\EnvironmentWriter;
+use System\Settings\GeneralSettings;
 use Throwable;
 
 class FinalizeController extends Controller

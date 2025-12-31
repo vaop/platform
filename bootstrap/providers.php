@@ -6,5 +6,5 @@ return [
     \System\View\Providers\TwigServiceProvider::class,
 
     // Settings
-    \Domain\Settings\Providers\SettingsServiceProvider::class,
+    \System\Settings\Providers\SettingsServiceProvider::class,
 ];

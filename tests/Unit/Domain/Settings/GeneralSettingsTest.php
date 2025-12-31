@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Settings;
 
-use Domain\Settings\GeneralSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use System\Settings\GeneralSettings;
 use Tests\TestCase;
 
 class GeneralSettingsTest extends TestCase

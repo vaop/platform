@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Domain\Settings\Providers;
+namespace System\Settings\Providers;
 
-use Domain\Settings\GeneralSettings;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use System\Settings\GeneralSettings;
 
 class SettingsServiceProvider extends ServiceProvider
 {

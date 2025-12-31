@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Domain\Settings;
+namespace System\Settings;
 
 use Spatie\LaravelSettings\Settings;
 
