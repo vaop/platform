@@ -264,7 +264,6 @@ class BackupService
     {
         return [
             'src',
-            'config',
             'database',
             'public',
             'resources',

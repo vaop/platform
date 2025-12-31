@@ -166,8 +166,8 @@ class BackupServiceTest extends TestCase
     #[Test]
     public function it_can_restore_from_backup(): void
     {
-        // Use a file that's included in backups (config directory)
-        $testFile = base_path('config/.backup-test-'.uniqid().'.php');
+        // Use a file that's included in backups (src/Config directory)
+        $testFile = base_path('src/Config/.backup-test-'.uniqid().'.php');
         $originalContent = '<?php return ["test" => true];';
 
         // Create test file
