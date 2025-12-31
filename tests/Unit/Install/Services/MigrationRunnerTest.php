@@ -23,10 +23,13 @@ class MigrationRunnerTest extends TestCase
         parent::setUp();
         $this->runner = new MigrationRunner;
 
-        // Get all migration files for reference
-        $files = glob(database_path('migrations/*.php'));
-        foreach ($files as $file) {
-            $this->allMigrationFiles[] = pathinfo($file, PATHINFO_FILENAME);
+        // Get all migration files from both directories
+        $directories = ['migrations', 'settings'];
+        foreach ($directories as $dir) {
+            $files = glob(database_path("{$dir}/*.php")) ?: [];
+            foreach ($files as $file) {
+                $this->allMigrationFiles[] = pathinfo($file, PATHINFO_FILENAME);
+            }
         }
         sort($this->allMigrationFiles);
     }
@@ -111,14 +114,13 @@ class MigrationRunnerTest extends TestCase
     }
 
     #[Test]
-    public function completed_migrations_are_less_than_or_equal_to_database_count(): void
+    public function completed_migrations_match_database_count(): void
     {
         $progress = $this->runner->getProgress();
         $dbCount = DB::table('migrations')->count();
 
-        // MigrationRunner tracks only database/migrations/, but the migrations table
-        // may include additional migrations (e.g., Spatie settings migrations from database/settings/)
-        $this->assertLessThanOrEqual($dbCount, $progress['completed']);
+        // MigrationRunner now tracks both database/migrations/ and database/settings/
+        $this->assertEquals($dbCount, $progress['completed']);
     }
 
     #[Test]
@@ -143,9 +145,24 @@ class MigrationRunnerTest extends TestCase
     {
         $pending = $this->runner->getPendingMigrations();
 
-        // Even if empty, verify it's sorted
-        $sorted = $pending;
+        // Even if empty, verify it's sorted by name
+        $names = array_column($pending, 'name');
+        $sorted = $names;
         sort($sorted);
-        $this->assertEquals($sorted, $pending, 'Pending migrations should be sorted');
+        $this->assertEquals($sorted, $names, 'Pending migrations should be sorted by name');
+    }
+
+    #[Test]
+    public function pending_migrations_have_name_and_path_keys(): void
+    {
+        // Clear one migration to have a pending item to test
+        DB::table('migrations')->orderBy('id', 'desc')->limit(1)->delete();
+
+        $pending = $this->runner->getPendingMigrations();
+
+        $this->assertNotEmpty($pending, 'Should have at least one pending migration');
+        $this->assertArrayHasKey('name', $pending[0]);
+        $this->assertArrayHasKey('path', $pending[0]);
+        $this->assertFileExists($pending[0]['path']);
     }
 }

@@ -100,10 +100,6 @@ class FinalizeController extends Controller
 
     private function handleSettingsStep(array $adminUser): View
     {
-        // Run any remaining migrations (including settings migrations from database/settings/)
-        // that weren't handled by the custom MigrationRunner
-        Artisan::call('migrate', ['--force' => true]);
-
         $vaName = session('va_name', 'My Virtual Airline');
         $siteUrl = session('site_url', 'http://localhost');
 

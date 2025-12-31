@@ -9,16 +9,46 @@ use Illuminate\Support\Facades\Schema;
 
 class MigrationRunner
 {
-    public function getPendingMigrations(): array
+    /**
+     * Directories containing migrations to run.
+     */
+    private array $migrationPaths = [
+        'migrations',
+        'settings',
+    ];
+
+    /**
+     * Get all migration files from all configured paths.
+     *
+     * @return array<array{name: string, path: string}>
+     */
+    private function getAllMigrations(): array
     {
-        $files = glob(database_path('migrations/*.php'));
         $migrations = [];
 
-        foreach ($files as $file) {
-            $migrations[] = pathinfo($file, PATHINFO_FILENAME);
+        foreach ($this->migrationPaths as $dir) {
+            $files = glob(database_path("{$dir}/*.php")) ?: [];
+
+            foreach ($files as $file) {
+                $migrations[] = [
+                    'name' => pathinfo($file, PATHINFO_FILENAME),
+                    'path' => $file,
+                ];
+            }
         }
 
-        sort($migrations);
+        // Sort by name (timestamp-based naming ensures correct order)
+        usort($migrations, fn ($a, $b) => strcmp($a['name'], $b['name']));
+
+        return $migrations;
+    }
+
+    /**
+     * @return array<array{name: string, path: string}>
+     */
+    public function getPendingMigrations(): array
+    {
+        $migrations = $this->getAllMigrations();
 
         if (! $this->migrationTableExists()) {
             return $migrations;
@@ -26,7 +56,10 @@ class MigrationRunner
 
         $ran = DB::table('migrations')->pluck('migration')->toArray();
 
-        return array_values(array_diff($migrations, $ran));
+        return array_values(array_filter(
+            $migrations,
+            fn ($m) => ! in_array($m['name'], $ran, true)
+        ));
     }
 
     public function runNext(): ?string
@@ -42,7 +75,7 @@ class MigrationRunner
         $this->ensureMigrationTableExists();
         $this->runMigration($migration);
 
-        return $migration;
+        return $migration['name'];
     }
 
     public function hasPending(): bool
@@ -52,8 +85,7 @@ class MigrationRunner
 
     public function getProgress(): array
     {
-        $files = glob(database_path('migrations/*.php'));
-        $total = count($files);
+        $total = count($this->getAllMigrations());
         $pending = count($this->getPendingMigrations());
         $completed = $total - $pending;
 
@@ -87,10 +119,12 @@ class MigrationRunner
         });
     }
 
-    private function runMigration(string $migration): void
+    /**
+     * @param array{name: string, path: string} $migration
+     */
+    private function runMigration(array $migration): void
     {
-        $file = database_path("migrations/{$migration}.php");
-        $class = require $file;
+        $class = require $migration['path'];
 
         if (is_object($class)) {
             $class->up();
@@ -99,7 +133,7 @@ class MigrationRunner
         $batch = DB::table('migrations')->max('batch') ?? 0;
 
         DB::table('migrations')->insert([
-            'migration' => $migration,
+            'migration' => $migration['name'],
             'batch' => $batch + 1,
         ]);
     }
