@@ -110,7 +110,7 @@ jobs:
           DB_PASSWORD: password
 
       - name: Start Laravel server
-        run: php artisan serve --host=0.0.0.0 --port=8000 &
+        run: nohup php artisan serve --host=0.0.0.0 --port=8000 > /dev/null 2>&1 &
         env:
           DB_CONNECTION: mariadb
           DB_HOST: 127.0.0.1
@@ -120,31 +120,13 @@ jobs:
           DB_PASSWORD: password
 
       - name: Wait for server
-        run: |
-          echo "=== .env content ==="
-          cat .env
-          echo "=== Starting health check ==="
-          timeout 60 bash -c 'until curl -sf http://127.0.0.1:8000/up -o /dev/null; do sleep 1; done'
-          echo "Server responded to /up"
-          echo "=== Laravel log after first request ==="
-          cat storage/logs/laravel.log 2>/dev/null || echo "No log file"
-          echo "=== Second request with timeout ==="
-          timeout 5 curl -v http://127.0.0.1:8000/up || echo "Second request timed out or failed"
-          echo "=== Laravel log after second request ==="
-          cat storage/logs/laravel.log 2>/dev/null || echo "No log file"
-          echo "=== PHP processes ==="
-          ps aux | grep php || true
+        run: timeout 60 bash -c 'until curl -sf http://127.0.0.1:8000/up -o /dev/null; do sleep 1; done'
 
       - name: Install ChromeDriver
         run: php artisan dusk:chrome-driver --detect
 
       - name: Run Dusk tests
-        run: |
-          echo "=== Checking server before Dusk tests ==="
-          curl -sf http://127.0.0.1:8000/up -o /dev/null && echo "Server is responding" || echo "Server is NOT responding"
-          ps aux | grep php || true
-          echo "=== Running Dusk tests ==="
-          php artisan dusk --env=testing
+        run: php artisan dusk --env=testing
 
       - name: Upload Dusk screenshots
         if: always()
