@@ -21,7 +21,7 @@ class SettingsServiceProvider extends ServiceProvider
     {
         try {
             return Schema::hasTable('settings');
-        } catch (\Exception) {
+        } catch (\Throwable) {
             return false;
         }
     }
@@ -33,10 +33,11 @@ class SettingsServiceProvider extends ServiceProvider
 
             config([
                 'app.name' => $settings->vaName,
-                'app.url' => $settings->siteUrl,
+                // Only override app.url if not explicitly set via environment
+                'app.url' => env('APP_URL') ?: $settings->siteUrl,
             ]);
-        } catch (\Spatie\LaravelSettings\Exceptions\MissingSettings) {
-            // Settings not yet migrated, skip override - only used pre-install
+        } catch (\Throwable) {
+            // Database connection or settings unavailable, skip override
         }
     }
 }
