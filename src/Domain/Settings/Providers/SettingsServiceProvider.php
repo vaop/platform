@@ -33,7 +33,8 @@ class SettingsServiceProvider extends ServiceProvider
 
             config([
                 'app.name' => $settings->vaName,
-                'app.url' => $settings->siteUrl,
+                // Only override app.url if not explicitly set via environment
+                'app.url' => env('APP_URL') ?: $settings->siteUrl,
             ]);
         } catch (\Throwable) {
             // Database connection or settings unavailable, skip override
