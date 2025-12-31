@@ -25,11 +25,16 @@ class EnvironmentBootstrapper
         }
 
         // Ensure existing .env has required values for installer
-        $content = file_get_contents($envPath);
+        $original = file_get_contents($envPath);
+        $content = $original;
         $content = static::ensureValue($content, 'APP_KEY', 'base64:'.base64_encode(random_bytes(32)));
         $content = static::ensureValue($content, 'SESSION_DRIVER', 'file');
         $content = static::ensureValue($content, 'CACHE_STORE', 'file');
-        file_put_contents($envPath, $content);
+
+        // Only write if changes were made (avoids triggering artisan serve reload in dev/CI environments)
+        if ($content !== $original) {
+            file_put_contents($envPath, $content);
+        }
     }
 
     private static function ensureValue(string $content, string $key, string $default): string
