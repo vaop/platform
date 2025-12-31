@@ -140,7 +140,9 @@ jobs:
             -e APP_ENV=production \
             -e INSTALLER_ENABLED=false \
             -e DB_CONNECTION=sqlite \
+            -e DB_HOST=localhost \
             -e DB_DATABASE=:memory: \
+            -e DB_USERNAME=none \
             -e SESSION_DRIVER=array \
             -e CACHE_STORE=array \
             -e LOG_CHANNEL=stderr \
