@@ -109,14 +109,8 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: password
 
-      - name: Upgrade Chrome Driver
-        run: php artisan dusk:chrome-driver --detect
-
-      - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux --port=9515 &
-
-      - name: Run Laravel Server
-        run: php artisan serve --no-reload &
+      - name: Start Laravel server
+        run: php artisan serve --host=0.0.0.0 --port=8000 &
         env:
           DB_CONNECTION: mariadb
           DB_HOST: 127.0.0.1
@@ -127,6 +121,9 @@ jobs:
 
       - name: Wait for server
         run: timeout 60 bash -c 'until curl -sf http://127.0.0.1:8000/up -o /dev/null; do sleep 1; done'
+
+      - name: Install ChromeDriver
+        run: php artisan dusk:chrome-driver --detect
 
       - name: Run Dusk tests
         run: php artisan dusk --env=testing
