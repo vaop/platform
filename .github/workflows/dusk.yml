@@ -139,7 +139,12 @@ jobs:
         run: php artisan dusk:chrome-driver --detect
 
       - name: Run Dusk tests
-        run: php artisan dusk --env=testing
+        run: |
+          echo "=== Checking server before Dusk tests ==="
+          curl -sf http://127.0.0.1:8000/up -o /dev/null && echo "Server is responding" || echo "Server is NOT responding"
+          ps aux | grep php || true
+          echo "=== Running Dusk tests ==="
+          php artisan dusk --env=testing
 
       - name: Upload Dusk screenshots
         if: always()
