@@ -121,12 +121,18 @@ jobs:
 
       - name: Wait for server
         run: |
+          echo "=== .env content ==="
+          cat .env
+          echo "=== Starting health check ==="
           timeout 60 bash -c 'until curl -sf http://127.0.0.1:8000/up -o /dev/null; do sleep 1; done'
-          echo "Server responded to /up, waiting 2 more seconds..."
-          sleep 2
-          echo "Verifying server is still responding..."
-          curl -v http://127.0.0.1:8000/up
-          echo "Checking server process..."
+          echo "Server responded to /up"
+          echo "=== Laravel log after first request ==="
+          cat storage/logs/laravel.log 2>/dev/null || echo "No log file"
+          echo "=== Second request with timeout ==="
+          timeout 5 curl -v http://127.0.0.1:8000/up || echo "Second request timed out or failed"
+          echo "=== Laravel log after second request ==="
+          cat storage/logs/laravel.log 2>/dev/null || echo "No log file"
+          echo "=== PHP processes ==="
           ps aux | grep php || true
 
       - name: Install ChromeDriver
