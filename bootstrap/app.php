@@ -43,4 +43,5 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->create()
+    ->useConfigPath($app->basePath('src/Config'))
     ->useAppPath($app->basePath('src/App'));
