@@ -120,7 +120,7 @@ class MigrationRunner
     }
 
     /**
-     * @param array{name: string, path: string} $migration
+     * @param  array{name: string, path: string}  $migration
      */
     private function runMigration(array $migration): void
     {
