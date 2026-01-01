@@ -11,6 +11,7 @@ use System\View\Exceptions\TwigErrorHandler;
 use System\View\Twig\Extensions\CoreFunctionsExtension;
 use System\View\Twig\Extensions\FiltersExtension;
 use System\View\Twig\Extensions\GlobalsExtension;
+use System\View\Twig\Extensions\UnitsExtension;
 use System\View\Twig\Security\SandboxExtension;
 use System\View\Twig\Security\ThemeSecurityPolicy;
 use TwigBridge\Facade\Twig;
@@ -96,6 +97,7 @@ class TwigServiceProvider extends ServiceProvider
         Twig::addExtension($this->app->make(CoreFunctionsExtension::class));
         Twig::addExtension($this->app->make(FiltersExtension::class));
         Twig::addExtension($this->app->make(GlobalsExtension::class));
+        Twig::addExtension($this->app->make(UnitsExtension::class));
     }
 
     /**
