@@ -45,7 +45,7 @@ interface DomainEventInterface
     /**
      * Reconstruct the event from array data.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): static;
 }
