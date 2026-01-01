@@ -12,6 +12,7 @@
         "ext-zip": "*",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "php-units-of-measure/php-units-of-measure": "^2.2",
         "rcrowe/twigbridge": "^0.14.6",
         "spatie/laravel-settings": "*"
     },
@@ -30,6 +31,7 @@
         "psr-4": {
             "App\\": "src/App/",
             "Domain\\": "src/Domain/",
+            "Support\\": "src/Support/",
             "System\\": "src/System/",
             "Services\\": "src/Services/",
             "Database\\Seeders\\": "database/seeders/"
