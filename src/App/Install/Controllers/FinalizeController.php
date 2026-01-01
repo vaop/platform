@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Install\Controllers;
 
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -81,13 +83,24 @@ class FinalizeController extends Controller
 
     private function handleUserStep(array $adminUser): View
     {
-        if (! User::where('email', $adminUser['email'])->exists()) {
-            User::create([
+        // Seed roles and permissions first
+        app(RolesAndPermissionsSeeder::class)->run();
+
+        $user = User::where('email', $adminUser['email'])->first();
+
+        if (! $user) {
+            $user = User::create([
                 'name' => $adminUser['name'],
                 'email' => $adminUser['email'],
                 'password' => $adminUser['password'],
                 'email_verified_at' => now(),
+                'status' => UserStatus::Active,
             ]);
+        }
+
+        // Assign superadmin role
+        if (! $user->hasRole('superadmin')) {
+            $user->assignRole('superadmin');
         }
 
         return view('install.steps.finalize', [

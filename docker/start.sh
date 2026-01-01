@@ -13,9 +13,10 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Run migrations if AUTO_MIGRATE is set
+# Run migrations and seeders if AUTO_MIGRATE is set
 if [ "$AUTO_MIGRATE" = "true" ]; then
     php artisan migrate --force
+    php artisan db:seed --class=RolesAndPermissionsSeeder --force
 fi
 
 # Start supervisor

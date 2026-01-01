@@ -8,6 +8,7 @@ use Domain\User\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Support\UnitsOfMeasure\Enums\AltitudeUnit;
 use Support\UnitsOfMeasure\Enums\DistanceUnit;
 use Support\UnitsOfMeasure\Enums\FuelUnit;
@@ -22,7 +23,7 @@ use Support\UnitsOfMeasure\Enums\WeightUnit;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Domain\User\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.

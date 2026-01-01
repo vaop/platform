@@ -1,7 +1,6 @@
 {
     "agents": [
-        "phpstorm",
-        "vscode"
+        "phpstorm"
     ],
     "guidelines": []
 }

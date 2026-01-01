@@ -13,4 +13,7 @@ return [
 
     // Expression Language
     \System\ExpressionLanguage\Providers\ExpressionLanguageServiceProvider::class,
+
+    // Auth
+    \System\Auth\Providers\AuthServiceProvider::class,
 ];
