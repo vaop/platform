@@ -7,4 +7,7 @@ return [
 
     // Settings
     \System\Settings\Providers\SettingsServiceProvider::class,
+
+    // Events
+    \System\Events\Providers\EventServiceProvider::class,
 ];
