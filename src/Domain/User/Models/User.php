@@ -3,6 +3,7 @@
 namespace Domain\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Domain\User\Enums\UserStatus;
 use Domain\User\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -32,6 +33,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'vanity_id',
+        'avatar',
+        'country',
+        'timezone',
+        'status',
         'distance_unit',
         'altitude_unit',
         'height_unit',
@@ -64,6 +70,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => UserStatus::class,
+            'last_login_at' => 'datetime',
             'distance_unit' => DistanceUnit::class,
             'altitude_unit' => AltitudeUnit::class,
             'height_unit' => HeightUnit::class,
@@ -75,6 +83,38 @@ class User extends Authenticatable
             'volume_unit' => VolumeUnit::class,
             'temperature_unit' => TemperatureUnit::class,
         ];
+    }
+
+    /**
+     * Check if the user can log in based on their status.
+     */
+    public function canLogin(): bool
+    {
+        return $this->status->canLogin();
+    }
+
+    /**
+     * Check if the user is active.
+     */
+    public function isActive(): bool
+    {
+        return $this->status === UserStatus::Active;
+    }
+
+    /**
+     * Check if the user is pending approval.
+     */
+    public function isPending(): bool
+    {
+        return $this->status === UserStatus::Pending;
+    }
+
+    /**
+     * Check if the user is suspended.
+     */
+    public function isSuspended(): bool
+    {
+        return $this->status === UserStatus::Suspended;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Domain\User\Factories;
 
+use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -32,6 +33,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'status' => UserStatus::Pending,
         ];
     }
 
@@ -42,6 +44,76 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is active.
+     */
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatus::Active,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is pending approval.
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatus::Pending,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is inactive.
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatus::Inactive,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is suspended.
+     */
+    public function suspended(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatus::Suspended,
+        ]);
+    }
+
+    /**
+     * Set the user's vanity ID.
+     */
+    public function withVanityId(string $vanityId): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'vanity_id' => $vanityId,
+        ]);
+    }
+
+    /**
+     * Set the user's country.
+     */
+    public function fromCountry(string $countryCode): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'country' => $countryCode,
+        ]);
+    }
+
+    /**
+     * Set the user's timezone.
+     */
+    public function inTimezone(string $timezone): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'timezone' => $timezone,
         ]);
     }
 }
