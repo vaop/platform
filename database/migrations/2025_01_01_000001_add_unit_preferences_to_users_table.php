@@ -12,16 +12,16 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Unit preferences - null means use airline defaults
-            $table->string('distance_unit', 10)->nullable();
-            $table->string('altitude_unit', 10)->nullable();
-            $table->string('height_unit', 10)->nullable();
-            $table->string('length_unit', 10)->nullable();
-            $table->string('pressure_unit', 10)->nullable();
-            $table->string('speed_unit', 10)->nullable();
-            $table->string('weight_unit', 10)->nullable();
-            $table->string('fuel_unit', 10)->nullable();
-            $table->string('volume_unit', 10)->nullable();
-            $table->string('temperature_unit', 10)->nullable();
+            $table->tinyInteger('distance_unit')->nullable();
+            $table->tinyInteger('altitude_unit')->nullable();
+            $table->tinyInteger('height_unit')->nullable();
+            $table->tinyInteger('length_unit')->nullable();
+            $table->tinyInteger('pressure_unit')->nullable();
+            $table->tinyInteger('speed_unit')->nullable();
+            $table->tinyInteger('weight_unit')->nullable();
+            $table->tinyInteger('fuel_unit')->nullable();
+            $table->tinyInteger('volume_unit')->nullable();
+            $table->tinyInteger('temperature_unit')->nullable();
         });
     }
 

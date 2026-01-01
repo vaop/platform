@@ -25,7 +25,7 @@ class Volume extends BaseVolume
      */
     public static function fromVolume(float $value, VolumeUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -34,7 +34,7 @@ class Volume extends BaseVolume
      */
     public static function fromFuel(float $value, FuelUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -42,7 +42,7 @@ class Volume extends BaseVolume
      */
     public static function fromLiters(float $value): self
     {
-        return new self($value, FuelUnit::LITERS->value);
+        return new self($value, FuelUnit::LITERS->getUnitName());
     }
 
     /**
@@ -50,7 +50,7 @@ class Volume extends BaseVolume
      */
     public static function fromGallons(float $value): self
     {
-        return new self($value, FuelUnit::GALLONS->value);
+        return new self($value, FuelUnit::GALLONS->getUnitName());
     }
 
     /**
@@ -58,7 +58,7 @@ class Volume extends BaseVolume
      */
     public function toPreferredVolumeUnit(): float
     {
-        return $this->toUnit($this->getPreferredVolumeUnit()->value);
+        return $this->toUnit($this->getPreferredVolumeUnit()->getUnitName());
     }
 
     /**
@@ -70,7 +70,7 @@ class Volume extends BaseVolume
 
         // Only convert if it's a volume-based fuel unit
         if (in_array($preferredUnit, [FuelUnit::LITERS, FuelUnit::GALLONS], true)) {
-            return $this->toUnit($preferredUnit->value);
+            return $this->toUnit($preferredUnit->getUnitName());
         }
 
         // Fall back to liters for mass-based preferences
@@ -82,7 +82,7 @@ class Volume extends BaseVolume
      */
     public function toLiters(): float
     {
-        return $this->toUnit(FuelUnit::LITERS->value);
+        return $this->toUnit(FuelUnit::LITERS->getUnitName());
     }
 
     /**
@@ -90,6 +90,6 @@ class Volume extends BaseVolume
      */
     public function toGallons(): float
     {
-        return $this->toUnit(FuelUnit::GALLONS->value);
+        return $this->toUnit(FuelUnit::GALLONS->getUnitName());
     }
 }

@@ -28,7 +28,7 @@ class Length extends BaseLength
      */
     public static function fromDistance(float $value, DistanceUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -36,7 +36,7 @@ class Length extends BaseLength
      */
     public static function fromAltitude(float $value, AltitudeUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -44,7 +44,7 @@ class Length extends BaseLength
      */
     public static function fromNauticalMiles(float $value): self
     {
-        return new self($value, DistanceUnit::canonical()->value);
+        return new self($value, DistanceUnit::canonical()->getUnitName());
     }
 
     /**
@@ -52,7 +52,7 @@ class Length extends BaseLength
      */
     public static function fromFeet(float $value): self
     {
-        return new self($value, AltitudeUnit::canonical()->value);
+        return new self($value, AltitudeUnit::canonical()->getUnitName());
     }
 
     /**
@@ -60,7 +60,7 @@ class Length extends BaseLength
      */
     public static function fromHeight(float $value, HeightUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -68,7 +68,7 @@ class Length extends BaseLength
      */
     public static function fromLength(float $value, LengthUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -76,7 +76,7 @@ class Length extends BaseLength
      */
     public static function fromMeters(float $value): self
     {
-        return new self($value, LengthUnit::canonical()->value);
+        return new self($value, LengthUnit::canonical()->getUnitName());
     }
 
     /**
@@ -84,7 +84,7 @@ class Length extends BaseLength
      */
     public function toPreferredDistanceUnit(): float
     {
-        return $this->toUnit($this->getPreferredDistanceUnit()->value);
+        return $this->toUnit($this->getPreferredDistanceUnit()->getUnitName());
     }
 
     /**
@@ -92,7 +92,7 @@ class Length extends BaseLength
      */
     public function toPreferredAltitudeUnit(): float
     {
-        return $this->toUnit($this->getPreferredAltitudeUnit()->value);
+        return $this->toUnit($this->getPreferredAltitudeUnit()->getUnitName());
     }
 
     /**
@@ -100,7 +100,7 @@ class Length extends BaseLength
      */
     public function toPreferredHeightUnit(): float
     {
-        return $this->toUnit($this->getPreferredHeightUnit()->value);
+        return $this->toUnit($this->getPreferredHeightUnit()->getUnitName());
     }
 
     /**
@@ -108,7 +108,7 @@ class Length extends BaseLength
      */
     public function toPreferredLengthUnit(): float
     {
-        return $this->toUnit($this->getPreferredLengthUnit()->value);
+        return $this->toUnit($this->getPreferredLengthUnit()->getUnitName());
     }
 
     /**
@@ -116,7 +116,7 @@ class Length extends BaseLength
      */
     public function toNauticalMiles(): float
     {
-        return $this->toUnit(DistanceUnit::canonical()->value);
+        return $this->toUnit(DistanceUnit::canonical()->getUnitName());
     }
 
     /**
@@ -124,7 +124,7 @@ class Length extends BaseLength
      */
     public function toFeet(): float
     {
-        return $this->toUnit(AltitudeUnit::canonical()->value);
+        return $this->toUnit(AltitudeUnit::canonical()->getUnitName());
     }
 
     /**
@@ -132,7 +132,7 @@ class Length extends BaseLength
      */
     public function toMeters(): float
     {
-        return $this->toUnit(AltitudeUnit::METERS->value);
+        return $this->toUnit(AltitudeUnit::METERS->getUnitName());
     }
 
     /**
@@ -140,7 +140,7 @@ class Length extends BaseLength
      */
     public function toKilometers(): float
     {
-        return $this->toUnit(DistanceUnit::KILOMETERS->value);
+        return $this->toUnit(DistanceUnit::KILOMETERS->getUnitName());
     }
 
     /**

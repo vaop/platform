@@ -9,11 +9,23 @@ namespace Support\UnitsOfMeasure\Enums;
  *
  * The canonical storage unit is hectopascals (hPa).
  */
-enum PressureUnit: string
+enum PressureUnit: int
 {
-    case HECTOPASCALS = 'hPa';
-    case INCHES_OF_MERCURY = 'inHg';
-    case MILLIBARS = 'mbar';
+    case HECTOPASCALS = 0;
+    case INCHES_OF_MERCURY = 1;
+    case MILLIBARS = 2;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::HECTOPASCALS => 'hPa',
+            self::INCHES_OF_MERCURY => 'inHg',
+            self::MILLIBARS => 'mbar',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -42,7 +54,7 @@ enum PressureUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

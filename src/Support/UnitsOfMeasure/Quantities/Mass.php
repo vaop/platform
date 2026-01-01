@@ -26,7 +26,7 @@ class Mass extends BaseMass
      */
     public static function fromWeight(float $value, WeightUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -35,7 +35,7 @@ class Mass extends BaseMass
      */
     public static function fromFuel(float $value, FuelUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -43,7 +43,7 @@ class Mass extends BaseMass
      */
     public static function fromKilograms(float $value): self
     {
-        return new self($value, WeightUnit::canonical()->value);
+        return new self($value, WeightUnit::canonical()->getUnitName());
     }
 
     /**
@@ -51,7 +51,7 @@ class Mass extends BaseMass
      */
     public static function fromPounds(float $value): self
     {
-        return new self($value, WeightUnit::POUNDS->value);
+        return new self($value, WeightUnit::POUNDS->getUnitName());
     }
 
     /**
@@ -59,7 +59,7 @@ class Mass extends BaseMass
      */
     public function toPreferredWeightUnit(): float
     {
-        return $this->toUnit($this->getPreferredWeightUnit()->value);
+        return $this->toUnit($this->getPreferredWeightUnit()->getUnitName());
     }
 
     /**
@@ -71,7 +71,7 @@ class Mass extends BaseMass
 
         // Only convert if it's a mass-based fuel unit
         if (in_array($preferredUnit, [FuelUnit::KILOGRAMS, FuelUnit::POUNDS], true)) {
-            return $this->toUnit($preferredUnit->value);
+            return $this->toUnit($preferredUnit->getUnitName());
         }
 
         // Fall back to canonical mass unit for volume-based preferences
@@ -83,7 +83,7 @@ class Mass extends BaseMass
      */
     public function toKilograms(): float
     {
-        return $this->toUnit(WeightUnit::canonical()->value);
+        return $this->toUnit(WeightUnit::canonical()->getUnitName());
     }
 
     /**
@@ -91,6 +91,6 @@ class Mass extends BaseMass
      */
     public function toPounds(): float
     {
-        return $this->toUnit(WeightUnit::POUNDS->value);
+        return $this->toUnit(WeightUnit::POUNDS->getUnitName());
     }
 }

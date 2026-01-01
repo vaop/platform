@@ -39,7 +39,7 @@ class Velocity extends BaseVelocity
      */
     public static function fromSpeed(float $value, SpeedUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -47,7 +47,7 @@ class Velocity extends BaseVelocity
      */
     public static function fromKnots(float $value): self
     {
-        return new self($value, SpeedUnit::canonical()->value);
+        return new self($value, SpeedUnit::canonical()->getUnitName());
     }
 
     /**
@@ -63,7 +63,7 @@ class Velocity extends BaseVelocity
      */
     public function toPreferredSpeedUnit(): float
     {
-        return $this->toUnit($this->getPreferredSpeedUnit()->value);
+        return $this->toUnit($this->getPreferredSpeedUnit()->getUnitName());
     }
 
     /**
@@ -71,7 +71,7 @@ class Velocity extends BaseVelocity
      */
     public function toKnots(): float
     {
-        return $this->toUnit(SpeedUnit::canonical()->value);
+        return $this->toUnit(SpeedUnit::canonical()->getUnitName());
     }
 
     /**
@@ -79,7 +79,7 @@ class Velocity extends BaseVelocity
      */
     public function toKilometersPerHour(): float
     {
-        return $this->toUnit(SpeedUnit::KILOMETERS_PER_HOUR->value);
+        return $this->toUnit(SpeedUnit::KILOMETERS_PER_HOUR->getUnitName());
     }
 
     /**
@@ -87,7 +87,7 @@ class Velocity extends BaseVelocity
      */
     public function toMilesPerHour(): float
     {
-        return $this->toUnit(SpeedUnit::MILES_PER_HOUR->value);
+        return $this->toUnit(SpeedUnit::MILES_PER_HOUR->getUnitName());
     }
 
     /**

@@ -24,7 +24,7 @@ class Temperature extends BaseTemperature
      */
     public static function fromTemperature(float $value, TemperatureUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -32,7 +32,7 @@ class Temperature extends BaseTemperature
      */
     public static function fromCelsius(float $value): self
     {
-        return new self($value, TemperatureUnit::canonical()->value);
+        return new self($value, TemperatureUnit::canonical()->getUnitName());
     }
 
     /**
@@ -40,7 +40,7 @@ class Temperature extends BaseTemperature
      */
     public static function fromFahrenheit(float $value): self
     {
-        return new self($value, TemperatureUnit::FAHRENHEIT->value);
+        return new self($value, TemperatureUnit::FAHRENHEIT->getUnitName());
     }
 
     /**
@@ -48,7 +48,7 @@ class Temperature extends BaseTemperature
      */
     public function toPreferredTemperatureUnit(): float
     {
-        return $this->toUnit($this->getPreferredTemperatureUnit()->value);
+        return $this->toUnit($this->getPreferredTemperatureUnit()->getUnitName());
     }
 
     /**
@@ -56,7 +56,7 @@ class Temperature extends BaseTemperature
      */
     public function toCelsius(): float
     {
-        return $this->toUnit(TemperatureUnit::canonical()->value);
+        return $this->toUnit(TemperatureUnit::canonical()->getUnitName());
     }
 
     /**
@@ -64,7 +64,7 @@ class Temperature extends BaseTemperature
      */
     public function toFahrenheit(): float
     {
-        return $this->toUnit(TemperatureUnit::FAHRENHEIT->value);
+        return $this->toUnit(TemperatureUnit::FAHRENHEIT->getUnitName());
     }
 
     /**

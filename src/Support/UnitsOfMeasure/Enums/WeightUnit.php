@@ -9,10 +9,21 @@ namespace Support\UnitsOfMeasure\Enums;
  *
  * The canonical storage unit is kilograms (kg).
  */
-enum WeightUnit: string
+enum WeightUnit: int
 {
-    case KILOGRAMS = 'kg';
-    case POUNDS = 'lbs';
+    case KILOGRAMS = 0;
+    case POUNDS = 1;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::KILOGRAMS => 'kg',
+            self::POUNDS => 'lbs',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -39,7 +50,7 @@ enum WeightUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

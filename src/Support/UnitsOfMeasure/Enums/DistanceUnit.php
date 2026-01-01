@@ -9,11 +9,23 @@ namespace Support\UnitsOfMeasure\Enums;
  *
  * The canonical storage unit is nautical miles (nm).
  */
-enum DistanceUnit: string
+enum DistanceUnit: int
 {
-    case NAUTICAL_MILES = 'nmi';
-    case KILOMETERS = 'km';
-    case STATUTE_MILES = 'mi';
+    case NAUTICAL_MILES = 0;
+    case KILOMETERS = 1;
+    case STATUTE_MILES = 2;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::NAUTICAL_MILES => 'nmi',
+            self::KILOMETERS => 'km',
+            self::STATUTE_MILES => 'mi',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -42,7 +54,7 @@ enum DistanceUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

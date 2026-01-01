@@ -10,10 +10,21 @@ namespace Support\UnitsOfMeasure\Enums;
  * Distinct from AltitudeUnit which is for flight levels and aircraft altitude.
  * The canonical storage unit is feet (ft).
  */
-enum HeightUnit: string
+enum HeightUnit: int
 {
-    case FEET = 'ft';
-    case METERS = 'm';
+    case FEET = 0;
+    case METERS = 1;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::FEET => 'ft',
+            self::METERS => 'm',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -40,7 +51,7 @@ enum HeightUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

@@ -10,11 +10,23 @@ namespace Support\UnitsOfMeasure\Enums;
  * For fuel-specific volume, see FuelUnit which includes both
  * mass and volume options. The canonical storage unit is liters (L).
  */
-enum VolumeUnit: string
+enum VolumeUnit: int
 {
-    case LITERS = 'l';
-    case GALLONS = 'gal';
-    case CUBIC_METERS = 'm^3';
+    case LITERS = 0;
+    case GALLONS = 1;
+    case CUBIC_METERS = 2;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::LITERS => 'l',
+            self::GALLONS => 'gal',
+            self::CUBIC_METERS => 'm^3',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -43,7 +55,7 @@ enum VolumeUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

@@ -14,12 +14,25 @@ namespace Support\UnitsOfMeasure\Enums;
  * by fuel type (Jet-A, AvGas, etc.). Conversions are handled at the
  * application layer.
  */
-enum FuelUnit: string
+enum FuelUnit: int
 {
-    case KILOGRAMS = 'kg';
-    case POUNDS = 'lbs';
-    case LITERS = 'l';
-    case GALLONS = 'gal';
+    case KILOGRAMS = 0;
+    case POUNDS = 1;
+    case LITERS = 2;
+    case GALLONS = 3;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::KILOGRAMS => 'kg',
+            self::POUNDS => 'lbs',
+            self::LITERS => 'l',
+            self::GALLONS => 'gal',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -69,7 +82,7 @@ enum FuelUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {
@@ -84,7 +97,7 @@ enum FuelUnit: string
     /**
      * Get weight-based options only.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function weightOptions(): array
     {
@@ -97,7 +110,7 @@ enum FuelUnit: string
     /**
      * Get volume-based options only.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function volumeOptions(): array
     {

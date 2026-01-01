@@ -24,7 +24,7 @@ class Pressure extends BasePressure
      */
     public static function fromPressure(float $value, PressureUnit $unit): self
     {
-        return new self($value, $unit->value);
+        return new self($value, $unit->getUnitName());
     }
 
     /**
@@ -32,7 +32,7 @@ class Pressure extends BasePressure
      */
     public static function fromHectopascals(float $value): self
     {
-        return new self($value, PressureUnit::canonical()->value);
+        return new self($value, PressureUnit::canonical()->getUnitName());
     }
 
     /**
@@ -40,7 +40,7 @@ class Pressure extends BasePressure
      */
     public static function fromInchesOfMercury(float $value): self
     {
-        return new self($value, PressureUnit::INCHES_OF_MERCURY->value);
+        return new self($value, PressureUnit::INCHES_OF_MERCURY->getUnitName());
     }
 
     /**
@@ -48,7 +48,7 @@ class Pressure extends BasePressure
      */
     public function toPreferredPressureUnit(): float
     {
-        return $this->toUnit($this->getPreferredPressureUnit()->value);
+        return $this->toUnit($this->getPreferredPressureUnit()->getUnitName());
     }
 
     /**
@@ -56,7 +56,7 @@ class Pressure extends BasePressure
      */
     public function toHectopascals(): float
     {
-        return $this->toUnit(PressureUnit::canonical()->value);
+        return $this->toUnit(PressureUnit::canonical()->getUnitName());
     }
 
     /**
@@ -64,7 +64,7 @@ class Pressure extends BasePressure
      */
     public function toInchesOfMercury(): float
     {
-        return $this->toUnit(PressureUnit::INCHES_OF_MERCURY->value);
+        return $this->toUnit(PressureUnit::INCHES_OF_MERCURY->getUnitName());
     }
 
     /**
@@ -72,6 +72,6 @@ class Pressure extends BasePressure
      */
     public function toMillibars(): float
     {
-        return $this->toUnit(PressureUnit::MILLIBARS->value);
+        return $this->toUnit(PressureUnit::MILLIBARS->getUnitName());
     }
 }

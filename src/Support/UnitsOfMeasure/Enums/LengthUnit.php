@@ -9,11 +9,23 @@ namespace Support\UnitsOfMeasure\Enums;
  *
  * The canonical storage unit is meters (m).
  */
-enum LengthUnit: string
+enum LengthUnit: int
 {
-    case METERS = 'm';
-    case FEET = 'ft';
-    case INCHES = 'in';
+    case METERS = 0;
+    case FEET = 1;
+    case INCHES = 2;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::METERS => 'm',
+            self::FEET => 'ft',
+            self::INCHES => 'in',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -42,7 +54,7 @@ enum LengthUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

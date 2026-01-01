@@ -9,10 +9,21 @@ namespace Support\UnitsOfMeasure\Enums;
  *
  * The canonical storage unit is Celsius (C).
  */
-enum TemperatureUnit: string
+enum TemperatureUnit: int
 {
-    case CELSIUS = 'C';
-    case FAHRENHEIT = 'F';
+    case CELSIUS = 0;
+    case FAHRENHEIT = 1;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::CELSIUS => 'C',
+            self::FAHRENHEIT => 'F',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -39,7 +50,7 @@ enum TemperatureUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {

@@ -30,25 +30,25 @@ class UnitsSettings extends Settings
      */
     public bool $allowUserCustomization;
 
-    public string $distanceUnit;
+    public int $distanceUnit;
 
-    public string $altitudeUnit;
+    public int $altitudeUnit;
 
-    public string $heightUnit;
+    public int $heightUnit;
 
-    public string $lengthUnit;
+    public int $lengthUnit;
 
-    public string $pressureUnit;
+    public int $pressureUnit;
 
-    public string $speedUnit;
+    public int $speedUnit;
 
-    public string $weightUnit;
+    public int $weightUnit;
 
-    public string $fuelUnit;
+    public int $fuelUnit;
 
-    public string $volumeUnit;
+    public int $volumeUnit;
 
-    public string $temperatureUnit;
+    public int $temperatureUnit;
 
     public static function group(): string
     {

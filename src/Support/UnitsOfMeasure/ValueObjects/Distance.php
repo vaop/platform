@@ -90,7 +90,7 @@ final readonly class Distance implements ValueObject
      */
     public function toStatuteMiles(): float
     {
-        return $this->length->toUnit(DistanceUnit::STATUTE_MILES->value);
+        return $this->length->toUnit(DistanceUnit::STATUTE_MILES->getUnitName());
     }
 
     /**

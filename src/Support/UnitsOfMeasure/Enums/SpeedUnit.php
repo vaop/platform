@@ -9,11 +9,23 @@ namespace Support\UnitsOfMeasure\Enums;
  *
  * The canonical storage unit is knots (kts).
  */
-enum SpeedUnit: string
+enum SpeedUnit: int
 {
-    case KNOTS = 'knots';
-    case KILOMETERS_PER_HOUR = 'km/h';
-    case MILES_PER_HOUR = 'mph';
+    case KNOTS = 0;
+    case KILOMETERS_PER_HOUR = 1;
+    case MILES_PER_HOUR = 2;
+
+    /**
+     * Get the unit name for the php-units-of-measure library.
+     */
+    public function getUnitName(): string
+    {
+        return match ($this) {
+            self::KNOTS => 'knots',
+            self::KILOMETERS_PER_HOUR => 'km/h',
+            self::MILES_PER_HOUR => 'mph',
+        };
+    }
 
     /**
      * Get the human-readable label.
@@ -42,7 +54,7 @@ enum SpeedUnit: string
     /**
      * Get options array for forms/dropdowns.
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function options(): array
     {
