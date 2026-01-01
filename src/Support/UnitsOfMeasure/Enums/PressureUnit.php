@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Support\UnitsOfMeasure\Enums;
 
 /**
- * Units for measuring speed/velocity.
+ * Units for measuring atmospheric pressure.
  *
- * The canonical storage unit is knots (kts).
+ * The canonical storage unit is hectopascals (hPa).
  */
-enum SpeedUnit: string
+enum PressureUnit: string
 {
-    case KNOTS = 'knots';
-    case KILOMETERS_PER_HOUR = 'km/h';
-    case MILES_PER_HOUR = 'mph';
+    case HECTOPASCALS = 'hPa';
+    case INCHES_OF_MERCURY = 'inHg';
+    case MILLIBARS = 'mbar';
 
     /**
      * Get the human-readable label.
@@ -21,9 +21,9 @@ enum SpeedUnit: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::KNOTS => 'Knots',
-            self::KILOMETERS_PER_HOUR => 'Kilometers per Hour',
-            self::MILES_PER_HOUR => 'Miles per Hour',
+            self::HECTOPASCALS => 'Hectopascals',
+            self::INCHES_OF_MERCURY => 'Inches of Mercury',
+            self::MILLIBARS => 'Millibars',
         };
     }
 
@@ -33,9 +33,9 @@ enum SpeedUnit: string
     public function getAcronym(): string
     {
         return match ($this) {
-            self::KNOTS => 'kts',
-            self::KILOMETERS_PER_HOUR => 'km/h',
-            self::MILES_PER_HOUR => 'mph',
+            self::HECTOPASCALS => 'hPa',
+            self::INCHES_OF_MERCURY => 'inHg',
+            self::MILLIBARS => 'mb',
         };
     }
 
@@ -59,6 +59,6 @@ enum SpeedUnit: string
      */
     public static function canonical(): self
     {
-        return self::KNOTS;
+        return self::HECTOPASCALS;
     }
 }

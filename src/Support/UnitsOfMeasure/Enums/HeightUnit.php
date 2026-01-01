@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Support\UnitsOfMeasure\Enums;
 
 /**
- * Units for measuring speed/velocity.
+ * Units for measuring height (e.g., runway dimensions, building heights).
  *
- * The canonical storage unit is knots (kts).
+ * Distinct from AltitudeUnit which is for flight levels and aircraft altitude.
+ * The canonical storage unit is feet (ft).
  */
-enum SpeedUnit: string
+enum HeightUnit: string
 {
-    case KNOTS = 'knots';
-    case KILOMETERS_PER_HOUR = 'km/h';
-    case MILES_PER_HOUR = 'mph';
+    case FEET = 'ft';
+    case METERS = 'm';
 
     /**
      * Get the human-readable label.
@@ -21,9 +21,8 @@ enum SpeedUnit: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::KNOTS => 'Knots',
-            self::KILOMETERS_PER_HOUR => 'Kilometers per Hour',
-            self::MILES_PER_HOUR => 'Miles per Hour',
+            self::FEET => 'Feet',
+            self::METERS => 'Meters',
         };
     }
 
@@ -33,9 +32,8 @@ enum SpeedUnit: string
     public function getAcronym(): string
     {
         return match ($this) {
-            self::KNOTS => 'kts',
-            self::KILOMETERS_PER_HOUR => 'km/h',
-            self::MILES_PER_HOUR => 'mph',
+            self::FEET => 'ft',
+            self::METERS => 'm',
         };
     }
 
@@ -59,6 +57,6 @@ enum SpeedUnit: string
      */
     public static function canonical(): self
     {
-        return self::KNOTS;
+        return self::FEET;
     }
 }

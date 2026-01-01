@@ -7,6 +7,16 @@ use Domain\User\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Support\UnitsOfMeasure\Enums\AltitudeUnit;
+use Support\UnitsOfMeasure\Enums\DistanceUnit;
+use Support\UnitsOfMeasure\Enums\FuelUnit;
+use Support\UnitsOfMeasure\Enums\HeightUnit;
+use Support\UnitsOfMeasure\Enums\LengthUnit;
+use Support\UnitsOfMeasure\Enums\PressureUnit;
+use Support\UnitsOfMeasure\Enums\SpeedUnit;
+use Support\UnitsOfMeasure\Enums\TemperatureUnit;
+use Support\UnitsOfMeasure\Enums\VolumeUnit;
+use Support\UnitsOfMeasure\Enums\WeightUnit;
 
 class User extends Authenticatable
 {
@@ -22,6 +32,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'distance_unit',
+        'altitude_unit',
+        'height_unit',
+        'length_unit',
+        'pressure_unit',
+        'speed_unit',
+        'weight_unit',
+        'fuel_unit',
+        'volume_unit',
+        'temperature_unit',
     ];
 
     /**
@@ -44,6 +64,16 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'distance_unit' => DistanceUnit::class,
+            'altitude_unit' => AltitudeUnit::class,
+            'height_unit' => HeightUnit::class,
+            'length_unit' => LengthUnit::class,
+            'pressure_unit' => PressureUnit::class,
+            'speed_unit' => SpeedUnit::class,
+            'weight_unit' => WeightUnit::class,
+            'fuel_unit' => FuelUnit::class,
+            'volume_unit' => VolumeUnit::class,
+            'temperature_unit' => TemperatureUnit::class,
         ];
     }
 
