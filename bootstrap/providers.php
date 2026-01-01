@@ -10,4 +10,7 @@ return [
 
     // Events
     \System\Events\Providers\EventServiceProvider::class,
+
+    // Expression Language
+    \System\ExpressionLanguage\Providers\ExpressionLanguageServiceProvider::class,
 ];
