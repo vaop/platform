@@ -114,6 +114,51 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+     * Check if a pending user is eligible for auto-activation based on current settings.
+     *
+     * This handles the edge case where settings become less restrictive after a user
+     * registered. For example, if email verification was required when they registered
+     * but has since been disabled, they should be able to activate.
+     */
+    public function isEligibleForAutoActivation(): bool
+    {
+        if (! $this->isPending()) {
+            return false;
+        }
+
+        $settings = app(\System\Settings\RegistrationSettings::class);
+
+        // If approval is required, user must wait for admin
+        if ($settings->requireApproval) {
+            return false;
+        }
+
+        // If email verification is required, user must have verified email
+        if ($settings->requireEmailVerification && ! $this->hasVerifiedEmail()) {
+            return false;
+        }
+
+        // User is pending but doesn't need to be anymore
+        return true;
+    }
+
+    /**
+     * Activate the user if they are eligible for auto-activation.
+     *
+     * @return bool Whether the user was activated
+     */
+    public function activateIfEligible(): bool
+    {
+        if (! $this->isEligibleForAutoActivation()) {
+            return false;
+        }
+
+        $this->update(['status' => UserStatus::Active]);
+
+        return true;
+    }
+
+    /**
      * Check if the user is suspended.
      */
     public function isSuspended(): bool

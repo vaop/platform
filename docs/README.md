@@ -12,6 +12,10 @@ Welcome to the Virtual Airline Operations Platform documentation.
 
 - [Environment Variables](configuration/environment.md) - Settings reference
 
+## Admin Guide
+
+- [Registration Settings](admin/registration-settings.md) - User registration and approval
+
 ## Deployment
 
 - [Upgrading](deployment/upgrading.md) - How to update VAOP

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
+use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use PHPUnit\Framework\Attributes\Test;
+use System\Settings\RegistrationSettings;
 use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
@@ -121,5 +123,47 @@ class EmailVerificationTest extends TestCase
         $response = $this->get(route('verification.notice'));
 
         $response->assertRedirect(route('login'));
+    }
+
+    #[Test]
+    public function pending_user_is_activated_after_verification_when_approval_not_required(): void
+    {
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = false;
+        $settings->save();
+
+        $user = User::factory()->pending()->unverified()->create();
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        $this->actingAs($user)->get($verificationUrl);
+
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+        $this->assertEquals(UserStatus::Active, $user->fresh()->status);
+    }
+
+    #[Test]
+    public function pending_user_stays_pending_after_verification_when_approval_required(): void
+    {
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = true;
+        $settings->save();
+
+        $user = User::factory()->pending()->unverified()->create();
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        $this->actingAs($user)->get($verificationUrl);
+
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+        $this->assertEquals(UserStatus::Pending, $user->fresh()->status);
     }
 }

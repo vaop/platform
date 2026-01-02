@@ -56,7 +56,14 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request): RedirectResponse
     {
-        $status = $this->settings->requireApproval
+        // Determine initial status:
+        // - If approval required: Pending (admin must approve)
+        // - If email verification required: Pending (until verified)
+        // - Otherwise: Active immediately
+        $requiresActivation = $this->settings->requireApproval
+            || $this->settings->requireEmailVerification;
+
+        $status = $requiresActivation
             ? UserStatus::Pending
             : UserStatus::Active;
 
@@ -74,6 +81,12 @@ class RegisterController extends Controller
         if ($this->settings->requireApproval) {
             return redirect()->route('login')
                 ->with('status', __('auth.registration_pending'));
+        }
+
+        if ($this->settings->requireEmailVerification) {
+            Auth::login($user);
+
+            return redirect()->route('verification.notice');
         }
 
         Auth::login($user);

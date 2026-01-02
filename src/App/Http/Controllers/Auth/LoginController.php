@@ -38,6 +38,11 @@ class LoginController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        // Auto-activate pending users if settings have become less restrictive
+        if ($user->isPending()) {
+            $user->activateIfEligible();
+        }
+
         // Check if user can login based on status
         if (! $user->canLogin()) {
             Auth::logout();

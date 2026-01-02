@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
+use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\RateLimiter;
 use PHPUnit\Framework\Attributes\Test;
+use System\Settings\RegistrationSettings;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -94,6 +96,11 @@ class LoginTest extends TestCase
     #[Test]
     public function pending_user_cannot_login(): void
     {
+        // Ensure approval is required so user stays pending
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = true;
+        $settings->save();
+
         $user = User::factory()->pending()->create([
             'email' => 'pending@example.com',
             'password' => 'password123',
@@ -106,6 +113,105 @@ class LoginTest extends TestCase
 
         $this->assertGuest();
         $response->assertSessionHasErrors('email');
+    }
+
+    #[Test]
+    public function pending_user_is_auto_activated_when_settings_become_less_restrictive(): void
+    {
+        // User registered when email verification was required
+        $user = User::factory()->pending()->unverified()->create([
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+        ]);
+
+        // Settings changed: no longer require email verification or approval
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = false;
+        $settings->requireEmailVerification = false;
+        $settings->save();
+
+        // User should be able to login and get auto-activated
+        $response = $this->post(route('login'), [
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('home'));
+        $this->assertEquals(UserStatus::Active, $user->fresh()->status);
+    }
+
+    #[Test]
+    public function pending_user_with_verified_email_is_auto_activated_when_approval_disabled(): void
+    {
+        // User registered when approval was required, but verified their email
+        $user = User::factory()->pending()->create([
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+            'email_verified_at' => now(),
+        ]);
+
+        // Settings changed: no longer require approval
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = false;
+        $settings->requireEmailVerification = true;
+        $settings->save();
+
+        // User should be able to login and get auto-activated
+        $response = $this->post(route('login'), [
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertAuthenticated();
+        $this->assertEquals(UserStatus::Active, $user->fresh()->status);
+    }
+
+    #[Test]
+    public function pending_user_stays_pending_when_approval_still_required(): void
+    {
+        $user = User::factory()->pending()->create([
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+            'email_verified_at' => now(),
+        ]);
+
+        // Approval still required
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = true;
+        $settings->requireEmailVerification = false;
+        $settings->save();
+
+        $response = $this->post(route('login'), [
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertGuest();
+        $this->assertEquals(UserStatus::Pending, $user->fresh()->status);
+    }
+
+    #[Test]
+    public function pending_user_stays_pending_when_email_not_verified(): void
+    {
+        $user = User::factory()->pending()->unverified()->create([
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+        ]);
+
+        // Email verification still required
+        $settings = app(RegistrationSettings::class);
+        $settings->requireApproval = false;
+        $settings->requireEmailVerification = true;
+        $settings->save();
+
+        $response = $this->post(route('login'), [
+            'email' => 'pending@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertGuest();
+        $this->assertEquals(UserStatus::Pending, $user->fresh()->status);
     }
 
     #[Test]

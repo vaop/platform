@@ -60,6 +60,12 @@ class RegistrationTest extends TestCase
     {
         Event::fake([Registered::class]);
 
+        // Disable email verification for direct activation
+        $settings = app(RegistrationSettings::class);
+        $settings->requireEmailVerification = false;
+        $settings->requireApproval = false;
+        $settings->save();
+
         $response = $this->post(route('register'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -83,6 +89,12 @@ class RegistrationTest extends TestCase
     #[Test]
     public function user_can_register_with_optional_fields(): void
     {
+        // Disable email verification for direct activation
+        $settings = app(RegistrationSettings::class);
+        $settings->requireEmailVerification = false;
+        $settings->requireApproval = false;
+        $settings->save();
+
         $response = $this->post(route('register'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -225,10 +237,12 @@ class RegistrationTest extends TestCase
     #[Test]
     public function registration_does_not_require_terms_when_no_legal_urls(): void
     {
-        // Ensure no legal URLs are set (default)
+        // Ensure no legal URLs are set and no email verification
         $settings = app(RegistrationSettings::class);
         $settings->termsUrl = null;
         $settings->privacyPolicyUrl = null;
+        $settings->requireEmailVerification = false;
+        $settings->requireApproval = false;
         $settings->save();
 
         $response = $this->post(route('register'), [
@@ -317,6 +331,35 @@ class RegistrationTest extends TestCase
 
         $settings = app(RegistrationSettings::class);
         $settings->requireEmailVerification = true;
+        $settings->requireApproval = false;
+        $settings->save();
+
+        $response = $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'terms' => true,
+        ]);
+
+        $user = User::where('email', 'test@example.com')->first();
+        Notification::assertSentToTimes($user, VerifyEmail::class, 1);
+
+        // User is logged in but pending until email verified
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('verification.notice'));
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'status' => UserStatus::Pending->value,
+        ]);
+    }
+
+    #[Test]
+    public function user_is_pending_when_email_verification_required(): void
+    {
+        $settings = app(RegistrationSettings::class);
+        $settings->requireEmailVerification = true;
+        $settings->requireApproval = false;
         $settings->save();
 
         $this->post(route('register'), [
@@ -327,8 +370,10 @@ class RegistrationTest extends TestCase
             'terms' => true,
         ]);
 
-        $user = User::where('email', 'test@example.com')->first();
-        Notification::assertSentToTimes($user, VerifyEmail::class, 1);
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'status' => UserStatus::Pending->value,
+        ]);
     }
 
     #[Test]
