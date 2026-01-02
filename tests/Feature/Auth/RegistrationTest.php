@@ -7,8 +7,10 @@ namespace Tests\Feature\Auth;
 use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
 use System\Settings\RegistrationSettings;
 use Tests\TestCase;
@@ -321,5 +323,47 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'status' => UserStatus::Pending->value,
         ]);
+    }
+
+    #[Test]
+    public function verification_email_is_sent_when_required(): void
+    {
+        Notification::fake();
+
+        $settings = app(RegistrationSettings::class);
+        $settings->requireEmailVerification = true;
+        $settings->save();
+
+        $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'terms' => true,
+        ]);
+
+        $user = User::where('email', 'test@example.com')->first();
+        Notification::assertSentToTimes($user, VerifyEmail::class, 1);
+    }
+
+    #[Test]
+    public function verification_email_is_not_sent_when_not_required(): void
+    {
+        Notification::fake();
+
+        $settings = app(RegistrationSettings::class);
+        $settings->requireEmailVerification = false;
+        $settings->save();
+
+        $this->post(route('register'), [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'terms' => true,
+        ]);
+
+        $user = User::where('email', 'test@example.com')->first();
+        Notification::assertNotSentTo($user, VerifyEmail::class);
     }
 }

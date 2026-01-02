@@ -4,51 +4,19 @@ declare(strict_types=1);
 
 namespace System\Events\Providers;
 
+use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
-use ReflectionClass;
 
 /**
  * Event service provider for domain events infrastructure.
  *
- * This provider sets up the event infrastructure for the application.
- * It auto-discovers listeners, subscribers, and observers within domain directories.
- *
- * Auto-discovery paths:
- *   - src/Domain/* /Listeners - Event listeners
- *   - src/Domain/* /Subscribers - Event subscribers
- *   - src/Domain/* /Observers - Model observers
+ * Auto-discovers listeners, subscribers, and observers from domain directories.
+ * Uses src/ as base path since Laravel's default discovery doesn't work with our structure.
  */
 class EventServiceProvider extends ServiceProvider
 {
-    /**
-     * The event to listener mappings for the application.
-     *
-     * @var array<class-string, array<int, class-string>>
-     */
-    protected $listen = [
-        // Auto-discovered from src/Domain/*/Listeners
-    ];
-
-    /**
-     * The subscriber classes to register.
-     *
-     * @var array<int, class-string>
-     */
-    protected $subscribe = [
-        // Auto-discovered from src/Domain/*/Subscribers
-    ];
-
-    /**
-     * The model observers for your application.
-     *
-     * @var array<class-string, array<int, class-string>|class-string>
-     */
-    protected $observers = [
-        // Auto-discovered from src/Domain/*/Observers
-    ];
-
     /**
      * Register any events for your application.
      */
@@ -56,69 +24,60 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
+        $this->discoverAndRegisterListeners();
         $this->discoverAndRegisterSubscribers();
         $this->discoverAndRegisterObservers();
     }
 
     /**
-     * Determine if events and listeners should be automatically discovered.
+     * Disable Laravel's auto-discovery (doesn't work with src/ prefix).
      */
     public function shouldDiscoverEvents(): bool
     {
-        return true;
+        return false;
     }
 
     /**
-     * Get the listener directories that should be used to discover events.
-     *
-     * @return array<int, string>
+     * Discover and register event listeners using Laravel's native discovery.
      */
-    protected function discoverEventsWithin(): array
+    protected function discoverAndRegisterListeners(): void
     {
-        return $this->getDomainDirectories('Listeners');
-    }
-
-    /**
-     * Discover and register event subscribers from domain directories.
-     */
-    protected function discoverAndRegisterSubscribers(): void
-    {
-        foreach ($this->getDomainDirectories('Subscribers') as $directory) {
-            if (! is_dir($directory)) {
-                continue;
-            }
-
-            foreach (File::allFiles($directory) as $file) {
-                $class = $this->getClassFromFile($file->getPathname());
-
-                if ($class && class_exists($class)) {
-                    Event::subscribe($class);
+        foreach ($this->domainDirectories('Listeners') as $directory) {
+            foreach (DiscoverEvents::within($directory, base_path('src')) as $event => $listeners) {
+                foreach ($listeners as $listener) {
+                    Event::listen($event, $listener);
                 }
             }
         }
     }
 
     /**
-     * Discover and register model observers from domain directories.
+     * Discover and register event subscribers.
+     */
+    protected function discoverAndRegisterSubscribers(): void
+    {
+        foreach ($this->domainDirectories('Subscribers') as $directory) {
+            foreach ($this->classesInDirectory($directory) as $class) {
+                Event::subscribe($class);
+            }
+        }
+    }
+
+    /**
+     * Discover and register model observers.
+     *
+     * Convention: UserObserver in Domain\User\Observers observes Domain\User\Models\User
      */
     protected function discoverAndRegisterObservers(): void
     {
-        foreach ($this->getDomainDirectories('Observers') as $directory) {
-            if (! is_dir($directory)) {
-                continue;
-            }
+        foreach ($this->domainDirectories('Observers') as $directory) {
+            foreach ($this->classesInDirectory($directory) as $observerClass) {
+                if (preg_match('/^(.+)\\\\Observers\\\\(.+)Observer$/', $observerClass, $matches)) {
+                    $modelClass = $matches[1].'\\Models\\'.$matches[2];
 
-            foreach (File::allFiles($directory) as $file) {
-                $observerClass = $this->getClassFromFile($file->getPathname());
-
-                if (! $observerClass || ! class_exists($observerClass)) {
-                    continue;
-                }
-
-                $modelClass = $this->getObservedModel($observerClass);
-
-                if ($modelClass && class_exists($modelClass)) {
-                    $modelClass::observe($observerClass);
+                    if (class_exists($modelClass)) {
+                        $modelClass::observe($observerClass);
+                    }
                 }
             }
         }
@@ -127,74 +86,47 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Get all domain directories for a given subdirectory type.
      *
-     * @return array<int, string>
+     * @return array<string>
      */
-    protected function getDomainDirectories(string $subdirectory): array
+    protected function domainDirectories(string $subdirectory): array
     {
         $domainPath = base_path('src/Domain');
-        $directories = [];
 
         if (! is_dir($domainPath)) {
-            return $directories;
+            return [];
         }
 
-        foreach (File::directories($domainPath) as $domain) {
-            $path = $domain.'/'.$subdirectory;
-            if (is_dir($path)) {
-                $directories[] = $path;
+        return array_filter(
+            array_map(
+                fn ($domain) => $domain.'/'.$subdirectory,
+                File::directories($domainPath)
+            ),
+            'is_dir'
+        );
+    }
+
+    /**
+     * Get all class names from PHP files in a directory.
+     *
+     * @return array<class-string>
+     */
+    protected function classesInDirectory(string $directory): array
+    {
+        $classes = [];
+        $basePath = base_path('src').'/';
+
+        foreach (File::allFiles($directory) as $file) {
+            $class = str_replace(
+                ['/', '.php'],
+                ['\\', ''],
+                str_replace($basePath, '', $file->getRealPath())
+            );
+
+            if (class_exists($class)) {
+                $classes[] = $class;
             }
         }
 
-        return $directories;
-    }
-
-    /**
-     * Get the fully qualified class name from a file.
-     */
-    protected function getClassFromFile(string $filePath): ?string
-    {
-        $contents = file_get_contents($filePath);
-
-        if (! $contents) {
-            return null;
-        }
-
-        // Extract namespace
-        if (! preg_match('/namespace\s+([^;]+);/', $contents, $namespaceMatch)) {
-            return null;
-        }
-
-        // Extract class name
-        if (! preg_match('/class\s+(\w+)/', $contents, $classMatch)) {
-            return null;
-        }
-
-        return $namespaceMatch[1].'\\'.$classMatch[1];
-    }
-
-    /**
-     * Determine the model class that an observer observes.
-     *
-     * Convention: UserObserver observes User model in the same domain.
-     */
-    protected function getObservedModel(string $observerClass): ?string
-    {
-        // Check if observer has a static $model property
-        if (property_exists($observerClass, 'model')) {
-            $reflection = new ReflectionClass($observerClass);
-            $property = $reflection->getProperty('model');
-
-            return $property->getDefaultValue();
-        }
-
-        // Convention: Domain\User\Observers\UserObserver -> Domain\User\Models\User
-        if (preg_match('/^(.+)\\\\Observers\\\\(.+)Observer$/', $observerClass, $matches)) {
-            $domainNamespace = $matches[1];
-            $modelName = $matches[2];
-
-            return $domainNamespace.'\\Models\\'.$modelName;
-        }
-
-        return null;
+        return $classes;
     }
 }

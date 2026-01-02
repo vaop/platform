@@ -65,4 +65,13 @@ return [
     'confirm_new_password' => 'Confirm New Password',
     'reset_password_button' => 'Reset Password',
 
+    // Email verification page
+    'verify_email_title' => 'Verify Your Email',
+    'verify_email_subtitle' => 'Thanks for signing up! Please verify your email address.',
+    'verify_email_instructions' => 'Before getting started, please verify your email address by clicking the link we sent to you. If you didn\'t receive the email, we\'ll gladly send you another.',
+    'resend_verification' => 'Resend Verification Email',
+    'verification_link_sent' => 'A new verification link has been sent to your email address.',
+    'email_verified' => 'Your email has been verified.',
+    'logout' => 'Log Out',
+
 ];

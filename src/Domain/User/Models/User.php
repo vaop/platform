@@ -2,9 +2,9 @@
 
 namespace Domain\User\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Domain\User\Enums\UserStatus;
 use Domain\User\Factories\UserFactory;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,8 +22,8 @@ use Support\UnitsOfMeasure\Enums\WeightUnit;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Domain\User\Factories\UserFactory> */
-    use HasFactory, HasRoles, Notifiable;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, HasRoles, MustVerifyEmail, Notifiable;
 
     /**
      * The attributes that are mass assignable.
