@@ -4,6 +4,8 @@ namespace Domain\User\Models;
 
 use Domain\User\Enums\UserStatus;
 use Domain\User\Factories\UserFactory;
+use Domain\User\Notifications\ResetPasswordNotification;
+use Domain\User\Notifications\VerifyEmailNotification;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
@@ -180,5 +182,21 @@ class User extends Authenticatable implements FilamentUser
     protected static function newFactory(): UserFactory
     {
         return UserFactory::new();
+    }
+
+    /**
+     * Send the email verification notification.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyEmailNotification);
+    }
+
+    /**
+     * Send the password reset notification.
+     */
+    public function sendPasswordResetNotification(mixed $token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
