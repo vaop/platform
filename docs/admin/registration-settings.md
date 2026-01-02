@@ -43,6 +43,19 @@ Enabling stricter requirements **does not affect existing active users**. Only n
 - You enable "Require Approval"
 - User remains active (they were already approved by registering when approval wasn't required)
 
+## Email Address Changes
+
+When a user's email address is changed (by an admin or the user themselves):
+
+1. **Verification status is always reset** - The user becomes unverified regardless of settings
+2. **Verification email sent if required** - If "Require Email Verification" is enabled, a new verification email is sent automatically
+3. **User status is NOT changed** - Active users remain active; they've already been approved
+
+This ensures:
+- Users always have a verified, working email on file (when verification is required)
+- Changed emails are confirmed to belong to the user
+- Established users aren't locked out just for updating their email
+
 ## Best Practices
 
 1. **Start restrictive, relax later** - It's easier to remove requirements than to add them retroactively
