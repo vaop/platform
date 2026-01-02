@@ -44,7 +44,6 @@ class SuperadminBypassTest extends TestCase
     public function regular_user_does_not_bypass_permissions(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('pilot');
 
         // Create a permission that the user doesn't have
         Permission::findOrCreate('some.restricted.permission');
@@ -59,7 +58,6 @@ class SuperadminBypassTest extends TestCase
     public function user_with_explicit_permission_can_access(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('pilot');
         $user->givePermissionTo('admin.access');
 
         $this->actingAs($user);

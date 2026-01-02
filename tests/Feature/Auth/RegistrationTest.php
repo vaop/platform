@@ -81,21 +81,6 @@ class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function user_is_assigned_pilot_role_on_registration(): void
-    {
-        $this->post(route('register'), [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'terms' => true,
-        ]);
-
-        $user = User::where('email', 'test@example.com')->first();
-        $this->assertTrue($user->hasRole('pilot'));
-    }
-
-    #[Test]
     public function user_can_register_with_optional_fields(): void
     {
         $response = $this->post(route('register'), [

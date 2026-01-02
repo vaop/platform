@@ -16,4 +16,7 @@ return [
 
     // Auth
     \System\Auth\Providers\AuthServiceProvider::class,
+
+    // Filament
+    \System\Filament\Providers\AdminPanelProvider::class,
 ];

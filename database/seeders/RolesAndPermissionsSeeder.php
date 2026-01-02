@@ -31,11 +31,8 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::findOrCreate($permission);
         }
 
-        // Create roles and assign permissions
+        // Create roles
         // superadmin bypasses all permission checks via Gate::before
         Role::findOrCreate('superadmin');
-
-        // pilot is the default role for registered users
-        Role::findOrCreate('pilot');
     }
 }

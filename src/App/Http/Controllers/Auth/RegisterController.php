@@ -69,8 +69,6 @@ class RegisterController extends Controller
             'status' => $status,
         ]);
 
-        $user->assignRole('pilot');
-
         event(new Registered($user));
 
         if ($this->settings->requireApproval) {

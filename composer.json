@@ -4,12 +4,30 @@
     "description": "A modern, open-source flight operations platform for virtual airlines",
     "license": "AGPL-3.0-or-later",
     "type": "project",
-    "keywords": ["virtual", "airline", "flight", "simulation", "operations", "vaop", "virtual-airline", "flight-sim", "pirep", "acars", "aviation", "laravel", "vatsim", "ivao", "msfs", "xplane"],
+    "keywords": [
+        "virtual",
+        "airline",
+        "flight",
+        "simulation",
+        "operations",
+        "vaop",
+        "virtual-airline",
+        "flight-sim",
+        "pirep",
+        "acars",
+        "aviation",
+        "laravel",
+        "vatsim",
+        "ivao",
+        "msfs",
+        "xplane"
+    ],
     "homepage": "https://github.com/vaop/platform",
     "require": {
         "php": "^8.4",
         "ext-pdo": "*",
         "ext-zip": "*",
+        "filament/filament": "^5.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "php-units-of-measure/php-units-of-measure": "^2.2",
@@ -63,7 +81,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
@@ -95,6 +114,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "prefer-stable": true
 }

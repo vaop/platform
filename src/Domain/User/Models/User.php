@@ -4,6 +4,8 @@ namespace Domain\User\Models;
 
 use Domain\User\Enums\UserStatus;
 use Domain\User\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,7 +22,7 @@ use Support\UnitsOfMeasure\Enums\TemperatureUnit;
 use Support\UnitsOfMeasure\Enums\VolumeUnit;
 use Support\UnitsOfMeasure\Enums\WeightUnit;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, MustVerifyEmail, Notifiable;
@@ -117,6 +119,14 @@ class User extends Authenticatable
     public function isSuspended(): bool
     {
         return $this->status === UserStatus::Suspended;
+    }
+
+    /**
+     * Check if the user can access the given Filament panel.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->can('admin.access');
     }
 
     /**

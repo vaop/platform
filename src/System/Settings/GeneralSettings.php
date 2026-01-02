@@ -12,6 +12,8 @@ class GeneralSettings extends Settings
 
     public string $siteUrl;
 
+    public bool $enableVanityIds;
+
     public static function group(): string
     {
         return 'general';

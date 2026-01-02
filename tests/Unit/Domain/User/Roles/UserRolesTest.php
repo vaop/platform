@@ -31,12 +31,6 @@ class UserRolesTest extends TestCase
     }
 
     #[Test]
-    public function seeder_creates_pilot_role(): void
-    {
-        $this->assertDatabaseHas('user_roles', ['name' => 'pilot']);
-    }
-
-    #[Test]
     public function seeder_creates_admin_access_permission(): void
     {
         $this->assertDatabaseHas('user_permissions', ['name' => 'admin.access']);
@@ -47,32 +41,33 @@ class UserRolesTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $user->assignRole('pilot');
+        $user->assignRole('superadmin');
 
-        $this->assertTrue($user->hasRole('pilot'));
+        $this->assertTrue($user->hasRole('superadmin'));
     }
 
     #[Test]
     public function user_can_have_multiple_roles(): void
     {
+        Role::findOrCreate('admin');
         $user = User::factory()->create();
 
         $user->assignRole('superadmin');
-        $user->assignRole('pilot');
+        $user->assignRole('admin');
 
         $this->assertTrue($user->hasRole('superadmin'));
-        $this->assertTrue($user->hasRole('pilot'));
+        $this->assertTrue($user->hasRole('admin'));
     }
 
     #[Test]
     public function user_can_be_removed_from_role(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('pilot');
+        $user->assignRole('superadmin');
 
-        $user->removeRole('pilot');
+        $user->removeRole('superadmin');
 
-        $this->assertFalse($user->hasRole('pilot'));
+        $this->assertFalse($user->hasRole('superadmin'));
     }
 
     #[Test]
@@ -92,8 +87,8 @@ class UserRolesTest extends TestCase
         app(RolesAndPermissionsSeeder::class)->run();
         app(RolesAndPermissionsSeeder::class)->run();
 
-        // Should still only have 2 roles
-        $this->assertCount(2, Role::all());
+        // Should still only have 1 role
+        $this->assertCount(1, Role::all());
 
         // Should still only have 1 permission
         $this->assertCount(1, Permission::all());
