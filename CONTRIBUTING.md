@@ -152,6 +152,47 @@ docs: update installation instructions
 
 PR titles are validated by CI to ensure they follow the conventional commit format.
 
+## LLM-Assisted Development
+
+LLM coding assistants (Claude, GitHub Copilot, ChatGPT, etc.) are welcome tools for contributing to this project. These guidelines ensure LLM-assisted contributions maintain quality and transparency.
+
+### Acceptable Uses
+
+- **Code generation**: Writing boilerplate, tests, migrations, and implementation code
+- **Refactoring**: Improving existing code structure and readability
+- **Documentation**: Generating docblocks, comments, and markdown documentation
+- **Problem solving**: Debugging, understanding complex code, exploring solutions
+- **Code review**: Using LLMs to review your own code before submission
+
+### Requirements for LLM-Generated Code
+
+1. **Review everything**: Never submit LLM-generated code without understanding it. You are responsible for all code you submit.
+
+2. **Test thoroughly**: LLM-generated code must pass all existing tests and include appropriate new tests.
+
+3. **Verify correctness**: LLMs can hallucinate APIs, generate deprecated patterns, or miss edge cases. Verify against official documentation.
+
+4. **Check for security issues**: Review LLM-generated code for vulnerabilities (SQL injection, XSS, etc.).
+
+5. **Maintain consistency**: Ensure generated code follows project patterns, not generic Laravel patterns. Review existing code for context.
+
+**You are wholly responsible for all code you submit.** Using an LLM does not reduce your accountability. Repeatedly submitting low-quality LLM-generated code will result in restricted access.
+
+### What to Avoid
+
+- **Blindly accepting suggestions**: Always understand what the code does
+- **Skipping tests**: "The LLM wrote it" is not a substitute for test coverage
+- **Copy-pasting without context**: LLMs need project context to generate appropriate code
+- **Ignoring linting/style errors**: LLM output must still pass Pint and other checks
+- **Committing secrets or credentials**: LLMs might generate placeholder values that look real
+
+### Tips for Better LLM Assistance
+
+1. **Provide context**: Share relevant existing code, patterns, and constraints
+2. **Be specific**: "Add a User model" vs "Add a User model following the existing Domain structure in src/Domain with the HasFactory trait"
+3. **Iterate**: If output isn't right, refine your prompt rather than manually fixing everything
+4. **Use for learning**: LLM explanations can help you understand unfamiliar parts of the codebase
+
 ## Project Structure
 
 ```
