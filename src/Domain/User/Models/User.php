@@ -39,6 +39,7 @@ class User extends Authenticatable
         'country',
         'timezone',
         'status',
+        'last_login_at',
         'distance_unit',
         'altitude_unit',
         'height_unit',
