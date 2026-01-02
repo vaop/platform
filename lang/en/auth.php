@@ -40,15 +40,29 @@ return [
     'timezone' => 'Timezone',
     'select_country' => 'Select your country',
     'select_timezone' => 'Select your timezone',
-    'i_agree_to' => 'I agree to the',
+    'accept_terms_and_privacy' => 'I agree to the :terms and :privacy',
+    'accept_terms_only' => 'I agree to the :terms',
+    'accept_privacy_only' => 'I agree to the :privacy',
     'terms_of_service' => 'Terms of Service',
     'privacy_policy' => 'Privacy Policy',
-    'and' => 'and',
     'register_button' => 'Create Account',
     'already_have_account' => 'Already have an account?',
     'login_link' => 'Sign in',
     'terms_required' => 'You must accept the terms and conditions.',
     'registration_closed' => 'Registration is currently closed.',
     'registration_pending' => 'Your registration has been submitted and is pending approval.',
+
+    // Forgot password page
+    'forgot_password_title' => 'Forgot Password',
+    'forgot_password_subtitle' => 'Enter your email address and we\'ll send you a reset link.',
+    'send_reset_link' => 'Send Reset Link',
+    'back_to_login' => 'Back to login',
+
+    // Reset password page
+    'reset_password_title' => 'Reset Password',
+    'reset_password_subtitle' => 'Enter your new password below.',
+    'new_password' => 'New Password',
+    'confirm_new_password' => 'Confirm New Password',
+    'reset_password_button' => 'Reset Password',
 
 ];
