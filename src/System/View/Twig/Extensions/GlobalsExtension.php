@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace System\View\Twig\Extensions;
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -14,7 +15,8 @@ use Twig\Extension\GlobalsInterface;
 class GlobalsExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(
-        private readonly Request $request
+        private readonly Request $request,
+        private readonly Guard $auth
     ) {}
 
     /**
@@ -37,6 +39,7 @@ class GlobalsExtension extends AbstractExtension implements GlobalsInterface
                 'method' => $this->request->method(),
                 'is_secure' => $this->request->secure(),
             ],
+            'currentUser' => $this->auth->user(),
         ];
     }
 }

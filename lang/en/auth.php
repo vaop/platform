@@ -31,4 +31,24 @@ return [
     // Logout
     'logged_out' => 'You have been logged out.',
 
+    // Registration page
+    'register_title' => 'Create Account',
+    'register_subtitle' => 'Join our virtual airline community.',
+    'name' => 'Full Name',
+    'password_confirmation' => 'Confirm Password',
+    'country' => 'Country',
+    'timezone' => 'Timezone',
+    'select_country' => 'Select your country',
+    'select_timezone' => 'Select your timezone',
+    'i_agree_to' => 'I agree to the',
+    'terms_of_service' => 'Terms of Service',
+    'privacy_policy' => 'Privacy Policy',
+    'and' => 'and',
+    'register_button' => 'Create Account',
+    'already_have_account' => 'Already have an account?',
+    'login_link' => 'Sign in',
+    'terms_required' => 'You must accept the terms and conditions.',
+    'registration_closed' => 'Registration is currently closed.',
+    'registration_pending' => 'Your registration has been submitted and is pending approval.',
+
 ];

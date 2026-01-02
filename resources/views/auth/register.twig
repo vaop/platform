@@ -1,0 +1,89 @@
+{% extends 'layouts/guest.twig' %}
+{% import 'macros/forms.twig' as forms %}
+
+{% block content %}
+<div class="center stack stack-6" style="max-width: 24rem; margin: 4rem auto;">
+    <div class="text-center">
+        <h1 class="text-2xl font-semibold">{{ t('auth.register_title') }}</h1>
+        <p class="text-muted">{{ t('auth.register_subtitle') }}</p>
+    </div>
+
+    <form method="POST" action="{{ route('register') }}" class="stack stack-4">
+        {{ csrf_field() }}
+
+        {{ forms.input('name', t('auth.name'), {
+            type: 'text',
+            required: true,
+            autocomplete: 'name',
+            value: old('name'),
+            error: errors.first('name')
+        }) }}
+
+        {{ forms.email('email', t('auth.email'), {
+            required: true,
+            autocomplete: 'email',
+            value: old('email'),
+            error: errors.first('email')
+        }) }}
+
+        {{ forms.password('password', t('auth.password'), {
+            required: true,
+            autocomplete: 'new-password',
+            error: errors.first('password')
+        }) }}
+
+        {{ forms.password('password_confirmation', t('auth.password_confirmation'), {
+            required: true,
+            autocomplete: 'new-password'
+        }) }}
+
+        {{ forms.select('timezone', t('auth.timezone'), timezones, {
+            placeholder: t('auth.select_timezone'),
+            value: old('timezone'),
+            error: errors.first('timezone')
+        }) }}
+
+        {% if registrationSettings.requiresLegalAcceptance() %}
+            {% set termsLink %}<a href="{{ registrationSettings.termsUrl }}" target="_blank">{{ t('auth.terms_of_service') }}</a>{% endset %}
+            {% set privacyLink %}<a href="{{ registrationSettings.privacyPolicyUrl }}" target="_blank">{{ t('auth.privacy_policy') }}</a>{% endset %}
+
+            {% if registrationSettings.hasTerms() and registrationSettings.hasPrivacyPolicy() %}
+                {% set termsLabel = t('auth.accept_terms_and_privacy', {terms: termsLink, privacy: privacyLink}) %}
+            {% elseif registrationSettings.hasTerms() %}
+                {% set termsLabel = t('auth.accept_terms_only', {terms: termsLink}) %}
+            {% else %}
+                {% set termsLabel = t('auth.accept_privacy_only', {privacy: privacyLink}) %}
+            {% endif %}
+
+            {{ forms.checkbox('terms', termsLabel|raw, {
+                required: true,
+                error: errors.first('terms')
+            }) }}
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary btn-full">
+            {{ t('auth.register_button') }}
+        </button>
+
+        <p class="text-center text-sm text-muted">
+            {{ t('auth.already_have_account') }}
+            <a href="{{ route('login') }}">{{ t('auth.login_link') }}</a>
+        </p>
+    </form>
+</div>
+
+<script>
+    (function() {
+        const tzSelect = document.getElementById('timezone');
+        if (tzSelect && !tzSelect.value) {
+            const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (browserTz) {
+                const option = tzSelect.querySelector(`option[value="${browserTz}"]`);
+                if (option) {
+                    option.selected = true;
+                }
+            }
+        }
+    })();
+</script>
+{% endblock %}

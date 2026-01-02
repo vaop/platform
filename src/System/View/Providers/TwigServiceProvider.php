@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace System\View\Providers;
 
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use System\View\Composers\GlobalViewComposer;
 use System\View\Exceptions\TwigErrorHandler;
 use System\View\Twig\Extensions\CoreFunctionsExtension;
 use System\View\Twig\Extensions\FiltersExtension;
@@ -47,9 +45,6 @@ class TwigServiceProvider extends ServiceProvider
             $this->registerSandboxExtension();
             $this->registerCustomExtensions();
         });
-
-        // Register view composers
-        $this->registerViewComposers();
     }
 
     /**
@@ -98,14 +93,5 @@ class TwigServiceProvider extends ServiceProvider
         Twig::addExtension($this->app->make(FiltersExtension::class));
         Twig::addExtension($this->app->make(GlobalsExtension::class));
         Twig::addExtension($this->app->make(UnitsExtension::class));
-    }
-
-    /**
-     * Register view composers.
-     */
-    private function registerViewComposers(): void
-    {
-        // Apply to all Twig views
-        View::composer('*.twig', GlobalViewComposer::class);
     }
 }
