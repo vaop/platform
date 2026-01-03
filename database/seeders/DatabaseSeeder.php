@@ -1,25 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use Domain\User\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Domain\Geography\Seeders\ContinentSeeder;
+use Domain\Geography\Seeders\CountrySeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * This seeder is idempotent and can be run multiple times safely.
+     * All sub-seeders use updateOrCreate to avoid duplicates.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            // Note: Order matters!
+            RolesAndPermissionsSeeder::class,
+            ContinentSeeder::class,
+            CountrySeeder::class,
         ]);
     }
 }

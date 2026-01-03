@@ -17,7 +17,7 @@ php artisan icons:cache
 # Run migrations and seeders if AUTO_MIGRATE is set
 if [ "$AUTO_MIGRATE" = "true" ]; then
     php artisan migrate --force
-    php artisan db:seed --class=RolesAndPermissionsSeeder --force
+    php artisan db:seed --force
 fi
 
 # Start supervisor

@@ -375,10 +375,7 @@ class UpdateService
     {
         try {
             Artisan::call('migrate', ['--force' => true]);
-            Artisan::call('db:seed', [
-                '--class' => 'RolesAndPermissionsSeeder',
-                '--force' => true,
-            ]);
+            Artisan::call('db:seed', ['--force' => true]);
         } catch (\Exception $e) {
             throw UpdateException::migrationFailed($e->getMessage());
         }
