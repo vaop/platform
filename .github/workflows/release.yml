@@ -52,7 +52,6 @@ jobs:
           # Copy application files
           cp -r bootstrap release/
           cp -r database release/
-          cp -r lang release/
           cp -r public release/
           cp -r resources release/
           cp -r storage release/
