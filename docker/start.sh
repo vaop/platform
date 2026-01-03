@@ -12,6 +12,7 @@ chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+php artisan icons:cache
 
 # Run migrations and seeders if AUTO_MIGRATE is set
 if [ "$AUTO_MIGRATE" = "true" ]; then

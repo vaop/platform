@@ -11,7 +11,7 @@ use System\Settings\RegistrationSettings;
 
 class RegistrationSettingsPage extends SettingsPage
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-plus';
+    protected static string|\BackedEnum|null $navigationIcon = 'fas-user-plus';
 
     protected static ?string $navigationLabel = 'Registration';
 

@@ -21,7 +21,7 @@ use System\Settings\UnitsSettings;
 
 class UnitsSettingsPage extends SettingsPage
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-scale';
+    protected static string|\BackedEnum|null $navigationIcon = 'fas-scale-balanced';
 
     protected static ?string $navigationLabel = 'Units';
 

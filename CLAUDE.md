@@ -108,27 +108,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Add useful array shape type definitions for arrays when appropriate.
 
 ## Enums
-- Enums should always be int-backed for database storage efficiency and consistency.
-- Enum keys should be TitleCase. For example: `FavoritePerson`, `BestLake`, `Monthly`.
-
-<code-snippet name="Int-backed Enum Example" lang="php">
-enum UserStatus: int
-{
-    case Pending = 0;
-    case Active = 1;
-    case Suspended = 2;
-}
-</code-snippet>
-
-## Observers
-- Keep observers simple - avoid static caches or storing state between events.
-- Use `$model->isDirty('field')` in `updating` and `$model->wasChanged('field')` in `updated`.
-- Fire dedicated events rather than reusing generic Laravel events (e.g., `EmailChanged` instead of `Registered`).
-
-## Twig Templates
-- This project uses Twig for templating instead of Blade.
-- Use `t('key')` for translations, with nested keys: `t('emails.verify_email.subject')`.
-- Pass parameters as a second argument: `t('messages.count', { count: 5 })`.
+- Typically, keys in an Enum should be TitleCase. For example: `FavoritePerson`, `BestLake`, `Monthly`.
 
 
 === sail rules ===

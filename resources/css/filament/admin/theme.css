@@ -1,0 +1,896 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../src/App/Admin/**/*';
+@source '../../../../src/System/Filament/**/*';
+@source '../../../../resources/views/admin/**/*';
+
+/* ==========================================================================
+   Theme Variables
+   ========================================================================== */
+
+@theme {
+    --color-admin-body-dark: #020B12;
+    --color-admin-sidebar-dark: #020E17;
+    --color-admin-topbar-dark: #031826;
+    --color-admin-input-dark: #03131F;
+    --color-admin-hover-dark: #041B2D;
+    --color-admin-dropdown-dark: #042235;
+    --color-admin-active-dark: #06293D;
+    --color-admin-sidebar-light: #062f4b;
+    --color-admin-topbar-light: #024a71;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/* Builder & Repeater */
+.fi-fo-builder .fi-fo-builder-item,
+.fi-fo-repeater-item {
+    @apply rounded-sm bg-transparent ring-gray-950/10 dark:bg-transparent dark:ring-white/10;
+}
+
+.fi-fo-builder-item-header,
+.fi-fo-repeater-item-header {
+    @apply rounded-t-sm;
+}
+
+.fi-fo-builder-item-content,
+.fi-fo-repeater-item-content {
+    @apply border-none pt-1;
+}
+
+.fi-fo-builder-block-picker-ctn,
+.fi-fo-repeater-add-between-items {
+    @apply rounded-sm;
+}
+
+/* Color Picker */
+.fi-fo-color-picker-panel {
+    @apply rounded-sm;
+}
+
+/* File Upload */
+.filepond--root {
+    @apply rounded-sm;
+}
+
+/* Label */
+.fi-fo-field {
+    & .fi-fo-field-label-content {
+        @apply dark:text-gray-200;
+    }
+}
+
+/* Markdown Editor */
+.fi-fo-markdown-editor .EasyMDEContainer {
+    .editor-toolbar {
+        @apply border-none pb-0;
+
+        button {
+            @apply rounded-sm hover:bg-transparent focus-visible:bg-transparent dark:hover:bg-transparent dark:focus-visible:bg-transparent;
+
+            &::before {
+                @apply transition duration-75;
+            }
+
+            &:not(.active)::before {
+                @apply bg-gray-500 hover:bg-gray-700 dark:bg-gray-400 dark:hover:bg-gray-200;
+            }
+
+            &.active {
+                @apply bg-transparent dark:bg-transparent;
+            }
+        }
+    }
+}
+
+/* Rich Editor */
+.fi-fo-rich-editor-toolbar {
+    @apply border-none pb-0;
+}
+
+.fi-fo-rich-editor .fi-fo-rich-editor-toolbar-btn {
+    @apply rounded-sm font-medium hover:bg-transparent focus-visible:bg-transparent dark:hover:bg-transparent dark:focus-visible:bg-transparent;
+}
+
+.fi-fo-rich-editor .fi-fo-rich-editor-toolbar-btn:not(.trix-active) {
+    @apply text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200;
+}
+
+.fi-fo-rich-editor .fi-fo-rich-editor-toolbar-btn.trix-active {
+    @apply bg-transparent dark:bg-transparent;
+}
+
+.fi-fo-rich-editor trix-toolbar .trix-dialog {
+    @apply rounded-sm;
+}
+
+/* Select */
+.choices__list--multiple .choices__item {
+    @apply !rounded-sm !bg-primary-100 !text-primary-700 !ring-0 dark:!bg-primary-400/20 dark:!text-primary-300;
+}
+
+.choices__item--choice.choices__item--selectable {
+    @apply rounded-sm;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+    @apply rounded-sm;
+}
+
+/* Schema Tabs */
+.fi-sc-tabs.fi-contained {
+    @apply rounded-none bg-transparent shadow-none ring-0;
+
+    .fi-sc-tabs-tab.fi-active {
+        @apply mt-6 p-0;
+    }
+}
+
+/* Wizard */
+.fi-sc-wizard-header {
+    @apply justify-start divide-y-0 lg:gap-x-12;
+    counter-reset: step;
+}
+
+.fi-sc-wizard:not(.fi-contained) .fi-sc-wizard-header {
+    @apply rounded-none bg-transparent shadow-none ring-0;
+}
+
+.fi-sc-wizard-header-step {
+    @apply pb-6 md:pb-0;
+    counter-increment: step;
+}
+
+.fi-sc-wizard-header-step:not(.fi-active):not(.fi-completed)
+.fi-sc-wizard-header-step-icon-ctn {
+    @apply border border-gray-950/10 dark:border-white/20;
+}
+
+.fi-sc-wizard-header-step-btn {
+    @apply z-10 items-start p-0;
+
+    &:not(:has(.fi-sc-wizard-header-step-description)) {
+        @apply items-center;
+    }
+}
+
+.fi-sc-wizard-header-step-icon-ctn {
+    position: relative;
+    height: --spacing(8);
+    width: --spacing(8);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-shadow: var(--shadow-xs);
+        border-radius: calc(infinity * 1px);
+    }
+
+    .fi-icon {
+        @apply h-5 w-5;
+    }
+}
+
+.fi-sc-wizard-header-step.fi-active .fi-sc-wizard-header-step-icon-ctn {
+    @apply border border-primary-600/40 dark:border-primary-500/40;
+}
+
+.fi-sc-wizard-header-step:not(.fi-completed)
+.fi-sc-wizard-header-step-icon-ctn {
+    @apply bg-gray-50 dark:bg-gray-800;
+}
+
+.fi-sc-wizard-header-step.fi-active .fi-icon {
+    @apply dark:text-primary-400;
+}
+
+.fi-sc-wizard-header-step-indicator {
+    @apply invisible relative;
+}
+
+.fi-sc-wizard-header-step.fi-active .fi-sc-wizard-header-step-indicator {
+    @apply dark:text-primary-400;
+}
+
+.fi-sc-wizard-header-step-indicator:after {
+    @apply visible absolute inset-0;
+    content: counter(step);
+    text-align: center;
+}
+
+.fi-sc-wizard-header-step-separator {
+    @apply bottom-0 start-4 top-4 -ms-px block w-0.5 bg-gray-200 dark:bg-gray-800 md:!hidden;
+}
+
+.fi-sc-wizard-header-step.fi-completed .fi-sc-wizard-header-step-separator {
+    @apply bg-primary-600 dark:bg-primary-500;
+}
+
+.fi-sc-wizard-header-step-separator svg {
+    @apply hidden;
+}
+
+/* ==========================================================================
+   Infolists
+   ========================================================================== */
+
+.fi-in-color-item,
+.fi-ta-color-item {
+    @apply rounded-full;
+}
+
+.fi-in-repeatable.fi-contained .fi-in-repeatable-item {
+    @apply rounded-sm;
+}
+
+/* ==========================================================================
+   Notifications
+   ========================================================================== */
+
+.fi-no-notification:not(.fi-inline) {
+    @apply rounded-sm;
+}
+
+.fi-no-notification-icon {
+    &.fi-color-gray {
+        @apply dark:text-gray-500;
+    }
+
+    &.fi-color-custom {
+        @apply text-custom-500 dark:text-custom-400;
+    }
+}
+
+/* ==========================================================================
+   Panels
+   ========================================================================== */
+
+/* Form Actions */
+.fi-form-actions.fi-sticky {
+    @apply rounded-b-none rounded-t-lg md:bottom-0;
+}
+
+/* Global Search */
+.fi-global-search-results-ctn {
+    @apply rounded-sm;
+}
+
+.fi-global-search-result-group {
+    & > div > h3 {
+        @apply font-medium text-gray-500 dark:text-gray-400;
+    }
+
+    & > ul {
+        @apply divide-y divide-gray-950/5 dark:divide-white/5;
+    }
+}
+
+/* Header */
+.fi-simple-header {
+    @apply items-start;
+}
+
+.fi-simple-header-heading,
+.fi-simple-header-subheading {
+    @apply text-start;
+}
+
+/* Layout */
+.fi-body {
+    @apply bg-white dark:!bg-admin-body-dark;
+}
+
+.fi-simple-main {
+    @apply mx-6 bg-transparent !px-0 py-0 shadow-none ring-0 dark:!bg-transparent sm:!rounded-none;
+}
+
+/* Sidebar */
+.fi-sidebar {
+    @apply ring-0 bg-admin-sidebar-light dark:bg-admin-sidebar-dark lg:border-r lg:border-gray-200 lg:dark:border-gray-900;
+}
+
+.fi-sidebar-header {
+    @apply border-b border-gray-600 px-8 ring-0 dark:!border-gray-800 lg:!shadow-none;
+    height: calc(4rem + 1px);
+}
+
+.fi-sidebar-nav {
+    @apply gap-y-0 px-0 pl-3;
+}
+
+.fi-sidebar-nav-tenant-menu-ctn {
+    @apply !mx-6;
+}
+
+.fi-sidebar-nav-groups {
+    @apply mx-0 gap-y-0 divide-y divide-gray-950/5 dark:divide-white/5;
+}
+
+.fi-page-sub-navigation-sidebar {
+    padding-inline-start: --spacing(6);
+
+    & .fi-sidebar-item {
+        margin-inline: 0;
+    }
+}
+
+.fi-sidebar-nav .fi-sidebar-group {
+    @apply px-3 py-2;
+}
+
+.fi-sidebar-group .fi-sidebar-group-icon {
+    @apply text-gray-500 dark:text-gray-400;
+}
+
+.fi-sidebar-group .fi-sidebar-group-label {
+    @apply text-xs uppercase font-bold tracking-wide text-gray-400 dark:text-gray-500;
+}
+
+.fi-sidebar-item {
+    .fi-page & {
+        @apply -mx-2;
+    }
+
+    &:not(.fi-active) {
+        & > .fi-sidebar-item-btn {
+            .fi-sidebar-item-icon,
+            .fi-sidebar-item-label {
+                @apply text-gray-300 dark:text-gray-400;
+            }
+
+            &:hover {
+                .fi-sidebar-item-icon,
+                .fi-sidebar-item-label {
+                    @apply text-gray-50 dark:text-gray-200;
+                }
+            }
+        }
+    }
+
+    &.fi-active {
+        & > .fi-sidebar-item-btn {
+            @apply rounded-sm dark:bg-admin-active-dark;
+
+            .fi-sidebar-item-icon,
+            .fi-sidebar-item-label {
+                @apply text-admin-sidebar-dark dark:text-gray-200;
+            }
+
+            &:hover {
+                @apply bg-gray-300 dark:bg-admin-hover-dark;
+            }
+
+            &:not(:has(.fi-sidebar-item-grouped-border)) {
+                &::before {
+                    .fi-page & {
+                        @apply hidden;
+                    }
+                }
+            }
+
+            & > .fi-sidebar-item-grouped-border {
+                div:last-child {
+                    @apply w-0.5 bg-primary-600 dark:bg-primary-400;
+                }
+            }
+        }
+    }
+
+    .fi-sidebar-item-icon {
+        @apply h-5 w-5;
+    }
+}
+
+.fi-sidebar-item-btn,
+.fi-topbar-item-btn {
+    @apply rounded-sm;
+
+    &:hover {
+        @apply bg-admin-topbar-light dark:bg-admin-hover-dark;
+    }
+
+    &:focus-visible {
+        @apply !bg-transparent outline outline-4 outline-offset-0 outline-primary-500/30 dark:outline-primary-400/40;
+    }
+}
+
+.fi-sidebar-item-grouped-border {
+    div:last-child {
+        @apply h-6 w-px rounded-none bg-gray-300 dark:bg-gray-600;
+    }
+}
+
+.fi-sidebar-sub-group-items {
+    @apply gap-y-0;
+}
+
+.fi-page .sidebar-item-btn::before {
+    @apply hidden;
+}
+
+.fi-sidebar-footer {
+    @apply mx-auto text-xs text-gray-400;
+}
+
+/* Theme Switcher */
+.fi-theme-switcher-btn {
+    @apply rounded-sm;
+}
+
+/* Topbar */
+.fi-topbar {
+    box-shadow: unset;
+    @apply bg-admin-topbar-light dark:bg-admin-topbar-dark;
+}
+
+.fi-logo {
+    @apply text-white;
+}
+
+.fi-topbar-item {
+    &:not(.fi-active) {
+        & > .fi-topbar-item-btn {
+            .fi-topbar-item-icon,
+            .fi-topbar-item-label,
+            .fi-topbar-group-toggle-icon {
+                @apply text-gray-500 dark:text-gray-400;
+            }
+
+            &:hover {
+                .fi-topbar-item-icon,
+                .fi-topbar-item-label,
+                .fi-topbar-group-toggle-icon {
+                    @apply text-gray-700 dark:text-gray-200;
+                }
+            }
+        }
+    }
+
+    &.fi-active {
+        & > .fi-topbar-item-btn {
+            @apply bg-transparent;
+        }
+    }
+
+    .fi-topbar-item-icon,
+    .fi-topbar-item-label,
+    .fi-topbar-group-toggle-icon {
+        @apply transition duration-75;
+    }
+}
+
+/* ==========================================================================
+   Support
+   ========================================================================== */
+
+/* Avatar */
+.fi-avatar {
+    &:not(.fi-circular) {
+        @apply rounded-sm;
+    }
+}
+
+/* Badge */
+.fi-badge {
+    @apply rounded-sm ring-0;
+
+    &.fi-color-custom {
+        @apply bg-custom-100 text-custom-700 dark:!bg-custom-400/20 dark:!text-custom-300;
+    }
+
+    &.fi-color-gray {
+        @apply bg-gray-100 dark:bg-gray-400/20 dark:text-gray-300;
+    }
+}
+
+.fi-badge-icon {
+    .fi-color-custom & {
+        @apply text-custom-600 dark:text-custom-400;
+    }
+
+    .fi-color-gray & {
+        @apply text-gray-400 dark:text-gray-400;
+    }
+}
+
+/* Breadcrumbs */
+.fi-breadcrumbs-item-separator {
+    @apply w-auto text-sm text-gray-300 dark:!text-gray-600;
+}
+
+/* Button Group */
+.fi-btn-group {
+    @apply rounded-sm;
+
+    .fi-btn {
+        @apply rounded-none;
+
+        &:nth-child(1 of .fi-btn) {
+            @apply rounded-es-md rounded-ss-md;
+        }
+
+        &:nth-last-child(1 of .fi-btn) {
+            @apply rounded-ee-md rounded-se-md;
+        }
+    }
+}
+
+/* Button & Icon Button */
+.fi-btn,
+.fi-icon-btn,
+.fi-pagination-item-btn {
+    @apply rounded-sm;
+
+    &.fi-color-primary {
+        @apply text-white;
+    }
+
+    &:focus-visible {
+        @apply outline outline-4 outline-offset-0 outline-primary-500/30 !ring-0 dark:outline-primary-400/40;
+    }
+}
+
+.fi-btn-badge-ctn,
+.fi-icon-btn-badge-ctn,
+.fi-link-badge-ctn {
+    @apply rounded-full;
+}
+
+/* Dropdown */
+.fi-dropdown-panel {
+    @apply rounded-sm dark:bg-admin-dropdown-dark;
+
+    .fi-icon {
+        @apply dark:text-gray-300;
+    }
+}
+
+.fi-dropdown-list-item {
+    @apply rounded-sm dark:text-gray-300;
+}
+
+/* Fieldset */
+.fi-fieldset {
+    @apply rounded-sm;
+}
+
+/* Headings */
+.fi-header-heading {
+    @apply dark:text-gray-300;
+}
+
+/* Input (Checkbox & Radio) */
+.fi-checkbox-input,
+.fi-radio-input {
+    @apply ring-gray-950/[15%];
+
+    &:focus,
+    &:focus:checked {
+        @apply outline outline-4 outline-offset-0 outline-primary-500/30 ring-0 dark:outline-primary-400/40;
+    }
+
+    &:focus:not(:checked) {
+        @apply ring-1 ring-gray-950/[15%] dark:ring-white/20;
+    }
+}
+
+/* Input Wrapper */
+.fi-input-wrp {
+    @apply rounded-sm dark:bg-admin-input-dark;
+
+    &:focus-within {
+        @apply outline outline-4 !ring-1;
+    }
+
+    &:not(.fi-invalid) {
+        @apply ring-gray-950/[15%] dark:ring-white/20;
+
+        &.fi-disabled {
+            @apply dark:ring-white/10;
+        }
+
+        &:focus-within {
+            @apply outline-primary-500/30 ring-gray-950/[15%] dark:outline-primary-400/40 dark:ring-white/20;
+        }
+    }
+
+    &.fi-invalid {
+        @apply ring-danger-600 dark:ring-danger-400;
+
+        &:focus-within {
+            @apply outline-primary-500/30 dark:outline-primary-400/40;
+        }
+    }
+}
+
+.fi-select-input-search-ctn {
+    @apply dark:bg-admin-dropdown-dark;
+}
+
+/* Loading Section */
+.fi-loading-section > .fi-section {
+    @apply !rounded-sm bg-gray-50 dark:bg-white/5;
+}
+
+/* Modal */
+.fi-modal-window {
+    @apply ring-0;
+}
+
+.fi-modal:not(.fi-width-screen):not(.fi-modal-slide-over) {
+    @apply rounded-sm;
+}
+
+.fi-modal:not(.fi-width-screen):not(.fi-modal-slide-over)
+.fi-modal-header.fi-sticky {
+    @apply rounded-t-sm;
+}
+
+.fi-modal:not(.fi-width-screen):not(.fi-modal-slide-over)
+.fi-modal-footer.fi-sticky {
+    @apply rounded-b-sm;
+}
+
+/* Pagination */
+.fi-pagination {
+    padding-inline: unset;
+}
+
+.fi-pagination .fi-pagination-items {
+    @apply rounded-none bg-transparent shadow-none ring-0 dark:bg-transparent;
+}
+
+.fi-pagination-overview {
+    @apply text-gray-500 dark:!text-gray-400;
+}
+
+.fi-pagination-item {
+    @apply border-x-0;
+
+    &:first-child > .fi-pagination-item-btn {
+        @apply !rounded-s-sm;
+    }
+
+    &:last-child > .fi-pagination-item-btn {
+        @apply !rounded-e-sm;
+    }
+
+    &:not(.fi-disabled) > .fi-pagination-item-btn {
+        @apply bg-transparent dark:bg-transparent;
+    }
+
+    &:not(.fi-active) {
+        .fi-pagination-item-btn {
+            &:hover {
+                .fi-pagination-item-icon,
+                .fi-pagination-item-label {
+                    @apply text-gray-700 dark:!text-gray-200;
+                }
+            }
+        }
+    }
+
+    &.fi-active {
+        .fi-pagination-item-icon,
+        .fi-pagination-item-label {
+            @apply text-primary-600 dark:!text-primary-400;
+        }
+    }
+}
+
+.fi-pagination-item-icon,
+.fi-pagination-item-label {
+    @apply text-gray-500 transition duration-75 dark:!text-gray-400;
+}
+
+.fi-pagination-item-label {
+    @apply font-medium;
+}
+
+/* Section */
+.fi-section {
+    &:not(.fi-aside) {
+        @apply rounded-none shadow-none ring-0;
+
+        & > .fi-section-header {
+            @apply px-0 pt-0;
+        }
+    }
+}
+
+.fi-section-header {
+    @apply overflow-visible;
+}
+
+.fi-section-content-ctn {
+    @apply border-none;
+}
+
+.fi-section-content {
+    @apply p-0;
+}
+
+.fi-section.fi-aside > .fi-section-content-ctn {
+    @apply rounded-none shadow-none ring-0;
+}
+
+.fi-section-footer {
+    @apply border-none px-0 pb-0;
+}
+
+/* Tabs */
+.fi-tabs {
+    @apply gap-x-3 shadow-[inset_0_-1px_var(--color-gray-200)] dark:shadow-[inset_0_-1px_var(--color-gray-700)];
+}
+
+.fi-tabs:not(.fi-contained) {
+    @apply mx-0 rounded-none bg-transparent p-0 ring-0 dark:bg-transparent;
+}
+
+.fi-tabs.fi-contained {
+    @apply border-b-0 px-0 py-0;
+}
+
+.fi-tabs-item {
+    @apply rounded-sm px-2 py-3;
+}
+
+.fi-tabs-item:focus-visible {
+    @apply outline-2 -outline-offset-2 outline-primary-600 dark:outline-primary-400;
+}
+
+.fi-tabs-item:not(.fi-active) {
+    @apply border-transparent hover:border-gray-300 hover:bg-transparent focus-visible:bg-transparent dark:hover:border-gray-600 dark:hover:bg-transparent dark:focus-visible:bg-transparent;
+}
+
+.fi-tabs-item.fi-active {
+    @apply relative bg-transparent after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-primary-600 dark:bg-transparent dark:after:bg-primary-400;
+}
+
+.fi-tabs-item:not(.fi-active) .fi-icon {
+    @apply text-gray-500 dark:text-gray-400;
+}
+
+.fi-tabs-item:not(.fi-active):hover .fi-icon {
+    @apply text-gray-700 dark:text-gray-200;
+}
+
+.fi-tabs-item .fi-tabs-item-label {
+    @apply leading-6;
+}
+
+.fi-tabs-item:not(.fi-active):not(:hover):focus-visible .fi-tabs-item-label {
+    @apply text-gray-500 dark:text-gray-400;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+.fi-ta-panel {
+    @apply rounded-sm bg-white shadow-xs;
+}
+
+.fi-ta-reorder-indicator,
+.fi-ta-selection-indicator {
+    @apply sm:!px-3;
+}
+
+.fi-ta-summary-header-cell {
+    &:first-of-type {
+        @apply sm:!ps-3;
+    }
+}
+
+.fi-ta-cell:not(.fi-ta-selection-cell) {
+    &:first-of-type {
+        padding-inline-start: unset;
+    }
+
+    &:last-of-type {
+        padding-inline-end: unset;
+    }
+}
+
+.fi-ta-selection-cell {
+    padding-inline-start: --spacing(3);
+}
+
+.fi-ta-cell:has(.fi-ta-actions) {
+    &:first-of-type {
+        padding-inline-start: --spacing(3);
+    }
+
+    &:last-of-type {
+        padding-inline-end: --spacing(3);
+    }
+}
+
+.fi-ta-ctn {
+    @apply overflow-visible rounded-none bg-transparent shadow-none ring-0 dark:!bg-transparent;
+}
+
+.fi-ta-header-cell,
+.fi-ta-header-group-cell {
+    &:first-of-type {
+        @apply sm:!ps-3;
+    }
+
+    &:last-of-type {
+        @apply sm:!pe-3;
+    }
+}
+
+.fi-ta-header-cell,
+.fi-ta-header-group-cell {
+    @apply font-medium text-gray-500 dark:!text-gray-400;
+}
+
+.fi-ta-header {
+    @apply !px-0 pt-0;
+
+    & + * {
+        @apply !border-t-0;
+    }
+}
+
+.fi-ta-filters-above-content-ctn {
+    @apply sm:!px-3;
+}
+
+.fi-ta-header-toolbar {
+    @apply sm:!px-3;
+
+    &:not(:has(* + &)) {
+        border-block-start: unset;
+    }
+}
+
+.fi-ta-cell > .fi-ta-search-field {
+    margin: 1px;
+}
+
+.fi-ta-content-grid .fi-ta-record {
+    @apply rounded-sm;
+}
+
+.fi-ta-pagination {
+    @apply !px-0;
+}
+
+.fi-ta-filters-below-content {
+    @apply sm:!px-3;
+}
+
+.fi-ta-table {
+    > thead > tr,
+    > tfoot {
+        @apply bg-transparent dark:bg-transparent;
+    }
+}
+
+/* ==========================================================================
+   Widgets
+   ========================================================================== */
+
+.fi-account-widget,
+.fi-filament-info-widget,
+.fi-wi-chart {
+    @apply rounded-sm p-6 ring-1 ring-gray-950/10 dark:ring-white/10;
+}
+
+*:has(> div > div > .fi-wi-stats-overview-stat) {
+    @apply gap-px overflow-hidden rounded-sm ring-1 ring-gray-950/10 dark:ring-white/10;
+}
+
+.fi-wi-stats-overview-stat {
+    @apply rounded-none shadow-none outline-1 outline-gray-200 ring-0 dark:outline-white/5 dark:bg-admin-hover-dark;
+}
+
+.fi-wi-stats-overview-stat-chart {
+    @apply rounded-b-none;
+}

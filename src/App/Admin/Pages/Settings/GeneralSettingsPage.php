@@ -11,7 +11,7 @@ use System\Settings\GeneralSettings;
 
 class GeneralSettingsPage extends SettingsPage
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\BackedEnum|null $navigationIcon = 'fas-gear';
 
     protected static ?string $navigationLabel = 'General';
 
