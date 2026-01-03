@@ -2,6 +2,7 @@
 
 namespace Domain\User\Models;
 
+use Domain\Geography\Models\Country;
 use Domain\User\Enums\UserStatus;
 use Domain\User\Factories\UserFactory;
 use Domain\User\Notifications\ResetPasswordNotification;
@@ -10,6 +11,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -40,7 +42,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'vanity_id',
         'avatar',
-        'country',
+        'country_id',
         'timezone',
         'status',
         'last_login_at',
@@ -174,6 +176,16 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->can('admin.access');
+    }
+
+    /**
+     * Get the country the user belongs to.
+     *
+     * @return BelongsTo<Country, $this>
+     */
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 
     /**

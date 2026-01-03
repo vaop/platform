@@ -40,6 +40,7 @@ return [
     'timezone' => 'Timezone',
     'select_country' => 'Select your country',
     'select_timezone' => 'Select your timezone',
+    'change' => 'Change',
     'accept_terms_and_privacy' => 'I agree to the :terms and :privacy',
     'accept_terms_only' => 'I agree to the :terms',
     'accept_privacy_only' => 'I agree to the :privacy',

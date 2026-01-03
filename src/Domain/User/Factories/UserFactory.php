@@ -2,6 +2,7 @@
 
 namespace Domain\User\Factories;
 
+use Domain\Geography\Models\Country;
 use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -98,12 +99,22 @@ class UserFactory extends Factory
     }
 
     /**
-     * Set the user's country.
+     * Set the user's country code (legacy string field).
      */
     public function fromCountry(string $countryCode): static
     {
         return $this->state(fn (array $attributes) => [
             'country' => $countryCode,
+        ]);
+    }
+
+    /**
+     * Set the user's country via relationship.
+     */
+    public function inCountry(Country $country): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'country_id' => $country->id,
         ]);
     }
 

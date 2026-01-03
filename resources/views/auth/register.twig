@@ -37,11 +37,32 @@
             autocomplete: 'new-password'
         }) }}
 
-        {{ forms.select('timezone', t('auth.timezone'), timezones, {
-            placeholder: t('auth.select_timezone'),
-            value: old('timezone'),
-            error: errors.first('timezone')
-        }) }}
+        {# Location fields - hidden by default, auto-detected via JavaScript #}
+        <div id="location-detected" class="text-sm text-muted" style="display: none;">
+            <span id="detected-location-text"></span>
+            <button type="button" id="change-location-btn" class="text-link">{{ t('auth.change') }}</button>
+        </div>
+
+        <div id="location-fields" style="display: none;">
+            {{ forms.select('country_id', t('auth.country'), countries, {
+                placeholder: t('auth.select_country'),
+                value: old('country_id'),
+                error: errors.first('country_id')
+            }) }}
+
+            {{ forms.select('timezone', t('auth.timezone'), timezones, {
+                placeholder: t('auth.select_timezone'),
+                value: old('timezone'),
+                error: errors.first('timezone')
+            }) }}
+        </div>
+
+        {# Show fields if there are validation errors #}
+        {% if errors.first('country_id') or errors.first('timezone') %}
+        <script>
+            document.getElementById('location-fields').style.display = 'block';
+        </script>
+        {% endif %}
 
         {% if registrationSettings.requiresLegalAcceptance() %}
             {% set termsLink %}<a href="{{ registrationSettings.termsUrl }}" target="_blank">{{ t('auth.terms_of_service') }}</a>{% endset %}
@@ -74,15 +95,69 @@
 
 <script>
     (function() {
+        const countryCodes = {{ countryCodes|json_encode|raw }};
+        const countrySelect = document.getElementById('country_id');
         const tzSelect = document.getElementById('timezone');
-        if (tzSelect && !tzSelect.value) {
-            const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            if (browserTz) {
-                const option = tzSelect.querySelector(`option[value="${browserTz}"]`);
-                if (option) {
-                    option.selected = true;
+        const detectedDiv = document.getElementById('location-detected');
+        const detectedText = document.getElementById('detected-location-text');
+        const fieldsDiv = document.getElementById('location-fields');
+        const changeBtn = document.getElementById('change-location-btn');
+
+        let detectedCountry = null;
+        let detectedTimezone = null;
+
+        // Detect timezone from browser
+        const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (browserTz && tzSelect && !tzSelect.value) {
+            const tzOption = tzSelect.querySelector(`option[value="${browserTz}"]`);
+            if (tzOption) {
+                tzOption.selected = true;
+                detectedTimezone = tzOption.textContent;
+            }
+        }
+
+        // Detect country from browser locale (e.g., "en-US" -> "US")
+        const locale = navigator.language || navigator.userLanguage;
+        if (locale && countrySelect && !countrySelect.value) {
+            const parts = locale.split('-');
+            if (parts.length >= 2) {
+                const countryCode = parts[parts.length - 1].toUpperCase();
+                const countryId = countryCodes[countryCode];
+                if (countryId) {
+                    const countryOption = countrySelect.querySelector(`option[value="${countryId}"]`);
+                    if (countryOption) {
+                        countryOption.selected = true;
+                        detectedCountry = countryOption.textContent;
+                    }
                 }
             }
+        }
+
+        // Show detected location summary if we detected something
+        if (detectedCountry || detectedTimezone) {
+            let text = '';
+            if (detectedCountry && detectedTimezone) {
+                text = detectedCountry + ' · ' + detectedTimezone;
+            } else if (detectedCountry) {
+                text = detectedCountry;
+            } else {
+                text = detectedTimezone;
+            }
+            detectedText.textContent = text;
+            detectedDiv.style.display = 'flex';
+            detectedDiv.style.justifyContent = 'space-between';
+            detectedDiv.style.alignItems = 'center';
+        } else {
+            // No auto-detection possible, show the fields
+            fieldsDiv.style.display = 'block';
+        }
+
+        // Change button reveals the fields
+        if (changeBtn) {
+            changeBtn.addEventListener('click', function() {
+                detectedDiv.style.display = 'none';
+                fieldsDiv.style.display = 'block';
+            });
         }
     })();
 </script>

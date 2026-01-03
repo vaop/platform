@@ -35,7 +35,8 @@
         "rcrowe/twigbridge": "^0.14.6",
         "spatie/laravel-permission": "^6.24",
         "spatie/laravel-settings": "*",
-        "symfony/expression-language": "^8.0"
+        "symfony/expression-language": "^8.0",
+        "symfony/intl": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

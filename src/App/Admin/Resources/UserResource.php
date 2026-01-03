@@ -54,8 +54,11 @@ class UserResource extends Resource
                     ->options(UserStatus::class)
                     ->required()
                     ->default(UserStatus::Active),
-                TextInput::make('country')
-                    ->maxLength(2),
+                Select::make('country_id')
+                    ->label('Country')
+                    ->relationship('country', 'name')
+                    ->searchable()
+                    ->preload(),
                 Select::make('timezone')
                     ->options(fn () => collect(timezone_identifiers_list())->mapWithKeys(fn ($tz) => [$tz => $tz]))
                     ->searchable(),

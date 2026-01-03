@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\User\Models;
 
 use Carbon\Carbon;
+use Domain\Geography\Models\Country;
 use Domain\User\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -65,17 +66,20 @@ class UserPilotColumnsTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->assertNull($user->country);
+        $this->assertNull($user->country_id);
     }
 
     #[Test]
-    public function it_can_set_country_code(): void
+    public function it_can_set_country(): void
     {
+        $country = Country::factory()->create();
+
         $user = User::factory()->create([
-            'country' => 'US',
+            'country_id' => $country->id,
         ]);
 
-        $this->assertEquals('US', $user->country);
+        $this->assertEquals($country->id, $user->country_id);
+        $this->assertTrue($user->country->is($country));
     }
 
     #[Test]
@@ -120,12 +124,13 @@ class UserPilotColumnsTest extends TestCase
     #[Test]
     public function it_can_update_pilot_columns(): void
     {
+        $country = Country::factory()->create();
         $user = User::factory()->create();
 
         $user->update([
             'vanity_id' => 'NEWID',
             'avatar' => 'avatars/new.jpg',
-            'country' => 'GB',
+            'country_id' => $country->id,
             'timezone' => 'Europe/London',
         ]);
 
@@ -133,7 +138,7 @@ class UserPilotColumnsTest extends TestCase
 
         $this->assertEquals('NEWID', $user->vanity_id);
         $this->assertEquals('avatars/new.jpg', $user->avatar);
-        $this->assertEquals('GB', $user->country);
+        $this->assertEquals($country->id, $user->country_id);
         $this->assertEquals('Europe/London', $user->timezone);
     }
 }

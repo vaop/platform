@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
+use Domain\Geography\Models\Country;
 use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
+use Domain\User\Notifications\VerifyEmailNotification;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -95,12 +96,14 @@ class RegistrationTest extends TestCase
         $settings->requireApproval = false;
         $settings->save();
 
+        $country = Country::factory()->unitedStates()->create();
+
         $response = $this->post(route('register'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'country' => 'US',
+            'country_id' => $country->id,
             'timezone' => 'America/New_York',
             'terms' => true,
         ]);
@@ -109,7 +112,7 @@ class RegistrationTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
-            'country' => 'US',
+            'country_id' => $country->id,
             'timezone' => 'America/New_York',
         ]);
     }
@@ -257,19 +260,19 @@ class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function registration_validates_country_code_length(): void
+    public function registration_validates_country_exists(): void
     {
         $response = $this->post(route('register'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'country' => 'USA',
+            'country_id' => 99999,
             'terms' => true,
         ]);
 
         $this->assertGuest();
-        $response->assertSessionHasErrors('country');
+        $response->assertSessionHasErrors('country_id');
     }
 
     #[Test]
@@ -343,7 +346,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $user = User::where('email', 'test@example.com')->first();
-        Notification::assertSentToTimes($user, VerifyEmail::class, 1);
+        Notification::assertSentToTimes($user, VerifyEmailNotification::class, 1);
 
         // User is logged in but pending until email verified
         $this->assertAuthenticated();
@@ -394,6 +397,6 @@ class RegistrationTest extends TestCase
         ]);
 
         $user = User::where('email', 'test@example.com')->first();
-        Notification::assertNotSentTo($user, VerifyEmail::class);
+        Notification::assertNotSentTo($user, VerifyEmailNotification::class);
     }
 }
