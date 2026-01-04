@@ -30,7 +30,8 @@ COPY vite.config.js ./
 COPY resources ./resources
 COPY public ./public
 # Copy Filament CSS from composer stage (needed for Tailwind imports in theme.css)
-COPY --from=composer /app/vendor/filament/filament/resources/css ./vendor/filament/filament/resources/css
+# Multiple packages have CSS that reference each other, so copy all Filament resources
+COPY --from=composer /app/vendor/filament ./vendor/filament
 
 RUN npm run build
 
