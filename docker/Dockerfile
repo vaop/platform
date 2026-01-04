@@ -5,6 +5,10 @@ FROM composer:2 AS composer
 
 ARG TARGETARCH
 
+# Install intl extension required by Filament
+RUN apk add --no-cache icu-dev \
+    && docker-php-ext-install intl
+
 WORKDIR /app
 
 COPY composer.json composer.lock ./
