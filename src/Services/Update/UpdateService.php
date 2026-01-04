@@ -388,6 +388,11 @@ class UpdateService
         Artisan::call('view:clear');
         Artisan::call('route:clear');
 
+        // Ensure storage symlink exists
+        if (! file_exists(public_path('storage'))) {
+            Artisan::call('storage:link');
+        }
+
         // Optionally optimize
         Artisan::call('config:cache');
         Artisan::call('route:cache');
