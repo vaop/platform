@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\User\Observers;
 use Domain\User\Enums\UserStatus;
 use Domain\User\Events\EmailChanged;
 use Domain\User\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Domain\User\Notifications\VerifyEmailNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -85,7 +85,7 @@ class UserObserverTest extends TestCase
 
         $user->update(['email' => 'new@example.com']);
 
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, VerifyEmailNotification::class);
     }
 
     #[Test]
@@ -104,7 +104,7 @@ class UserObserverTest extends TestCase
 
         $user->update(['email' => 'new@example.com']);
 
-        Notification::assertNotSentTo($user, VerifyEmail::class);
+        Notification::assertNotSentTo($user, VerifyEmailNotification::class);
     }
 
     #[Test]

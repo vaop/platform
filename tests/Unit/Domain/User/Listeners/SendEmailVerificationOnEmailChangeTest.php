@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\User\Listeners;
 use Domain\User\Events\EmailChanged;
 use Domain\User\Listeners\SendEmailVerificationOnEmailChange;
 use Domain\User\Models\User;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Domain\User\Notifications\VerifyEmailNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
@@ -48,7 +48,7 @@ class SendEmailVerificationOnEmailChangeTest extends TestCase
         $listener = app(SendEmailVerificationOnEmailChange::class);
         $listener->handle($event);
 
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Notification::assertSentTo($user, VerifyEmailNotification::class);
     }
 
     #[Test]
@@ -69,7 +69,7 @@ class SendEmailVerificationOnEmailChangeTest extends TestCase
         $listener = app(SendEmailVerificationOnEmailChange::class);
         $listener->handle($event);
 
-        Notification::assertNotSentTo($user, VerifyEmail::class);
+        Notification::assertNotSentTo($user, VerifyEmailNotification::class);
     }
 
     #[Test]
@@ -93,6 +93,6 @@ class SendEmailVerificationOnEmailChangeTest extends TestCase
         $listener = app(SendEmailVerificationOnEmailChange::class);
         $listener->handle($event);
 
-        Notification::assertNotSentTo($user, VerifyEmail::class);
+        Notification::assertNotSentTo($user, VerifyEmailNotification::class);
     }
 }

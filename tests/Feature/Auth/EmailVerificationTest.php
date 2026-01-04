@@ -6,8 +6,8 @@ namespace Tests\Feature\Auth;
 
 use Domain\User\Enums\UserStatus;
 use Domain\User\Models\User;
+use Domain\User\Notifications\VerifyEmailNotification;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -113,7 +113,7 @@ class EmailVerificationTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('verification.send'));
 
-        Notification::assertSentToTimes($user, VerifyEmail::class, 1);
+        Notification::assertSentToTimes($user, VerifyEmailNotification::class, 1);
         $response->assertSessionHas('status');
     }
 
