@@ -12,6 +12,7 @@ use Filament\Panel;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -25,6 +26,7 @@ use Support\UnitsOfMeasure\Enums\SpeedUnit;
 use Support\UnitsOfMeasure\Enums\TemperatureUnit;
 use Support\UnitsOfMeasure\Enums\VolumeUnit;
 use Support\UnitsOfMeasure\Enums\WeightUnit;
+use System\Notifications\DatabaseNotification;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -210,5 +212,15 @@ class User extends Authenticatable implements FilamentUser
     public function sendPasswordResetNotification(mixed $token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Get the entity's notifications.
+     *
+     * @return MorphMany<DatabaseNotification, $this>
+     */
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(DatabaseNotification::class, 'notifiable')->latest();
     }
 }

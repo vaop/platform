@@ -92,6 +92,9 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->maxContentWidth(Width::ScreenTwoExtraLarge)
 
+            // Features
+            ->databaseNotifications()
+
             // Render Hooks
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_FOOTER,
