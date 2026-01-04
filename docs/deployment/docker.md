@@ -84,6 +84,31 @@ For scheduled tasks, use host cron:
 * * * * * docker compose exec -T app php artisan schedule:run >> /dev/null 2>&1
 ```
 
+## Queue Workers
+
+Run queue workers as separate containers. See [Queue Workers](queues.md) for detailed configuration.
+
+Quick example:
+
+```yaml
+services:
+  worker:
+    image: quay.io/vaop/platform:X.Y.Z
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    environment:
+      # Same environment variables as your app
+      APP_KEY: ${APP_KEY}
+      DB_HOST: db
+      DB_DATABASE: vaop
+      DB_USERNAME: vaop
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - db
+    restart: unless-stopped
+```
+
+Scale workers: `docker compose up -d --scale worker=3`
+
 ## Health Checks
 
 ```yaml

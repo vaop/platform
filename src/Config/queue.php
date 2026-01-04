@@ -98,4 +98,25 @@ return [
         'table' => 'system_failed_jobs',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Embedded Queue Workers
+    |--------------------------------------------------------------------------
+    |
+    | Embedded workers are cron-triggered queue processors designed for
+    | environments without persistent daemon support (shared hosting, etc).
+    | When enabled, the scheduler spawns workers that process jobs and exit.
+    |
+    */
+
+    'embedded_workers' => [
+        'enabled' => env('QUEUE_EMBEDDED_WORKERS', true),
+        'workers' => (int) env('QUEUE_WORKERS', 2),
+        'max_time' => (int) env('QUEUE_MAX_TIME', 55),
+        'max_jobs' => (int) env('QUEUE_MAX_JOBS', 50),
+        'memory' => (int) env('QUEUE_MEMORY', 128),
+        'rest' => (int) env('QUEUE_REST', 1),
+        'queues' => env('QUEUE_QUEUES', 'default'),
+    ],
+
 ];
