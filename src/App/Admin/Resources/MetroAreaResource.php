@@ -14,10 +14,21 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use System\Settings\ModulesSettings;
 
 class MetroAreaResource extends Resource
 {
     protected static ?string $model = MetroArea::class;
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return app(ModulesSettings::class)->enableMetroAreas;
+    }
+
+    public static function canAccess(): bool
+    {
+        return app(ModulesSettings::class)->enableMetroAreas;
+    }
 
     protected static string|\BackedEnum|null $navigationIcon = 'fas-city';
 

@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use System\Settings\ModulesSettings;
 
 class CountryResource extends Resource
 {
@@ -22,7 +23,7 @@ class CountryResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'fas-flag';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reference';
+    protected static string|\UnitEnum|null $navigationGroup = 'Reference Data';
 
     protected static ?int $navigationSort = 2;
 
@@ -92,6 +93,7 @@ class CountryResource extends Resource
                     ->counts('metroAreas')
                     ->sortable()
                     ->color('primary')
+                    ->visible(fn (): bool => app(ModulesSettings::class)->enableMetroAreas)
                     ->url(fn (Country $record): string => MetroAreaResource::getUrl('index', [
                         'filters' => [
                             'country' => ['value' => $record->id],

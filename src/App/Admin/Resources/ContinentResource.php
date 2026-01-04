@@ -18,9 +18,9 @@ class ContinentResource extends Resource
 {
     protected static ?string $model = Continent::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'fas-globe-americas';
+    protected static string|\BackedEnum|null $navigationIcon = 'fas-globe';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reference';
+    protected static string|\UnitEnum|null $navigationGroup = 'Reference Data';
 
     protected static ?int $navigationSort = 1;
 

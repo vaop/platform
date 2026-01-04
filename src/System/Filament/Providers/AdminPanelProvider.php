@@ -4,12 +4,23 @@ declare(strict_types=1);
 
 namespace System\Filament\Providers;
 
+use App\Admin\Pages\Settings\GeneralSettingsPage;
+use App\Admin\Pages\Settings\ModulesSettingsPage;
+use App\Admin\Pages\Settings\RegistrationSettingsPage;
+use App\Admin\Pages\Settings\UnitsSettingsPage;
+use App\Admin\Resources\ContinentResource;
+use App\Admin\Resources\CountryResource;
+use App\Admin\Resources\MetroAreaResource;
+use App\Admin\Resources\UserResource;
 use Filament\Actions\View\ActionsIconAlias;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Infolists\View\InfolistsIconAlias;
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Notifications\View\NotificationsIconAlias;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
@@ -28,6 +39,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use System\Settings\ModulesSettings;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -91,6 +103,41 @@ class AdminPanelProvider extends PanelProvider
             )
 
             // Navigation
+            ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
+                return $builder
+                    ->items([
+                        NavigationItem::make()
+                            ->label('Dashboard')
+                            ->icon('fas-house')
+                            ->isActiveWhen(fn (): bool => request()->routeIs(Dashboard::getRouteName()))
+                            ->url(fn (): string => Dashboard::getUrl()),
+                    ])
+                    ->groups([
+                        NavigationGroup::make('Scheduling')
+                            ->items([
+                                ...(app(ModulesSettings::class)->enableMetroAreas ? MetroAreaResource::getNavigationItems() : []),
+                            ]),
+                        NavigationGroup::make('Pilots')
+                            ->items([
+                                ...UserResource::getNavigationItems(),
+                            ]),
+                        NavigationGroup::make('Reference Data')
+                            ->collapsible()
+                            ->collapsed()
+                            ->items([
+                                ...ContinentResource::getNavigationItems(),
+                                ...CountryResource::getNavigationItems(),
+                            ]),
+                        NavigationGroup::make('Settings')
+                            ->collapsible()
+                            ->items([
+                                ...GeneralSettingsPage::getNavigationItems(),
+                                ...RegistrationSettingsPage::getNavigationItems(),
+                                ...UnitsSettingsPage::getNavigationItems(),
+                                ...ModulesSettingsPage::getNavigationItems(),
+                            ]),
+                    ]);
+            })
 
             // Discovery
             ->discoverResources(in: base_path('src/App/Admin/Resources'), for: 'App\Admin\Resources')

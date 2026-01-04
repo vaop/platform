@@ -16,6 +16,7 @@ use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
+use System\Settings\ModulesSettings;
 use Tests\TestCase;
 
 class MetroAreaResourceTest extends TestCase
@@ -28,6 +29,11 @@ class MetroAreaResourceTest extends TestCase
         $this->markAsInstalled();
         app(RolesAndPermissionsSeeder::class)->run();
         Filament::setCurrentPanel('admin');
+
+        // Enable metro areas module for these tests
+        $settings = app(ModulesSettings::class);
+        $settings->enableMetroAreas = true;
+        $settings->save();
     }
 
     protected function tearDown(): void
@@ -233,5 +239,20 @@ class MetroAreaResourceTest extends TestCase
             ->searchTable('NYC')
             ->assertCanSeeTableRecords([$nyc])
             ->assertCanNotSeeTableRecords([$london]);
+    }
+
+    #[Test]
+    public function admin_cannot_access_metro_areas_when_module_disabled(): void
+    {
+        $this->authenticatedAdmin();
+
+        // Disable the module
+        $settings = app(ModulesSettings::class);
+        $settings->enableMetroAreas = false;
+        $settings->save();
+
+        $response = $this->get(MetroAreaResource::getUrl('index'));
+
+        $response->assertForbidden();
     }
 }
