@@ -1,5 +1,16 @@
 # syntax=docker/dockerfile:1
 
+# Composer stage to get vendor CSS files needed for frontend build
+FROM composer:2 AS composer
+
+ARG TARGETARCH
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+RUN --mount=type=cache,id=composer-$TARGETARCH,target=/root/.composer/cache \
+    composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+
 # Build stage for frontend assets
 FROM node:25-alpine AS frontend
 
@@ -14,6 +25,8 @@ RUN --mount=type=cache,id=npm-$TARGETARCH,target=/root/.npm \
 COPY vite.config.js ./
 COPY resources ./resources
 COPY public ./public
+# Copy Filament CSS from composer stage (needed for Tailwind imports in theme.css)
+COPY --from=composer /app/vendor/filament/filament/resources/css ./vendor/filament/filament/resources/css
 
 RUN npm run build
 
