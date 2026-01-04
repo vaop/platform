@@ -4,6 +4,17 @@ use Illuminate\Support\Facades\Schedule;
 
 /*
 |--------------------------------------------------------------------------
+| Update Check
+|--------------------------------------------------------------------------
+|
+| Check for available updates daily and cache the result.
+|
+*/
+
+Schedule::command('vaop:check-updates')->daily()->name('update-check');
+
+/*
+|--------------------------------------------------------------------------
 | Embedded Queue Workers
 |--------------------------------------------------------------------------
 |

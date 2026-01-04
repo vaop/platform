@@ -37,6 +37,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use System\Settings\ModulesSettings;
@@ -50,7 +51,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->brandName('VAOP Administration')
+            ->brandName('VAOP')
 
             // Appearance
             ->colors([
@@ -99,10 +100,29 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_FOOTER,
                 fn () => new HtmlString(
-                    '<div class="fi-sidebar-footer">'.
-                        '<span>v'.config('vaop.version').'</span>'.
-                    '</div>'
+                    '<div class="fi-sidebar-footer"><span>v'.config('vaop.version').'</span></div>'
                 ),
+            )
+            ->renderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+                function () {
+                    $user = auth()->user();
+                    if (! $user?->hasRole('superadmin')) {
+                        return null;
+                    }
+
+                    $update = Cache::get('vaop.update_available');
+                    if (! $update || ! $update['available']) {
+                        return null;
+                    }
+
+                    return new HtmlString(
+                        '<a href="https://github.com/vaop/platform/releases" target="_blank" '.
+                            'class="fi-topbar-update-badge" title="VAOP v'.$update['latest'].' is available">'.
+                            '<span class="fi-badge fi-color-warning">Update Available</span>'.
+                        '</a>'
+                    );
+                },
             )
 
             // Navigation
