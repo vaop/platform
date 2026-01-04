@@ -26,9 +26,12 @@ class ListContinents extends ListRecords
             CreateAction::make(),
             ActionGroup::make([
                 ImportAction::make()
-                    ->importer(ContinentImporter::class),
+                    ->importer(ContinentImporter::class)
+                    ->label('Import Continents'),
                 ExportAction::make()
-                    ->exporter(ContinentExporter::class),
+                    ->exporter(ContinentExporter::class)
+                    ->label('Export Continents')
+                    ->modalDescription('Only the currently filtered records will be exported.'),
                 ActionGroup::make([
                     Action::make('sync')
                         ->label('Sync Dataset')

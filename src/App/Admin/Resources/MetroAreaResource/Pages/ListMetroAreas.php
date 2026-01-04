@@ -23,9 +23,12 @@ class ListMetroAreas extends ListRecords
             CreateAction::make(),
             ActionGroup::make([
                 ImportAction::make()
-                    ->importer(MetroAreaImporter::class),
+                    ->importer(MetroAreaImporter::class)
+                    ->label('Import Metro Areas'),
                 ExportAction::make()
-                    ->exporter(MetroAreaExporter::class),
+                    ->exporter(MetroAreaExporter::class)
+                    ->label('Export Metro Areas')
+                    ->modalDescription('Only the currently filtered records will be exported.'),
             ])
                 ->label('')
                 ->icon('heroicon-o-ellipsis-vertical')

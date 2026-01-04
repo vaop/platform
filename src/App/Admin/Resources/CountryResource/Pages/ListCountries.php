@@ -26,9 +26,12 @@ class ListCountries extends ListRecords
             CreateAction::make(),
             ActionGroup::make([
                 ImportAction::make()
-                    ->importer(CountryImporter::class),
+                    ->importer(CountryImporter::class)
+                    ->label('Import Countries'),
                 ExportAction::make()
-                    ->exporter(CountryExporter::class),
+                    ->exporter(CountryExporter::class)
+                    ->label('Export Countries')
+                    ->modalDescription('Only the currently filtered records will be exported.'),
                 ActionGroup::make([
                     Action::make('sync')
                         ->label('Sync Dataset')
