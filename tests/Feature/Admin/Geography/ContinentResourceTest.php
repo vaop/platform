@@ -185,4 +185,39 @@ class ContinentResourceTest extends TestCase
             'id' => $continent->id,
         ]);
     }
+
+    #[Test]
+    public function admin_can_sync_continents(): void
+    {
+        $this->authenticatedAdmin();
+
+        // Start with no continents
+        $this->assertDatabaseCount('geography_continents', 0);
+
+        Livewire::test(ListContinents::class)
+            ->callAction('sync')
+            ->assertNotified('Continents synced successfully');
+
+        // All 7 continents should be created
+        $this->assertDatabaseCount('geography_continents', 7);
+        $this->assertDatabaseHas('geography_continents', ['code' => 'EU', 'name' => 'Europe']);
+        $this->assertDatabaseHas('geography_continents', ['code' => 'AS', 'name' => 'Asia']);
+    }
+
+    #[Test]
+    public function sync_continents_is_idempotent(): void
+    {
+        $this->authenticatedAdmin();
+
+        // Create one continent that will be updated
+        Continent::factory()->create(['code' => 'EU', 'name' => 'Old Europe']);
+
+        Livewire::test(ListContinents::class)
+            ->callAction('sync')
+            ->assertNotified('Continents synced successfully');
+
+        // Should still have 7 continents, and Europe should be updated
+        $this->assertDatabaseCount('geography_continents', 7);
+        $this->assertDatabaseHas('geography_continents', ['code' => 'EU', 'name' => 'Europe']);
+    }
 }

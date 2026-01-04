@@ -243,4 +243,50 @@ class CountryResourceTest extends TestCase
             'id' => $country->id,
         ]);
     }
+
+    #[Test]
+    public function admin_can_sync_countries(): void
+    {
+        $this->authenticatedAdmin();
+
+        // First create continents (required for country syncing)
+        Continent::factory()->create(['code' => 'NA', 'name' => 'North America']);
+        Continent::factory()->create(['code' => 'EU', 'name' => 'Europe']);
+
+        $this->assertDatabaseCount('geography_countries', 0);
+
+        Livewire::test(ListCountries::class)
+            ->callAction('sync')
+            ->assertNotified('Countries synced successfully');
+
+        // Countries should be created for the continents we have
+        $this->assertDatabaseHas('geography_countries', ['iso_alpha2' => 'US', 'name' => 'United States']);
+        $this->assertDatabaseHas('geography_countries', ['iso_alpha2' => 'DE', 'name' => 'Germany']);
+    }
+
+    #[Test]
+    public function sync_countries_is_idempotent(): void
+    {
+        $this->authenticatedAdmin();
+
+        $continent = Continent::factory()->create(['code' => 'NA', 'name' => 'North America']);
+        Country::factory()->create([
+            'iso_alpha2' => 'US',
+            'iso_alpha3' => 'USA',
+            'name' => 'Old United States',
+            'continent_id' => $continent->id,
+        ]);
+
+        $initialCount = Country::count();
+
+        Livewire::test(ListCountries::class)
+            ->callAction('sync')
+            ->assertNotified('Countries synced successfully');
+
+        // The existing country should be updated, new ones created
+        $this->assertDatabaseHas('geography_countries', ['iso_alpha2' => 'US', 'name' => 'United States']);
+
+        // Count should increase (new countries added for North America)
+        $this->assertGreaterThan($initialCount, Country::count());
+    }
 }
