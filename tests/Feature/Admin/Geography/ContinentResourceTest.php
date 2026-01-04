@@ -10,6 +10,7 @@ use App\Admin\Resources\ContinentResource\Pages\EditContinent;
 use App\Admin\Resources\ContinentResource\Pages\ListContinents;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Domain\Geography\Models\Continent;
+use Domain\Geography\Models\Country;
 use Domain\User\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -165,6 +166,22 @@ class ContinentResourceTest extends TestCase
             ->callAction('delete');
 
         $this->assertDatabaseMissing('geography_continents', [
+            'id' => $continent->id,
+        ]);
+    }
+
+    #[Test]
+    public function admin_cannot_delete_continent_with_countries(): void
+    {
+        $this->authenticatedAdmin();
+        $continent = Continent::factory()->create();
+        Country::factory()->count(3)->create(['continent_id' => $continent->id]);
+
+        Livewire::test(EditContinent::class, ['record' => $continent->id])
+            ->assertActionHidden('delete')
+            ->assertActionVisible('cannotDelete');
+
+        $this->assertDatabaseHas('geography_continents', [
             'id' => $continent->id,
         ]);
     }

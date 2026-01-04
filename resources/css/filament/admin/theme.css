@@ -694,12 +694,17 @@
 /* Section */
 .fi-section {
     &:not(.fi-aside) {
-        @apply rounded-none shadow-none ring-0;
+        @apply rounded-none bg-transparent shadow-none ring-0 dark:bg-transparent;
 
         & > .fi-section-header {
             @apply px-0 pt-0;
         }
     }
+}
+
+/* Warning section header - extraAttributes applied to fi-sc-section wrapper */
+.fi-sc-section.fi-section-warning .fi-section-header {
+    @apply mb-4 rounded-sm bg-warning-50 px-4 py-3 dark:bg-warning-950;
 }
 
 .fi-section-header {

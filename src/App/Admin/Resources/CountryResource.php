@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -30,25 +31,32 @@ class CountryResource extends Resource
         return $schema
             ->columns(1)
             ->components([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(100),
-                TextInput::make('iso_alpha2')
-                    ->label('ISO Alpha-2')
-                    ->required()
-                    ->maxLength(2)
-                    ->unique(ignoreRecord: true),
-                TextInput::make('iso_alpha3')
-                    ->label('ISO Alpha-3')
-                    ->required()
-                    ->maxLength(3)
-                    ->unique(ignoreRecord: true),
-                Select::make('continent_id')
-                    ->label('Continent')
-                    ->relationship('continent', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
+                Section::make('Reference Data')
+                    ->description('This is reference data used throughout the system. Changes may have unintended consequences.')
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->iconColor('warning')
+                    ->extraAttributes(['class' => 'fi-section-warning'])
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(100),
+                        TextInput::make('iso_alpha2')
+                            ->label('ISO Alpha-2')
+                            ->required()
+                            ->maxLength(2)
+                            ->unique(ignoreRecord: true),
+                        TextInput::make('iso_alpha3')
+                            ->label('ISO Alpha-3')
+                            ->required()
+                            ->maxLength(3)
+                            ->unique(ignoreRecord: true),
+                        Select::make('continent_id')
+                            ->label('Continent')
+                            ->relationship('continent', 'name')
+                            ->required()
+                            ->searchable()
+                            ->preload(),
+                    ]),
             ]);
     }
 

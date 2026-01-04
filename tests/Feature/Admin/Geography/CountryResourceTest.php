@@ -11,6 +11,7 @@ use App\Admin\Resources\CountryResource\Pages\ListCountries;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Domain\Geography\Models\Continent;
 use Domain\Geography\Models\Country;
+use Domain\Geography\Models\MetroArea;
 use Domain\User\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -207,6 +208,38 @@ class CountryResourceTest extends TestCase
             ->callAction('delete');
 
         $this->assertDatabaseMissing('geography_countries', [
+            'id' => $country->id,
+        ]);
+    }
+
+    #[Test]
+    public function admin_cannot_delete_country_with_metro_areas(): void
+    {
+        $this->authenticatedAdmin();
+        $country = Country::factory()->create();
+        MetroArea::factory()->count(3)->create(['country_id' => $country->id]);
+
+        Livewire::test(EditCountry::class, ['record' => $country->id])
+            ->assertActionHidden('delete')
+            ->assertActionVisible('cannotDelete');
+
+        $this->assertDatabaseHas('geography_countries', [
+            'id' => $country->id,
+        ]);
+    }
+
+    #[Test]
+    public function admin_cannot_delete_country_with_users(): void
+    {
+        $this->authenticatedAdmin();
+        $country = Country::factory()->create();
+        User::factory()->count(2)->create(['country_id' => $country->id]);
+
+        Livewire::test(EditCountry::class, ['record' => $country->id])
+            ->assertActionHidden('delete')
+            ->assertActionVisible('cannotDelete');
+
+        $this->assertDatabaseHas('geography_countries', [
             'id' => $country->id,
         ]);
     }

@@ -9,6 +9,7 @@ use Domain\Geography\Models\Continent;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -28,13 +29,20 @@ class ContinentResource extends Resource
         return $schema
             ->columns(1)
             ->components([
-                TextInput::make('code')
-                    ->required()
-                    ->maxLength(2)
-                    ->unique(ignoreRecord: true),
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(50),
+                Section::make('Reference Data')
+                    ->description('This is reference data used throughout the system. Changes may have unintended consequences.')
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->iconColor('warning')
+                    ->extraAttributes(['class' => 'fi-section-warning'])
+                    ->schema([
+                        TextInput::make('code')
+                            ->required()
+                            ->maxLength(2)
+                            ->unique(ignoreRecord: true),
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(50),
+                    ]),
             ]);
     }
 
